@@ -10,6 +10,7 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 
 export default function ClientMenu() {
     const [selectedSection, setSelectedSection] = useState<number | null>(null);
+    const pageNumbers = [1, 2, 3, 4];
 
     useEffect(() => {
         const saved = localStorage.getItem("section");
@@ -228,23 +229,16 @@ export default function ClientMenu() {
                             </div>
                         </div>
                         <Pagination>
-                            <PaginationContent>
-                                <PaginationItem>
+                            <PaginationContent className="text-xl [&>li>a]:text-xl">
+                                <PaginationItem className="border rounded-lg">
                                     <PaginationPrevious />
                                 </PaginationItem>
-                                <PaginationItem>
-                                    <PaginationLink> 1</PaginationLink>
-                                </PaginationItem>
-                                <PaginationItem>
-                                    <PaginationLink> 2</PaginationLink>
-                                </PaginationItem>
-                                <PaginationItem>
-                                    <PaginationLink> 3</PaginationLink>
-                                </PaginationItem>
-                                <PaginationItem>
-                                    <PaginationLink> 4</PaginationLink>
-                                </PaginationItem>
-                                <PaginationItem>
+                                {pageNumbers.map((num) => (
+                                    <PaginationItem key={num} className="border rounded-lg flex items-center justify-center w-10 h-10">
+                                        <PaginationLink className="text-2xl text-center">{num}</PaginationLink>
+                                    </PaginationItem>
+                                ))}
+                                <PaginationItem className="border rounded-lg flex items-center">
                                     <PaginationNext />
                                 </PaginationItem>
                             </PaginationContent>
