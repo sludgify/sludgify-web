@@ -11,7 +11,7 @@ export const Navbar = () => {
     const pathname = usePathname();
 
     return (
-        <div className="flex items-center justify-between p-6 font-radley">
+        <nav className="flex items-center justify-between p-6 font-radley">
             <div className="flex items-center gap-2  text-4xl ">
                 <Image src={"/logo.svg"} width={50} height={50} alt="logo"></Image>
                 <h1>Sludgify</h1>
@@ -24,8 +24,9 @@ export const Navbar = () => {
                     <DropdownMenu>
                         <DropdownMenuTrigger className="cursor-pointer outline-none">Service</DropdownMenuTrigger>
                         <DropdownMenuContent align="start">
-                            <DropdownMenuItem>B3 Sludge Management</DropdownMenuItem>
-                            <DropdownMenuItem>Non B3 Sludge Management</DropdownMenuItem>
+                            <DropdownMenuItem>Sludge Management</DropdownMenuItem>
+                            <DropdownMenuItem>Sustainablitiy Reporting</DropdownMenuItem>
+                            <DropdownMenuItem>Carbon Consulting</DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </h1>
@@ -41,6 +42,6 @@ export const Navbar = () => {
                     <Link href={"/register"}>Sign Up</Link>
                 </Button>
             </div>
-        </div>
+        </nav>
     );
 };
