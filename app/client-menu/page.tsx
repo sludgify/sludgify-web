@@ -80,7 +80,6 @@ export default function ClientMenu() {
                 </div>
             </div>
 
-            {/* Bisa render konten section berdasarkan selectedSection */}
             <div>
                 {selectedSection === 1 && (
                     <div className="flex flex-col items-center justify-center">
