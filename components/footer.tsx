@@ -52,8 +52,8 @@ export const Footer = () => {
                     <h1 className="text-4xl">Sludgify</h1>
                     <h2 className="text-2xl">Subscribe to our social media</h2>
                     <div className="flex gap-4 mt-4">
-                        <Image src="instagram.svg" alt="Instagram" width={24} height={24} className="cursor-pointer" />
-                        <Image src="linkedin.svg" alt="Facebook" width={24} height={24} className="cursor-pointer" />
+                        <Image src="/instagram.svg" alt="Instagram" width={24} height={24} className="cursor-pointer" />
+                        <Image src="/linkedin.svg" alt="Facebook" width={24} height={24} className="cursor-pointer" />
                     </div>
                 </div>
             </div>
