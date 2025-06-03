@@ -9,9 +9,10 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 
 export const Navbar = () => {
     const pathname = usePathname();
+    const parentPath = pathname.split("/")[1];
 
     return (
-        <nav className="flex items-center justify-between p-6 font-radley">
+        <nav className="flex items-center justify-between p-6 font-radley h-[142px]">
             <div className="flex items-center gap-2  text-4xl ">
                 <Image src={"/logo.svg"} width={50} height={50} alt="logo"></Image>
                 <h1>Sludgify</h1>
@@ -22,9 +23,11 @@ export const Navbar = () => {
                 </h1>
                 <h1>
                     <DropdownMenu>
-                        <DropdownMenuTrigger className="cursor-pointer outline-none">Service</DropdownMenuTrigger>
+                        <DropdownMenuTrigger className={clsx(parentPath === "services" && "border-b-1 border-primary", "py-1 outer-none cursor-pointer")}>Services</DropdownMenuTrigger>
                         <DropdownMenuContent align="start">
-                            <DropdownMenuItem>Sludge Management</DropdownMenuItem>
+                            <DropdownMenuItem>
+                                <Link href={"/services/sludge-management"}>Sludge Management</Link>
+                            </DropdownMenuItem>
                             <DropdownMenuItem>Sustainablitiy Reporting</DropdownMenuItem>
                             <DropdownMenuItem>Carbon Consulting</DropdownMenuItem>
                         </DropdownMenuContent>
