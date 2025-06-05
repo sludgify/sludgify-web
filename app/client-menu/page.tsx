@@ -3,6 +3,7 @@
 import { ClientNavbar } from "@/components/client-navbar";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import clsx from "clsx";
 import { Button } from "@/components/ui/button";
 import { Footer } from "@/components/footer";
@@ -125,7 +126,9 @@ export default function ClientMenu() {
                                         </div>
                                     </div>
                                     <div className="flex justify-end">
-                                        <Button className="font-radley text-xl px-9 py-2">Request Report</Button>
+                                        <Button className="font-radley text-xl px-9 py-2">
+                                            <Link href={"/request/sustainability-reports"}>Request Report</Link>
+                                        </Button>
                                     </div>
                                 </div>
                                 <Image src={"/Rectangle 104.svg"} alt="bg-client" height={504} width={721} className="w-[50%] object-cover block h-[504px]" />
