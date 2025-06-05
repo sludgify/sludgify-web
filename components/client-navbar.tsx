@@ -13,6 +13,9 @@ export const ClientNavbar = () => {
     const pathname = usePathname();
     const parentPath = pathname.split("/")[1];
     const compactMode = parentPath === "request";
+    const [isHovered, setIsHovered] = useState(false);
+
+    const shouldShowMenu = compactMode ? isHovered : open;
 
     useEffect(() => {
         const storedOpen = localStorage.getItem("open");
@@ -71,27 +74,34 @@ export const ClientNavbar = () => {
                 </>
             )}
 
-            {open && <div className="fixed inset-0 backdrop-blur-[2px] z-10" onClick={toggleMenu} />}
+            {shouldShowMenu && <div className="fixed inset-0 backdrop-blur-[2px] z-10" onClick={() => !compactMode && toggleMenu()} />}
 
             <div
                 className={clsx(
                     "fixed top-0 left-0 h-[780px] bg-white rounded-br-md shadow-lg transform transition-all duration-300 z-20",
-                    compactMode ? (open ? "w-[292px]" : "w-[101px]") : open ? "translate-x-0 w-[292px]" : "-translate-x-full"
+                    compactMode ? (shouldShowMenu ? "w-[292px]" : "w-[101px]") : shouldShowMenu ? "translate-x-0 w-[292px]" : "-translate-x-full"
                 )}
-                onClick={compactMode ? toggleMenu : undefined}
+                onMouseEnter={() => compactMode && setIsHovered(true)}
+                onMouseLeave={() => compactMode && setIsHovered(false)}
             >
                 <nav className="flex flex-col h-full justify-between p-5">
                     <div className="flex flex-col gap-4">
                         <div className="flex items-center gap-2 text-4xl font-radley">
                             <Image src="/logo.svg" width={50} height={50} alt="logo" />
-                            {(!compactMode || open) && <h1 className={clsx("overflow-hidden transition-all duration-300 whitespace-nowrap", !compactMode || open ? "w-auto opacity-100 ml-2" : "w-0 opacity-0")}>Sludgify</h1>}
+                            {(!compactMode || shouldShowMenu) && (
+                                <h1 className={clsx("overflow-hidden transition-all duration-300 whitespace-nowrap", !compactMode || shouldShowMenu ? "w-auto opacity-100 ml-2" : "w-0 opacity-0")}>Sludgify</h1>
+                            )}
                         </div>
                         <Separator className="my-4 bg-[#D1D5DB] h-[1px]" />
                         <div className="flex flex-col gap-4">
                             {menu.map((item, index) => (
-                                <Link href={item.link} key={index} className={clsx(pathname === item.link && "bg-black text-white rounded-lg", "flex items-center gap-5 text-2xl p-2 min-h-[64px]")}>
+                                <Link
+                                    href={item.link}
+                                    key={index}
+                                    className={clsx(pathname === item.link && "bg-black text-white rounded-lg", "flex items-center gap-5 text-2xl p-2 min-h-[64px] hover:bg-black hover:text-white hover:rounded-lg")}
+                                >
                                     <div className="flex-shrink-0">{item.icon}</div>
-                                    <span className={clsx("overflow-hidden transition-all duration-300 whitespace-nowrap", !compactMode || open ? "w-auto opacity-100 ml-2" : "w-0 opacity-0")}>{item.name}</span>
+                                    <span className={clsx("overflow-hidden transition-all duration-300 whitespace-nowrap", !compactMode || shouldShowMenu ? "w-auto opacity-100 ml-2" : "w-0 opacity-0")}>{item.name}</span>
                                 </Link>
                             ))}
                         </div>
@@ -99,14 +109,18 @@ export const ClientNavbar = () => {
 
                     <div className="flex flex-col gap-4">
                         {menu2.map((item, index) => (
-                            <Link href={item.link} key={index} className={clsx(pathname === item.link && "bg-black text-white rounded-lg", "flex items-center gap-5 text-2xl p-2 min-h-[64px]")}>
+                            <Link
+                                href={item.link}
+                                key={index}
+                                className={clsx(pathname === item.link && "bg-black text-white rounded-lg", "flex items-center gap-5 text-2xl p-2 min-h-[64px] hover:bg-black hover:text-white hover:rounded-lg")}
+                            >
                                 <div className="flex-shrink-0">{item.icon}</div>
-                                <span className={clsx("overflow-hidden transition-all duration-300 whitespace-nowrap", !compactMode || open ? "w-auto opacity-100 ml-2" : "w-0 opacity-0")}>{item.name}</span>
+                                <span className={clsx("overflow-hidden transition-all duration-300 whitespace-nowrap", !compactMode || shouldShowMenu ? "w-auto opacity-100 ml-2" : "w-0 opacity-0")}>{item.name}</span>
                             </Link>
                         ))}
                         <div className="flex gap-2 items-center mt-4 min-h-[64px]">
                             <Image src="/Ellipse 2.svg" alt="Ellipse 2" width={50} height={50} />
-                            {(!compactMode || open) && (
+                            {(!compactMode || shouldShowMenu) && (
                                 <div className={clsx("overflow-hidden transition-all duration-300 whitespace-nowrap", !compactMode || open ? "w-auto opacity-100 ml-2" : "w-0 opacity-0")}>
                                     <h1 className="text-2xl">Kim Gimyung</h1>
                                     <p className="text-sm">ecosolution@gmail.com</p>
