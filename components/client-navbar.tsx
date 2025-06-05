@@ -11,13 +11,17 @@ import { usePathname } from "next/navigation";
 export const ClientNavbar = () => {
     const [open, setOpen] = useState(false);
     const pathname = usePathname();
+    const parentPath = pathname.split("/")[1];
+    const compactMode = parentPath === "request";
 
     useEffect(() => {
         const storedOpen = localStorage.getItem("open");
         if (storedOpen !== null) {
             setOpen(JSON.parse(storedOpen));
+        } else {
+            setOpen(!compactMode); // default open if not in compact mode
         }
-    }, []);
+    }, [compactMode]);
 
     const toggleMenu = () => {
         setOpen((prev) => {
@@ -60,24 +64,34 @@ export const ClientNavbar = () => {
 
     return (
         <div className="flex justify-between w-screen p-4 bg-transparent absolute z-10">
-            <Menu strokeWidth={1} className="cursor-pointer text-white" onClick={toggleMenu} size={70} />
-            <Image src="/Ellipse 2.svg" alt="Ellipse 2" width={70} height={70} />
-            {/* Overlay background */}
+            {!compactMode && (
+                <>
+                    <Menu strokeWidth={1} className="cursor-pointer text-white" onClick={toggleMenu} size={70} />
+                    <Image src="/Ellipse 2.svg" alt="Ellipse 2" width={70} height={70} />
+                </>
+            )}
+
             {open && <div className="fixed inset-0 backdrop-blur-[2px] z-10" onClick={toggleMenu} />}
-            {/* Sidebar */}
-            <div className={`fixed top-0 left-0 h-[780px] w-[292px] bg-white rounded-br-md shadow-lg transform transition-transform duration-300 z-20 ${open ? "translate-x-0" : "-translate-x-full"}`}>
+
+            <div
+                className={clsx(
+                    "fixed top-0 left-0 h-[780px] bg-white rounded-br-md shadow-lg transform transition-all duration-300 z-20",
+                    compactMode ? (open ? "w-[292px]" : "w-[101px]") : open ? "translate-x-0 w-[292px]" : "-translate-x-full"
+                )}
+                onClick={compactMode ? toggleMenu : undefined}
+            >
                 <nav className="flex flex-col h-full justify-between p-5">
                     <div className="flex flex-col gap-4">
                         <div className="flex items-center gap-2 text-4xl font-radley">
                             <Image src="/logo.svg" width={50} height={50} alt="logo" />
-                            <h1>Sludgify</h1>
+                            {(!compactMode || open) && <h1 className={clsx("overflow-hidden transition-all duration-300 whitespace-nowrap", !compactMode || open ? "w-auto opacity-100 ml-2" : "w-0 opacity-0")}>Sludgify</h1>}
                         </div>
                         <Separator className="my-4 bg-[#D1D5DB] h-[1px]" />
                         <div className="flex flex-col gap-4">
                             {menu.map((item, index) => (
-                                <Link href={item.link} key={index} className={clsx(pathname === item.link && "bg-black text-white rounded-lg", "flex text-2xl p-2 items-center gap-5")}>
-                                    {item.icon}
-                                    {item.name}
+                                <Link href={item.link} key={index} className={clsx(pathname === item.link && "bg-black text-white rounded-lg", "flex items-center gap-5 text-2xl p-2 min-h-[64px]")}>
+                                    <div className="flex-shrink-0">{item.icon}</div>
+                                    <span className={clsx("overflow-hidden transition-all duration-300 whitespace-nowrap", !compactMode || open ? "w-auto opacity-100 ml-2" : "w-0 opacity-0")}>{item.name}</span>
                                 </Link>
                             ))}
                         </div>
@@ -85,17 +99,19 @@ export const ClientNavbar = () => {
 
                     <div className="flex flex-col gap-4">
                         {menu2.map((item, index) => (
-                            <Link href={item.link} key={index} className={clsx(pathname === item.link && "bg-black text-white rounded-lg", "flex text-2xl p-2 items-center gap-5")}>
-                                {item.icon}
-                                {item.name}
+                            <Link href={item.link} key={index} className={clsx(pathname === item.link && "bg-black text-white rounded-lg", "flex items-center gap-5 text-2xl p-2 min-h-[64px]")}>
+                                <div className="flex-shrink-0">{item.icon}</div>
+                                <span className={clsx("overflow-hidden transition-all duration-300 whitespace-nowrap", !compactMode || open ? "w-auto opacity-100 ml-2" : "w-0 opacity-0")}>{item.name}</span>
                             </Link>
                         ))}
-                        <div className="flex gap-2 items-center mt-4">
+                        <div className="flex gap-2 items-center mt-4 min-h-[64px]">
                             <Image src="/Ellipse 2.svg" alt="Ellipse 2" width={50} height={50} />
-                            <div>
-                                <h1 className="text-2xl">Kim Gimyung</h1>
-                                <p className="text-sm">ecosolution@gmail.com</p>
-                            </div>
+                            {(!compactMode || open) && (
+                                <div className={clsx("overflow-hidden transition-all duration-300 whitespace-nowrap", !compactMode || open ? "w-auto opacity-100 ml-2" : "w-0 opacity-0")}>
+                                    <h1 className="text-2xl">Kim Gimyung</h1>
+                                    <p className="text-sm">ecosolution@gmail.com</p>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </nav>
