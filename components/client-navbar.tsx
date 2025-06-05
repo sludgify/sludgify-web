@@ -121,7 +121,7 @@ export const ClientNavbar = () => {
                         <div className="flex gap-2 items-center mt-4 min-h-[64px]">
                             <Image src="/Ellipse 2.svg" alt="Ellipse 2" width={50} height={50} />
                             {(!compactMode || shouldShowMenu) && (
-                                <div className={clsx("overflow-hidden transition-all duration-300 whitespace-nowrap", !compactMode || open ? "w-auto opacity-100 ml-2" : "w-0 opacity-0")}>
+                                <div className={clsx("overflow-hidden transition-all duration-300 whitespace-nowrap", !compactMode || shouldShowMenu ? "w-auto opacity-100 ml-2" : "w-0 opacity-0")}>
                                     <h1 className="text-2xl">Kim Gimyung</h1>
                                     <p className="text-sm">ecosolution@gmail.com</p>
                                 </div>
