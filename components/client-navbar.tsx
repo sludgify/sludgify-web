@@ -78,7 +78,7 @@ export const ClientNavbar = () => {
 
             <div
                 className={clsx(
-                    "fixed top-0 left-0 h-[780px] bg-white rounded-br-md shadow-lg transform transition-all duration-300 z-20",
+                    "fixed top-0 left-0 h-[620px] bg-white rounded-br-md shadow-lg transform transition-all duration-300 z-20",
                     compactMode ? (shouldShowMenu ? "w-[292px]" : "w-[101px]") : shouldShowMenu ? "translate-x-0 w-[292px]" : "-translate-x-full"
                 )}
                 onMouseEnter={() => compactMode && setIsHovered(true)}
