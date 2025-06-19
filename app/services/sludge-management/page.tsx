@@ -23,7 +23,7 @@ export default function Page() {
             {/* Content */}
             <div className="flex flex-col items-center justify-center mb-20">
                 <div className="flex w-full h-[504px]">
-                    <div className="px-24 flex flex-col justify-center space-y-7 w-[50%] ">
+                    <div className="px-20 py-16 flex flex-col justify-center space-y-5 w-[50%] ">
                         <h1 className="text-7xl font-radley">
                             We&apos;re Here to Help <br /> Your Business Unlock ESG Value
                         </h1>
@@ -92,7 +92,7 @@ export default function Page() {
                 </div>
             </div>
             {/* Sludge Management Workflow*/}
-            <div className="h-screen my-28">
+            <div className="h-screen my-36">
                 {selectedSection === 1 && (
                     <div>
                         <h1 className="text-7xl text-center font-radley">Non-B3 Sludge Management Workflow</h1>
