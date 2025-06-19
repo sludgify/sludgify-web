@@ -3,7 +3,7 @@ import { Button } from "./ui/button";
 
 export const BannerFooter = () => {
     return (
-        <div className="relative container rounded-2xl bg-[url('/banner.jpg')] bg-no-repeat bg-cover bg-center h-[376px] mx-auto px-10 flex flex-col items-start justify-center gap-6 overflow-hidden -mb-20 z-10">
+        <div className="relative container rounded-2xl bg-[url('/banner.jpg')] bg-no-repeat bg-cover bg-center w-[1000px] h-[376px] mx-auto px-10 flex flex-col items-start justify-center gap-6 overflow-hidden -mb-20 z-10">
             {/* Overlay gradient */}
             <div className="absolute inset-0 bg-gradient-to-r from-black to-transparent z-0 rounded-2xl" />
 
