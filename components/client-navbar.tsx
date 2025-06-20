@@ -13,7 +13,6 @@ export const ClientNavbar = () => {
     const pathname = usePathname();
     const compactMode = pathname.startsWith("/request") || (pathname.startsWith("/client-menu") && pathname !== "/client-menu");
     const [isHovered, setIsHovered] = useState(false);
-    const [hover, setHover] = useState(false);
 
     const shouldShowMenu = compactMode ? isHovered : open;
 
@@ -96,16 +95,18 @@ export const ClientNavbar = () => {
                         <div className="flex flex-col gap-4">
                             {menu.map((item, index) => {
                                 const isActive = pathname === item.link;
+                                // eslint-disable-next-line react-hooks/rules-of-hooks
+                                const [isItemHovered, setIsItemHovered] = useState(false); // lokal per item
 
                                 return (
                                     <Link
                                         href={item.link}
                                         key={index}
-                                        onMouseEnter={() => setHover(true)}
-                                        onMouseLeave={() => setHover(false)}
+                                        onMouseEnter={() => setIsItemHovered(true)}
+                                        onMouseLeave={() => setIsItemHovered(false)}
                                         className={clsx(isActive && "bg-black text-white rounded-lg", "flex items-center gap-5 text-2xl p-2 min-h-[64px] hover:bg-black hover:text-white hover:rounded-lg")}
                                     >
-                                        <div className="flex-shrink-0">{typeof item.icon === "function" ? item.icon(isActive, hover) : item.icon}</div>
+                                        <div className="flex-shrink-0">{typeof item.icon === "function" ? item.icon(isActive, isItemHovered) : item.icon}</div>
                                         <span className={clsx("overflow-hidden transition-all duration-300 whitespace-nowrap", !compactMode || shouldShowMenu ? "w-auto opacity-100 ml-2" : "w-0 opacity-0")}>{item.name}</span>
                                     </Link>
                                 );
