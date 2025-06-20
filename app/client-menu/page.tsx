@@ -1,6 +1,5 @@
 "use client";
 
-import { ClientNavbar } from "@/components/client-navbar";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -33,7 +32,6 @@ export default function ClientMenu() {
 
     return (
         <div>
-            <ClientNavbar />
             {/* Banner */}
             <div className="bg-[url('/bg-client.svg')]  bg-no-repeat bg-cover bg-center h-[462px] flex flex-col justify-center pl-[10%] text-secondary">
                 <h1 className="text-5xl font-radley">Insights That Drive Sustainable Impact</h1>
