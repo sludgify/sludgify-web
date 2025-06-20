@@ -1,5 +1,4 @@
 "use client";
-import { ClientNavbar } from "@/components/client-navbar";
 import { FileDown } from "lucide-react";
 import Image from "next/image";
 import React from "react";
@@ -78,7 +77,6 @@ export default function Page() {
     ];
     return (
         <div className="py-8 px-36 space-y-6 w-screen">
-            <ClientNavbar />
             <div className="flex justify-between items-center">
                 <div>
                     <h1 className="text-4xl font-bold">Welcome Back, PT Eco Solution!</h1>
