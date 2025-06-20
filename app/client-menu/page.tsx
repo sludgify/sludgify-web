@@ -88,7 +88,7 @@ export default function ClientMenu() {
                         <div className="flex flex-col items-center justify-center">
                             <div className="flex w-full h-[504px]">
                                 <Image src={"/Rectangle 104.svg"} alt="bg-client" height={504} width={721} className="w-[50%] object-cover block h-[504px]" />
-                                <div className="px-12 space-y-10 w-[50%] ">
+                                <div className="px-12 space-y-4 w-[50%] ">
                                     <h1 className="text-5xl font-radley">
                                         Zero-Waste Sludge <br /> Solutions
                                     </h1>
@@ -106,7 +106,9 @@ export default function ClientMenu() {
                                             <h1>Tons carbon emissions Reduced</h1>
                                         </div>
                                     </div>
-                                    <Button className="font-radley text-xl px-9 py-2">Request Pick up</Button>
+                                    <Link href={"/request/sludge-pickup"}>
+                                        <Button className="font-radley text-xl px-9 py-2">Request Pick up</Button>
+                                    </Link>
                                 </div>
                             </div>
                             <div className="flex w-full h-[504px]">
@@ -125,11 +127,11 @@ export default function ClientMenu() {
                                             <h1>Sustainability Reporting standards</h1>
                                         </div>
                                     </div>
-                                    <div className="flex justify-end">
-                                        <Button className="font-radley text-xl px-9 py-2">
-                                            <Link href={"/request/sustainability-reports"}>Request Report</Link>
-                                        </Button>
-                                    </div>
+                                    <Link href={"/request/sustainability-reports"}>
+                                        <div className="flex justify-end">
+                                            <Button className="font-radley text-xl px-9 py-2">Request Report</Button>
+                                        </div>
+                                    </Link>
                                 </div>
                                 <Image src={"/Rectangle 104.svg"} alt="bg-client" height={504} width={721} className="w-[50%] object-cover block h-[504px]" />
                             </div>
