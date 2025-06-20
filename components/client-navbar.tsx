@@ -11,9 +11,9 @@ import { usePathname } from "next/navigation";
 export const ClientNavbar = () => {
     const [open, setOpen] = useState(false);
     const pathname = usePathname();
-    const parentPath = pathname.split("/")[1];
-    const compactMode = parentPath === "request";
+    const compactMode = pathname.startsWith("/request") || (pathname.startsWith("/client-menu") && pathname !== "/client-menu");
     const [isHovered, setIsHovered] = useState(false);
+    const [hover, setHover] = useState(false);
 
     const shouldShowMenu = compactMode ? isHovered : open;
 
@@ -43,7 +43,7 @@ export const ClientNavbar = () => {
         {
             name: "Dashboard",
             link: "/client-menu/dashboard",
-            icon: <Image src="/dashboard.svg" alt="dashboard" width={24} height={24} />,
+            icon: (isActive: boolean, isHovered: boolean) => <Image src={isActive || isHovered ? "/dashboard-white.svg" : "/dashboard.svg"} alt="dashboard" width={24} height={24} />,
         },
         {
             name: "AI Analyst",
@@ -94,16 +94,22 @@ export const ClientNavbar = () => {
                         </div>
                         <Separator className="my-4 bg-[#D1D5DB] h-[1px]" />
                         <div className="flex flex-col gap-4">
-                            {menu.map((item, index) => (
-                                <Link
-                                    href={item.link}
-                                    key={index}
-                                    className={clsx(pathname === item.link && "bg-black text-white rounded-lg", "flex items-center gap-5 text-2xl p-2 min-h-[64px] hover:bg-black hover:text-white hover:rounded-lg")}
-                                >
-                                    <div className="flex-shrink-0">{item.icon}</div>
-                                    <span className={clsx("overflow-hidden transition-all duration-300 whitespace-nowrap", !compactMode || shouldShowMenu ? "w-auto opacity-100 ml-2" : "w-0 opacity-0")}>{item.name}</span>
-                                </Link>
-                            ))}
+                            {menu.map((item, index) => {
+                                const isActive = pathname === item.link;
+
+                                return (
+                                    <Link
+                                        href={item.link}
+                                        key={index}
+                                        onMouseEnter={() => setHover(true)}
+                                        onMouseLeave={() => setHover(false)}
+                                        className={clsx(isActive && "bg-black text-white rounded-lg", "flex items-center gap-5 text-2xl p-2 min-h-[64px] hover:bg-black hover:text-white hover:rounded-lg")}
+                                    >
+                                        <div className="flex-shrink-0">{typeof item.icon === "function" ? item.icon(isActive, hover) : item.icon}</div>
+                                        <span className={clsx("overflow-hidden transition-all duration-300 whitespace-nowrap", !compactMode || shouldShowMenu ? "w-auto opacity-100 ml-2" : "w-0 opacity-0")}>{item.name}</span>
+                                    </Link>
+                                );
+                            })}
                         </div>
                     </div>
 
