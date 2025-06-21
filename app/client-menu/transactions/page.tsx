@@ -1,5 +1,5 @@
 import React from "react";
-import { columns, Transactions } from "./columns";
+import { columns } from "./columns";
 import { DataTable } from "./data-table";
 
 const data: Transactions[] = [

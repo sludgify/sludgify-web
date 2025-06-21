@@ -8,15 +8,6 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 
-export type Transactions = {
-    id: string;
-    type: "ID_SLB3" | "ID_SLNo";
-    date: string;
-    location: string;
-    volume: number;
-    status: "Pending" | "On Process" | "Completed" | "Failed";
-};
-
 export const columns: ColumnDef<Transactions>[] = [
     {
         accessorKey: "id",
