@@ -54,7 +54,7 @@ export const ClientNavbar = () => {
     const menu2 = [
         {
             name: "Transactions",
-            link: "/client-menu/Transactions",
+            link: "/client-menu/transactions",
             icon: <ShoppingCart size={24} />,
         },
         {
