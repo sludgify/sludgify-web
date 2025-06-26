@@ -2,41 +2,122 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { Lock } from "lucide-react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { toast } from "sonner";
+import { useGoogleLogin } from "@react-oauth/google";
+import { axiosInstance } from "@/lib/axios";
+import { AxiosError } from "axios";
+import { useFormik } from "formik";
+import { useMutation } from "@tanstack/react-query";
+import clsx from "clsx";
 
 export default function Page() {
-    const router = useRouter();
     const [showPassword, setShowPassword] = useState(false);
-    const [loginData, setLoginData] = useState({ email: "", password: "" });
 
-    const handleLogin = async (e: React.FormEvent) => {
-        e.preventDefault();
-        try {
-            const res = await fetch("/api/auth/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(loginData),
-            });
-            const data = await res.json();
-            localStorage.setItem("user", JSON.stringify(data.user));
-            if (!res.ok) {
-                return alert(data.error);
+    const [formErrors, setFormErrors] = useState<FormErrors>({
+        first_name: [],
+        last_name: [],
+        company_name: [],
+        email: [],
+        password: [],
+        confirm_password: [],
+        password_security: [],
+        password_match: [],
+    });
+
+    const login = useGoogleLogin({
+        onSuccess: async (tokenResponse) => {
+            try {
+                const response = await axiosInstance.post("/api/auth/login", {
+                    provider: "google",
+                    token: tokenResponse.access_token,
+                });
+                toast.success(response.data.message);
+            } catch (err) {
+                const error = err as AxiosError<ErrorResponse>;
+                toast.error(error.response?.data.message);
             }
-            setTimeout(() => {
-                if (data.user.role === "user") {
-                    router.push("/dashboard");
-                }
-                if (data.user.role === "admin") {
-                    router.push("/admin");
-                }
-            }, 1000);
-        } catch (e) {
-            alert("Error logging in: " + e);
-        }
+        },
+    });
+
+    const handleValidation = (errors: { email: string[]; password: string[]; confirm_password: string[]; first_name: string[]; last_name: string[]; company_name: string[]; password_security: string[]; password_match: string[] }) => {
+        setFormErrors({
+            first_name: errors.first_name || [],
+            last_name: errors.last_name || [],
+            company_name: errors.company_name || [],
+            email: errors.email || [],
+            password: errors.password || [],
+            confirm_password: errors.confirm_password || [],
+            password_security: errors.password_security || [],
+            password_match: errors.password_match || [],
+        });
     };
+
+    const { mutate } = useMutation({
+        mutationFn: async (data: FormData) => {
+            console.log("data", data);
+            const response = await axiosInstance.post("/sludgify/register", data);
+            console.log("response", response);
+            return response;
+        },
+        onError: (error) => {
+            const err = error as AxiosError<ErrorResponse>;
+            if (err.response?.status === 400 && err.response.data.errors) {
+                handleValidation({
+                    first_name: err.response?.data?.errors?.first_name ?? [],
+                    last_name: err.response?.data?.errors?.last_name ?? [],
+                    company_name: err.response?.data?.errors?.company_name ?? [],
+                    email: err.response?.data?.errors?.email ?? [],
+                    password: err.response?.data?.errors?.password ?? [],
+                    confirm_password: err.response?.data?.errors?.confirm_password ?? [],
+                    password_security: err.response?.data?.errors?.password_security ?? [],
+                    password_match: err.response?.data?.errors?.password_match ?? [],
+                });
+                console.log(err?.response?.data);
+                toast.error(err?.response?.data?.message);
+                return;
+            }
+            console.log(err?.response?.data?.message);
+            toast(err?.response?.data?.message);
+            return;
+        },
+        onSuccess: async (data) => {
+            const dataApi = data.data;
+            toast.success(dataApi.message);
+        },
+    });
+
+    const formik = useFormik({
+        initialValues: {
+            first_name: "",
+            last_name: "",
+            company_name: "",
+            email: "",
+            password: "",
+            confirm_password: "",
+            provider: "auth_internal",
+        },
+
+        onSubmit: (values, { setSubmitting }) => {
+            try {
+                const { first_name, last_name, company_name, email, password, confirm_password } = values;
+                mutate({
+                    first_name,
+                    last_name,
+                    company_name,
+                    email,
+                    password,
+                    confirm_password,
+                    provider: "auth_internal",
+                } as FormData);
+            } catch (error) {
+                console.error("Terjadi kesalahan:", error);
+            } finally {
+                setSubmitting(false);
+            }
+        },
+    });
+
     return (
         <div className="bg-[url('/bg-login.jpg')] font-radley bg-no-repeat bg-cover bg-center grayscale-50 h-screen w-screen p-7">
             <div className="absolute top-7 left-7 flex items-center gap-2  text-white text-4xl ">
@@ -49,32 +130,69 @@ export default function Page() {
                         <h1 className="text-4xl">Welcome Back!</h1>
                         <h2>Please enter your email & password to sign in</h2>
                     </div>
-                    <form className="space-y-5" onSubmit={handleLogin}>
+                    <form className="space-y-5" onSubmit={formik.isSubmitting ? () => {} : formik.handleSubmit}>
                         <div>
                             <label className="block text-sm text-gray-900 mb-2">Email </label>
                             <input
-                                value={loginData.email}
-                                onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
+                                name="email"
+                                value={formik.values.email}
+                                onChange={formik.handleChange}
                                 type="email"
-                                className="w-full p-2 border border-primary rounded-md focus:outline-none"
-                                required
+                                className={clsx(formErrors.email.length > 0 ? "border-red-500" : "border-primary", "w-full p-2 border rounded-md focus:outline-none")}
                             />
+                            {formErrors.email.map((error, index) =>
+                                error === "FIELD_REQUIRED" ? (
+                                    <p key={index} className="text-red-500 text-sm">
+                                        email is required
+                                    </p>
+                                ) : null
+                            )}
+                            {formErrors.email.map((error, index) =>
+                                error === "FIELD_INVALID" ? (
+                                    <p key={index} className="text-red-500 text-sm">
+                                        email is invalid
+                                    </p>
+                                ) : null
+                            )}
                         </div>
 
                         <div>
-                            <label className="block text-sm font-semibold text-gray-900 mb-2">Password</label>
+                            <label className="block text-sm text-gray-900 mb-2">Create Password</label>
                             <div className="relative">
                                 <input
-                                    value={loginData.password}
-                                    onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
+                                    name="password"
+                                    value={formik.values.password}
+                                    onChange={formik.handleChange}
                                     type={showPassword ? "text" : "password"}
-                                    className="w-full p-2 border border-primary rounded-md focus:outline-none"
-                                    required
+                                    className={clsx(
+                                        formErrors.password.length > 0 || formErrors.password_security.length > 0 || formErrors.password_match.length > 0 ? "border-red-500" : "border-primary",
+                                        "w-full p-2 border rounded-md focus:outline-none"
+                                    )}
                                 />
                                 <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
-                                    {showPassword ? <Lock className="h-5 w-5" /> : <Lock className="h-5 w-5" />}
+                                    {showPassword ? <Lock className="h-5 w-5 text-primary" /> : <Lock className="h-5 w-5 text-primary" />}
                                 </button>
                             </div>
+                            {formErrors.password.map((error, index) =>
+                                error === "FIELD_REQUIRED" ? (
+                                    <p key={index} className="text-red-500 text-sm">
+                                        password is required
+                                    </p>
+                                ) : null
+                            )}
+                            {formErrors.password_security.map((error, index) => (
+                                <p key={index} className="text-red-500 text-sm">
+                                    {error === "NO_CAPITAL" && "Password harus memiliki huruf kapital"}
+                                    {error === "NO_SYMBOL" && "Password harus memiliki simbol"}
+                                </p>
+                            ))}
+                            {formErrors.password_match.map((error, index) =>
+                                error === "IS_MISMATCH" ? (
+                                    <p key={index} className="text-red-500 text-sm">
+                                        password is not match
+                                    </p>
+                                ) : null
+                            )}
                         </div>
 
                         <Link href="#" className="text-sm text-primary mb-7">
@@ -90,7 +208,7 @@ export default function Page() {
                         <span className="px-4 text-sm text-gray-500">or</span>
                         <div className="flex-1 border-t border-primary"></div>
                     </div>
-                    <button className="w-full bg-primary border border-primary text-secondary py-2 px-6 rounded-md  flex items-center justify-center">
+                    <button onClick={() => login()} className="w-full bg-primary border border-primary text-secondary py-2 px-6 rounded-md  flex items-center justify-center">
                         <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24">
                             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
                             <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
