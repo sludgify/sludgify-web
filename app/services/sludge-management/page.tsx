@@ -5,6 +5,7 @@ import Image from "next/image";
 import clsx from "clsx";
 import { BannerFooter } from "@/components/banner-footer";
 import { Footer } from "@/components/footer";
+import { Button } from "@/components/ui/button";
 
 export default function Page() {
     const [selectedSection, setSelectedSection] = useState<number>(1);
@@ -12,37 +13,51 @@ export default function Page() {
     const handleClick = (sect: number) => {
         setSelectedSection(sect);
     };
+    const content = [
+        {
+            h1: "1500+",
+            h2: "Tons of sludge managed",
+        },
+        {
+            h1: "500+",
+            h2: "Business-to-business client",
+        },
+        {
+            h1: "450+",
+            h2: "Sludge Management Projects",
+        },
+    ];
 
     return (
         <div className="flex min-h-screen w-screen flex-col">
             <Navbar />
             {/* Banner */}
-            <div>
-                <Image src={"/bg-sludge-management.svg"} alt="sludge management" width={1920} height={659} />
+            <div className="bg-[url('/bg-sludge-management.svg')] text-secondary w-full bg-no-repeat bg-cover bg-center h-[690px] space-y-3 flex flex-col justify-center gap-3 p-20 ">
+                <h1 className="text-6xl font-radley">We Transform Industrial Sludge Into Competitive Advantage And Accelerate Your ESG Performance</h1>
+                <p className="max-w-[815px]">
+                    Sludgify transforms industrial waste into competitive advantage, delivering zero-waste sludge solutions that drive ESG performance, ensure regulatory compliance, and create measurable value for forward-thinking
+                    manufacturers
+                </p>
+                <Button className="font-radley p-6 w-fit text-lg cursor-pointer bg-gradient-to-b from-primary to-[#525252]">Let’s Collaborate</Button>
             </div>
             {/* Content */}
-            <div className="flex flex-col items-center justify-center mb-20">
-                <div className="flex w-full h-[504px]">
-                    <div className="px-20 py-16 flex flex-col justify-center space-y-5 w-[50%] ">
-                        <h1 className="text-7xl font-radley">
-                            We&apos;re Here to Help <br /> Your Business Unlock ESG Value
-                        </h1>
-                        <p className="text-xl text-[#505050]">
-                            We provide end-to-end support for sustainability reporting, ensuring full compliance with GRI and other frameworks, and helping you communicate your ESG performance with clarity and accountability.
-                        </p>
-                    </div>
-                    <Image src={"/Rectangle 110.svg"} alt="bg-client" height={504} width={721} className="w-[50%] object-cover block h-[504px]" />
-                </div>
-                <div className="flex w-full h-[504px]">
-                    <Image src={"/Rectangle 111.svg"} alt="bg-client" height={504} width={721} className="w-[50%] object-cover block h-[504px]" />
-                    <div className="px-24 flex flex-col justify-center space-y-7 w-[50%] ">
-                        <h1 className="text-7xl font-radley">
-                            Your Zero-Waste <br /> Sludge Solution
-                        </h1>
-                        <p className="text-xl text-[#505050]">
-                            We provide end-to-end sludge management for both hazardous (B3) and non-hazardous waste using a zero-waste approach, in partnership with licensed provider Pituku. Our service includes full ESG support—complete
-                            with carbon emission tracking and sustainability reporting to help you meet compliance and stakeholder expectations.
-                        </p>
+            <div className="bg-[#FAFAFA] flex gap-8 px-10 items-center justify-center py-10">
+                <Image src={"/Rectangle 111.svg"} width={549} height={497} alt="Sludgify illustration" className="rounded-xl" />
+                <div className="px-24 flex flex-col justify-center space-y-7 w-[50%] ">
+                    <h1 className="text-7xl font-radley">
+                        Your Zero-Waste <br /> Sludge Solution
+                    </h1>
+                    <p className="text-xl text-[#505050]">
+                        We provide end-to-end sludge management for both hazardous (B3) and non-hazardous waste using a zero-waste approach, in partnership with licensed provider Pituku. Our service includes full ESG support—complete with
+                        carbon emission tracking and sustainability reporting to help you meet compliance and stakeholder expectations.
+                    </p>
+                    <div className="grid grid-cols-3 items-center gap-8 my-6">
+                        {content.map((item, index) => (
+                            <div key={index} className="w-[170px]">
+                                <h1 className="text-3xl font-radley">{item.h1}</h1>
+                                <h2 className="text-lg font-radley text-[#000000]">{item.h2}</h2>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </div>
@@ -55,15 +70,15 @@ export default function Page() {
                 <div className="flex w-full">
                     <div className="w-[40%] space-y-10">
                         <div className="space-y-4">
-                            <h1 className="text-3xl font-radley border-b py-3"> 01 Visibility</h1>
+                            <h1 className="text-3xl font-radleypy-3"> Visibility</h1>
                             <p className="text-xl text-[#505050]">Get a clear, real-time overview of your sludge operations from volumes handled to CO₂ impact—empowering smarter, data-driven decisions.</p>
                         </div>
                         <div className="space-y-4">
-                            <h1 className="text-3xl font-radley border-b py-3"> 02 ESG & Compliance-Ready</h1>
+                            <h1 className="text-3xl font-radley py-3">ESG & Compliance-Ready</h1>
                             <p className="text-xl text-[#505050]">Easily track carbon reductions, manage reporting, and meet regulatory standards to strengthen your ESG performance and sustainability goals.</p>
                         </div>
                         <div className="space-y-4">
-                            <h1 className="text-3xl font-radley border-b py-3"> 03 Value Creation </h1>
+                            <h1 className="text-3xl font-radley py-3">Value Creation </h1>
                             <p className="text-xl text-[#505050]">Turn waste into measurable impact through carbon credits and zero-waste strategies, contributing directly to cost efficiency and environmental value.</p>
                         </div>
                     </div>
