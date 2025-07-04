@@ -23,12 +23,14 @@ export const Navbar = () => {
                 </h1>
                 <h1>
                     <DropdownMenu>
-                        <DropdownMenuTrigger className={clsx(parentPath === "services" && "border-b-1 border-primary", "py-1 outer-none cursor-pointer")}>Services</DropdownMenuTrigger>
+                        <DropdownMenuTrigger className={clsx(parentPath === "services" && "border-b-1 border-primary", "py-1 outer-none cursor-pointer focus:outline-none")}>Services</DropdownMenuTrigger>
                         <DropdownMenuContent align="start">
                             <DropdownMenuItem>
                                 <Link href={"/services/sludge-management"}>Sludge Management</Link>
                             </DropdownMenuItem>
-                            <DropdownMenuItem>Sustainablitiy Reporting</DropdownMenuItem>
+                            <DropdownMenuItem>
+                                <Link href={"/services/sustainability-report"}>Sustainablitiy Reporting</Link>
+                            </DropdownMenuItem>
                             <DropdownMenuItem>Carbon Consulting</DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
