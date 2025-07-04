@@ -3,7 +3,6 @@ import { Footer } from "@/components/footer";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { BannerFooter } from "@/components/banner-footer";
 
 export default function Home() {

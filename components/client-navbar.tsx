@@ -46,7 +46,7 @@ export const ClientNavbar = () => {
         },
         {
             name: "AI Analyst",
-            link: "/client-menu/ai-analyst",
+            link: "/client-menu/chat",
             icon: <Sparkles size={24} />,
         },
     ];
