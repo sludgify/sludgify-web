@@ -48,13 +48,15 @@ export const Footer = () => {
                         </div>
                     ))}
                 </div>
-                <div className="font-radley text-secondary">
-                    <h1 className="text-4xl">Sludgify</h1>
-                    <h2 className="text-2xl">Subscribe to our social media</h2>
-                    <div className="flex gap-4 mt-4">
-                        <Image src="/instagram.svg" alt="Instagram" width={24} height={24} className="cursor-pointer" />
-                        <Image src="/linkedin.svg" alt="Facebook" width={24} height={24} className="cursor-pointer" />
+                <div className="font-radley text-primary p-5 bg-white flex flex-col justify-around rounded-[10px]">
+                    <div className="flex items-center gap-2 h-10 text-black  ">
+                        <Image src={"/logo.svg"} width={50} height={50} alt="logo"></Image>
+                        <h1 className="text-4xl">Sludgify</h1>
+                        <Separator orientation="vertical" className="w-[30px] h-full bg-black mx-4" />
                     </div>
+                    <p className="text-xl">
+                        One Platform for ESG, Waste, <br /> and Carbon Impact
+                    </p>
                 </div>
             </div>
             <Separator />
