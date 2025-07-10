@@ -65,7 +65,7 @@ export default function Home() {
                 {/* Hero Section*/}
                 <div className="bg-[url('/bg-about.svg')] text-secondary w-full bg-no-repeat bg-cover bg-center h-[690px] space-y-3 flex flex-col justify-center gap-3 p-20 ">
                     <h1 className="text-6xl font-radley">One Platform for Waste Compliance, ESG Reporting, and Carbon Reduction</h1>
-                    <p className="max-w-[815px]">
+                    <p className="max-w-[1000px]">
                         Sludgify offers an integrated solution that transforms industrial waste management into a strategic ESG and decarbonization asset. Our platform ensures regulatory compliance, delivers audit-ready sustainability
                         reports, and quantifies carbon impact, enabling companies to meet environmental goals with full transparency and measurable results
                     </p>

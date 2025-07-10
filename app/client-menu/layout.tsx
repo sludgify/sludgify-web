@@ -7,9 +7,9 @@ export default function layout({
     children: React.ReactNode;
 }>) {
     return (
-        <body>
+        <div className="flex flex-nowrap w-screen h-screen overflow-hidden">
             <ClientNavbar />
-            {children}
-        </body>
+            <main className="flex-1 min-w-0 overflow-y-auto">{children}</main>
+        </div>
     );
 }

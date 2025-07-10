@@ -6,14 +6,16 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { useGoogleLogin } from "@react-oauth/google";
 import { axiosInstance } from "@/lib/axios";
-import { AxiosError } from "axios";
+import axios, { AxiosError } from "axios";
 import { useFormik } from "formik";
 import { useMutation } from "@tanstack/react-query";
 import clsx from "clsx";
 import { Separator } from "@/components/ui/separator";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
     const [showPassword, setShowPassword] = useState(false);
+    const { push } = useRouter();
 
     const [formErrors, setFormErrors] = useState<FormErrors>({
         first_name: [],
@@ -55,36 +57,43 @@ export default function Page() {
     };
 
     const { mutate } = useMutation({
-        mutationFn: async (data: FormData) => {
-            console.log("data", data);
-            const response = await axiosInstance.post("/sludgify/register", data);
-            console.log("response", response);
-            return response;
+        mutationFn: async (formData: FormData) => {
+            const response = await axios.post("/api/login", formData);
+            return response.data;
         },
+
         onError: (error) => {
             const err = error as AxiosError<ErrorResponse>;
-            if (err.response?.status === 400 && err.response.data.errors) {
+            const res = err.response;
+
+            if (res?.status === 400 && res.data.errors) {
                 handleValidation({
-                    first_name: err.response?.data?.errors?.first_name ?? [],
-                    last_name: err.response?.data?.errors?.last_name ?? [],
-                    company_name: err.response?.data?.errors?.company_name ?? [],
-                    email: err.response?.data?.errors?.email ?? [],
-                    password: err.response?.data?.errors?.password ?? [],
-                    confirm_password: err.response?.data?.errors?.confirm_password ?? [],
-                    password_security: err.response?.data?.errors?.password_security ?? [],
-                    password_match: err.response?.data?.errors?.password_match ?? [],
+                    first_name: res.data.errors.first_name ?? [],
+                    last_name: res.data.errors.last_name ?? [],
+                    company_name: res.data.errors.company_name ?? [],
+                    email: res.data.errors.email ?? [],
+                    password: res.data.errors.password ?? [],
+                    confirm_password: res.data.errors.confirm_password ?? [],
+                    password_security: res.data.errors.password_security ?? [],
+                    password_match: res.data.errors.password_match ?? [],
                 });
-                console.log(err?.response?.data);
-                toast.error(err?.response?.data?.message);
+
+                toast.error(res.data.message || "Validasi gagal");
                 return;
             }
-            console.log(err?.response?.data?.message);
-            toast(err?.response?.data?.message);
-            return;
+
+            toast.error(res?.data?.message || "Terjadi kesalahan saat login");
+            console.error("Login error:", res?.data);
         },
-        onSuccess: async (data) => {
-            const dataApi = data.data;
-            toast.success(dataApi.message);
+
+        onSuccess: (data) => {
+            console.log("Login successful:", data);
+            localStorage.setItem("user", JSON.stringify(data.data));
+            localStorage.setItem("accessToken", data.token.access_token);
+            toast.success(data.message || "Login berhasil");
+            setTimeout(() => {
+                push("/client-menu");
+            }, 1000);
         },
     });
 
@@ -130,7 +139,7 @@ export default function Page() {
                         One Platform for ESG, Waste, <br /> and Carbon Impact
                     </p>
                 </div>
-                <div className=" flex justify-center items-center p-12 ">
+                <div className="mt-10 flex justify-center items-center p-12 ">
                     <div className="right-0 space-y-2 w-[446px] h-[582px]">
                         <div className="text-center space-y-1">
                             <h1 className="text-4xl">Welcome Back!</h1>
@@ -163,7 +172,7 @@ export default function Page() {
                             </div>
 
                             <div>
-                                <label className="block text-sm text-gray-900 mb-2">Create Password</label>
+                                <label className="block text-sm text-gray-900 mb-2">Password</label>
                                 <div className="relative">
                                     <input
                                         name="password"
@@ -223,6 +232,12 @@ export default function Page() {
                             </svg>
                             Continue with Google
                         </button>
+                        <div className="flex items-center  gap-1 mt-6">
+                            <p>Does not have an account?</p>
+                            <Link href="/register" className="text-[#173863]">
+                                Sign Up
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </div>

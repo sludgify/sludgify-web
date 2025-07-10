@@ -27,7 +27,7 @@ const data: Transactions[] = [
 
 export default function Page() {
     return (
-        <div className="py-8 px-36 space-y-6 w-screen">
+        <div className="py-8 px-36 space-y-6">
             <DataTable columns={columns} data={data} />
         </div>
     );

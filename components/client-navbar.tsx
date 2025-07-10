@@ -1,53 +1,51 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Menu, House, Sparkles, ShoppingCart, Settings } from "lucide-react";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import clsx from "clsx";
 import { usePathname } from "next/navigation";
 
-export const ClientNavbar = () => {
-    const [open, setOpen] = useState(false);
-    const pathname = usePathname();
-    const compactMode = pathname.startsWith("/request") || (pathname.startsWith("/client-menu") && pathname !== "/client-menu");
-    const [isHovered, setIsHovered] = useState(false);
+type User = {
+    first_name: string;
+    last_name: string;
+    avatar: string;
+    // Add other properties if needed
+};
 
-    const shouldShowMenu = compactMode ? isHovered : open;
+export const ClientNavbar = () => {
+    const [, setOpen] = useState(false);
+    const pathname = usePathname();
+    const [user, setUser] = useState<User | null>(null);
 
     useEffect(() => {
         const storedOpen = localStorage.getItem("open");
         if (storedOpen !== null) {
             setOpen(JSON.parse(storedOpen));
-        } else {
-            setOpen(!compactMode); // default open if not in compact mode
         }
-    }, [compactMode]);
 
-    const toggleMenu = () => {
-        setOpen((prev) => {
-            const newState = !prev;
-            localStorage.setItem("open", JSON.stringify(newState));
-            return newState;
-        });
-    };
+        const storedUser = localStorage.getItem("user");
+        if (storedUser !== null) {
+            setUser(JSON.parse(storedUser));
+        }
+    }, []);
 
     const menu = [
         {
             name: "Home",
             link: "/client-menu",
-            icon: <House size={24} />,
+            icon: (isActive: boolean, isHovered: boolean) => <Image src={isActive || isHovered ? "/home_white.svg" : "/home.svg"} alt="home" width={22} height={22} />,
         },
         {
             name: "Dashboard",
             link: "/client-menu/dashboard",
-            icon: (isActive: boolean, isHovered: boolean) => <Image src={isActive || isHovered ? "/dashboard-white.svg" : "/dashboard.svg"} alt="dashboard" width={24} height={24} />,
+            icon: (isActive: boolean, isHovered: boolean) => <Image src={isActive || isHovered ? "/dashboard-white.svg" : "/dashboard.svg"} alt="dashboard" width={22} height={22} />,
         },
         {
             name: "AI Analyst",
             link: "/client-menu/chat",
-            icon: <Sparkles size={24} />,
+            icon: (isActive: boolean, isHovered: boolean) => <Image src={isActive || isHovered ? "/AI_white.svg" : "/AI.svg"} alt="AI Analyst" width={22} height={22} />,
         },
     ];
 
@@ -55,88 +53,74 @@ export const ClientNavbar = () => {
         {
             name: "Transactions",
             link: "/client-menu/transactions",
-            icon: <ShoppingCart size={24} />,
+            icon: (isActive: boolean, isHovered: boolean) => <Image src={isActive || isHovered ? "/cart_white.svg" : "/cart.svg"} alt="transactions" width={22} height={22} />,
         },
         {
             name: "Settings",
             link: "/client-menu/settings",
-            icon: <Settings size={24} />,
+            icon: (isActive: boolean, isHovered: boolean) => <Image src={isActive || isHovered ? "/settings_white.svg" : "/settings.svg"} alt="settings" width={22} height={22} />,
         },
     ];
 
     return (
-        <div className="flex justify-between w-screen p-4 bg-transparent absolute z-10">
-            {!compactMode && (
-                <>
-                    <Menu strokeWidth={1} className="cursor-pointer text-white" onClick={toggleMenu} size={70} />
-                    <Image src="/Ellipse 2.svg" alt="Ellipse 2" width={70} height={70} />
-                </>
-            )}
-
-            {shouldShowMenu && <div className="fixed inset-0 backdrop-blur-[2px] z-10" onClick={() => !compactMode && toggleMenu()} />}
-
-            <div
-                className={clsx(
-                    "fixed top-0 left-0 h-[620px] bg-white rounded-br-md shadow-lg transform transition-all duration-300 z-20",
-                    compactMode ? (shouldShowMenu ? "w-[292px]" : "w-[101px]") : shouldShowMenu ? "translate-x-0 w-[292px]" : "-translate-x-full"
-                )}
-                onMouseEnter={() => compactMode && setIsHovered(true)}
-                onMouseLeave={() => compactMode && setIsHovered(false)}
-            >
-                <nav className="flex flex-col h-full justify-between p-5">
-                    <div className="flex flex-col gap-4">
-                        <div className="flex items-center gap-2 text-4xl font-radley">
-                            <Image src="/logo.svg" width={50} height={50} alt="logo" />
-                            {(!compactMode || shouldShowMenu) && (
-                                <h1 className={clsx("overflow-hidden transition-all duration-300 whitespace-nowrap", !compactMode || shouldShowMenu ? "w-auto opacity-100 ml-2" : "w-0 opacity-0")}>Sludgify</h1>
-                            )}
-                        </div>
-                        <Separator className="my-4 bg-[#D1D5DB] h-[1px]" />
-                        <div className="flex flex-col gap-4">
-                            {menu.map((item, index) => {
-                                const isActive = pathname === item.link;
-                                // eslint-disable-next-line react-hooks/rules-of-hooks
-                                const [isItemHovered, setIsItemHovered] = useState(false); // lokal per item
-
-                                return (
-                                    <Link
-                                        href={item.link}
-                                        key={index}
-                                        onMouseEnter={() => setIsItemHovered(true)}
-                                        onMouseLeave={() => setIsItemHovered(false)}
-                                        className={clsx(isActive && "bg-black text-white rounded-lg", "flex items-center gap-5 text-2xl p-2 min-h-[64px] hover:bg-black hover:text-white hover:rounded-lg")}
-                                    >
-                                        <div className="flex-shrink-0">{typeof item.icon === "function" ? item.icon(isActive, isItemHovered) : item.icon}</div>
-                                        <span className={clsx("overflow-hidden transition-all duration-300 whitespace-nowrap", !compactMode || shouldShowMenu ? "w-auto opacity-100 ml-2" : "w-0 opacity-0")}>{item.name}</span>
-                                    </Link>
-                                );
-                            })}
-                        </div>
+        <div className="h-screen p-4 w-[262px] bg-white rounded-br-md border border-[#D9D9D9]">
+            <nav className="flex flex-col h-full justify-between gap-5">
+                <div className="flex flex-col gap-2 space-y-1">
+                    <div className="flex items-center gap-2 text-2xl font-radley">
+                        <Image src="/logo.svg" width={50} height={50} alt="logo" />
+                        <h1>Sludgify</h1>
                     </div>
+                    <Separator className="my-4 bg-[#D1D5DB] h-[1px]" />
+                    <div className="flex flex-col space-y-3">
+                        {menu.map((item, index) => {
+                            const isActive = pathname === item.link;
+                            // eslint-disable-next-line react-hooks/rules-of-hooks
+                            const [isHovered, setIsHovered] = React.useState(false); // Per item hover (untuk icon fungsi)
 
-                    <div className="flex flex-col gap-4">
-                        {menu2.map((item, index) => (
+                            return (
+                                <Link
+                                    href={item.link}
+                                    key={index}
+                                    onMouseEnter={() => setIsHovered(true)}
+                                    onMouseLeave={() => setIsHovered(false)}
+                                    className={clsx("flex items-center gap-5 text-xl p-2 min-h-[54px] rounded-lg transition", isActive ? "bg-black text-white" : "hover:bg-black text-[#525252] hover:text-white")}
+                                >
+                                    <div className={clsx("flex-shrink-0", isActive || isHovered ? "text-white" : "text-[#525252]")}>{typeof item.icon === "function" && item.icon(isActive, isHovered)}</div>
+                                    <span className="ml-2 font-bold font-calibri">{item.name}</span>
+                                </Link>
+                            );
+                        })}
+                    </div>
+                </div>
+
+                <div className="flex flex-col">
+                    {menu2.map((item, index) => {
+                        // eslint-disable-next-line react-hooks/rules-of-hooks
+                        const [isHovered, setIsHovered] = React.useState(false);
+                        const isActive = pathname === item.link;
+                        return (
                             <Link
                                 href={item.link}
                                 key={index}
-                                className={clsx(pathname === item.link && "bg-black text-white rounded-lg", "flex items-center gap-5 text-2xl p-2 min-h-[64px] hover:bg-black hover:text-white hover:rounded-lg")}
+                                onMouseEnter={() => setIsHovered(true)}
+                                onMouseLeave={() => setIsHovered(false)}
+                                className={clsx("flex items-center gap-5 text-xl p-2 min-h-[64px] rounded-lg transition", isActive ? "bg-black text-white" : "hover:bg-black text-[#525252]  hover:text-white")}
                             >
-                                <div className="flex-shrink-0">{item.icon}</div>
-                                <span className={clsx("overflow-hidden transition-all duration-300 whitespace-nowrap", !compactMode || shouldShowMenu ? "w-auto opacity-100 ml-2" : "w-0 opacity-0")}>{item.name}</span>
+                                <div className={clsx("flex-shrink-0", isActive || isHovered ? "text-white" : "text-[#525252]")}>{typeof item.icon === "function" && item.icon(isActive, isHovered)}</div>
+                                <span className="ml-2 font-bold font-calibri">{item.name}</span>
                             </Link>
-                        ))}
-                        <div className="flex gap-2 items-center mt-4 min-h-[64px]">
-                            <Image src="/Ellipse 2.svg" alt="Ellipse 2" width={50} height={50} />
-                            {(!compactMode || shouldShowMenu) && (
-                                <div className={clsx("overflow-hidden transition-all duration-300 whitespace-nowrap", !compactMode || shouldShowMenu ? "w-auto opacity-100 ml-2" : "w-0 opacity-0")}>
-                                    <h1 className="text-2xl">Kim Gimyung</h1>
-                                    <p className="text-sm">ecosolution@gmail.com</p>
-                                </div>
-                            )}
+                        );
+                    })}
+                    <div className="flex gap-2 items-center min-h-[64px]">
+                        <Image src="/Ellipse 1.svg" alt="Ellipse 2" width={45} height={45} />
+                        <div className="ml-2">
+                            <h1 className="text-xl text-[#525252] font-bold capitalize">
+                                {user?.first_name} {user?.last_name}
+                            </h1>
                         </div>
                     </div>
-                </nav>
-            </div>
+                </div>
+            </nav>
         </div>
     );
 };
