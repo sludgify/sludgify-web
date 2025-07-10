@@ -76,7 +76,7 @@ export default function Page() {
         },
     ];
     return (
-        <div className="py-8 px-36 space-y-6 w-screen">
+        <div className="py-8 px-36 space-y-6">
             <div className="flex justify-between items-center">
                 <div>
                     <h1 className="text-4xl font-bold">Welcome Back, PT Eco Solution!</h1>

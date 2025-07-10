@@ -1,14 +1,29 @@
 "use client";
 import { cn } from "@/lib/utils";
 import { ChevronUp, Loader2, Mic, Paperclip, Search } from "lucide-react";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { io, Socket } from "socket.io-client";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
+import Image from "next/image";
 
-type Message = {
+interface Message {
     id: string;
     role: "user" | "assistant";
     content: string;
     timestamp: string;
-};
+    links?: string[];
+    audio?: string;
+}
+
+interface SocketMessage {
+    username?: string;
+    message?: string;
+    original_message?: string;
+    response_message?: string;
+    links?: string[];
+}
 
 function formatTime(date: string | number | Date) {
     if (!date) return "";
@@ -17,26 +32,242 @@ function formatTime(date: string | number | Date) {
 }
 
 export default function Page() {
-    const [messages, ] = useState<Message[]>([]);
-    const [isTyping,] = useState(false);
+    const [messages, setMessages] = useState<Message[]>([]);
+    const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+    const [isTyping, setIsTyping] = useState(false);
     const [inputValue, setInputValue] = useState("");
-    const messagesEndRef = useRef(null);
-    const inputRef = useRef(null);
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
+    const [socket, setSocket] = useState<Socket | null>(null);
+    const [token, setToken] = useState<string | null>(null);
+    const [isRecording, setIsRecording] = useState(false);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const [voiceBase64, setVoiceBase64] = useState<string | null>(null);
+    // Add SpeechRecognition type for TypeScript
+    type SpeechRecognitionType = typeof window extends { SpeechRecognition: infer T } ? T : typeof window extends { webkitSpeechRecognition: infer T } ? T : any;
+
+    const recognitionRef = useRef<InstanceType<SpeechRecognitionType> | null>(null);
+
+    useEffect(() => {
+        const userData = localStorage.getItem("accessToken");
+        if (userData) {
+            setToken(userData);
+            const newSocket = io("http://localhost:5000");
+            setSocket(newSocket);
+
+            newSocket.on("connect", () => {
+                console.log("Connected to server");
+                newSocket.emit("join", { room: "default", token: userData });
+            });
+
+            newSocket.on("chat_history", (msgs: SocketMessage[]) => {
+                console.log("chat_history: ", msgs);
+
+                const formatted: Message[] = [];
+
+                msgs.forEach((msg, index) => {
+                    const timestamp = new Date().toISOString();
+
+                    // Tambahkan pesan user jika ada original_message
+                    if (msg.original_message) {
+                        formatted.push({
+                            id: `${index}-user`,
+                            role: "user",
+                            content: msg.original_message,
+                            timestamp,
+                        });
+                    }
+
+                    // Tambahkan jawaban dari bot jika ada response_message
+                    if (msg.response_message) {
+                        formatted.push({
+                            id: `${index}-bot`,
+                            role: "assistant",
+                            content: msg.response_message,
+                            timestamp,
+                            links: msg.links || [],
+                        });
+                    }
+                });
+
+                setMessages(formatted);
+            });
+
+            newSocket.on("message", (msg: string) => {
+                setIsTyping(false);
+                setMessages((prev) => [
+                    ...prev,
+                    {
+                        id: `${Date.now()}`,
+                        role: "assistant",
+                        content: msg,
+                        timestamp: new Date().toISOString(),
+                    },
+                ]);
+            });
+
+            newSocket.on("message_with_links", (data) => {
+                setIsTyping(false);
+
+                // Tampilkan balasan dari bot
+                setMessages((prev) => [
+                    ...prev,
+                    {
+                        id: `${Date.now()}-bot`,
+                        role: "assistant",
+                        content: data.response_message ?? data.message ?? "",
+                        timestamp: new Date().toISOString(),
+                        links: data.links || [],
+                    },
+                ]);
+            });
+
+            newSocket.on("disconnect", () => {
+                console.warn("Disconnected from server");
+            });
+
+            return () => {
+                newSocket.disconnect();
+            };
+        }
+    }, []);
+
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [messages, isTyping]);
+
+    const handleSendMessage = (msg: string) => {
+        if (!msg || !socket || !token) return;
+
+        setMessages((prev) => [
+            ...prev,
+            {
+                id: `${Date.now()}`,
+                role: "user",
+                content: msg,
+                timestamp: new Date().toISOString(),
+            },
+        ]);
+        setIsTyping(true);
+        if (voiceBase64) {
+            socket.emit("message", {
+                room: "default",
+                audio: voiceBase64,
+                token,
+                type: "voice",
+            });
+            setVoiceBase64(null);
+        } else if (uploadedFile) {
+            console.log("uploadedFile", uploadedFile);
+            const reader = new FileReader();
+            reader.onload = () => {
+                const base64File = reader.result?.toString().split(",")[1];
+                console.log(base64File);
+                socket.emit("message", {
+                    room: "default",
+                    token,
+                    msg,
+                    pdf_base64: base64File,
+                    methode: "resume",
+                    type: "text",
+                });
+                setUploadedFile(null);
+            };
+            reader.readAsDataURL(uploadedFile);
+        } else {
+            socket.emit("message", { room: "default", msg, token });
+        }
+        setInputValue("");
+    };
+
+    const toggleRecording = () => {
+        if (!("webkitSpeechRecognition" in window || "SpeechRecognition" in window)) {
+            alert("Browser tidak mendukung Speech Recognition. Coba gunakan Google Chrome.");
+            return;
+        }
+
+        if (isRecording) {
+            recognitionRef.current?.stop();
+            setIsRecording(false);
+        } else {
+            const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+            const recognition = new SpeechRecognition();
+
+            recognition.lang = "id-ID"; // ubah sesuai bahasa
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+
+            recognition.onresult = (event: SpeechRecognitionEvent) => {
+                const transcript = event.results[0][0].transcript;
+                setInputValue(transcript); // Langsung masukkan ke input
+            };
+
+            recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
+                console.error("Recognition error:", event.error);
+                alert("Terjadi kesalahan saat merekam: " + event.error);
+            };
+
+            recognition.onend = () => {
+                setIsRecording(false);
+            };
+
+            recognitionRef.current = recognition;
+            recognition.start();
+            setIsRecording(true);
+        }
+    };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
-            // handleSendMessage(inputValue);
+            handleSendMessage(inputValue);
         }
     };
+
     return (
-        <div className="py-8 px-36 space-y-6 w-screen">
-            <div className="flex-1 overflow-y-auto min-h-[70vh] p-4 space-y-4">
+        <div className="space-y-6 px-6 w-[80%]">
+            <div className="flex-1 overflow-y-auto w-full h-[75vh] p-4 space-y-4">
                 {messages.length > 0 ? (
                     messages.map((message) => (
                         <div key={message.id} className={cn("flex", message.role === "user" ? "justify-end" : "justify-start")}>
-                            <div className={cn("max-w-[80%] rounded-lg p-3", message.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted")}>
-                                <p className="text-sm">{message.content}</p>
+                            <div className={cn("max-w-[80%] rounded-lg p-3 whitespace-pre-wrap", message.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted")}>
+                                <div className="overflow-x-auto prose prose-sm prose-invert max-w-full break-words whitespace-pre-wrap [&>p]:mb-1 [&>ul]:mb-1 [&>li]:my-0">
+                                    {message.role === "assistant" ? (
+                                        <ReactMarkdown
+                                            components={{
+                                                a: ({ node, ...props }) => (
+                                                    <a
+                                                        {...props}
+                                                        className="text-blue-600 hover:underline" // ← styling warna link
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                    />
+                                                ),
+                                            }}
+                                            remarkPlugins={[remarkGfm]}
+                                            rehypePlugins={[rehypeRaw]}
+                                        >
+                                            {message.content}
+                                        </ReactMarkdown>
+                                    ) : (
+                                        <p className="mb-1">{message.content}</p>
+                                    )}
+                                </div>
+
+                                {message.links && message.links.length > 0 && (
+                                    <div className="mt-2 flex flex-wrap gap-2">
+                                        {message.links.map((link, i) => (
+                                            <button
+                                                key={i}
+                                                onClick={() => window.open(link, "_blank")}
+                                                className="px-3 py-1 text-xl bg-black text-white rounded-lg font-radley hover:bg-black/70 transition drop-shadow-xl hover:cursor-pointer"
+                                            >
+                                                Download Report {i + 1}
+                                                <Image src="/file-download.svg" alt="Download Icon" width={20} height={20} className="inline ml-2" />
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
                                 <p className="text-xs opacity-70 mt-1 text-right">{formatTime(message.timestamp)}</p>
                             </div>
                         </div>
@@ -50,9 +281,14 @@ export default function Page() {
                 {isTyping && (
                     <div className="flex justify-start">
                         <div className="max-w-[80%] rounded-lg p-3 bg-muted">
-                            <div className="flex items-center gap-1">
-                                <div className="w-3 h-3 bg-[#505050] animate animate-pulse" />
-                                <h1 className="text-xl">Generating answer please wait...</h1>
+                            <div className="flex items-center gap-2">
+                                <div className="w-3 h-3 bg-[#505050] animate-pulse" />
+                                <h1 className="text-xl flex items-center gap-1">
+                                    Generating answer
+                                    <span className="animate-bounce delay-0">.</span>
+                                    <span className="animate-bounce delay-150">.</span>
+                                    <span className="animate-bounce delay-300">.</span>
+                                </h1>
                             </div>
                         </div>
                     </div>
@@ -69,40 +305,44 @@ export default function Page() {
                             onChange={(e) => setInputValue(e.target.value)}
                             onKeyDown={handleKeyDown}
                             placeholder="What can I help you?"
-                            className="flex-1 px-4 py-3 rounded-md bg-transparent text-white placeholder-white focus:outline-none"
+                            className="flex-1 px-4 py-3 w-full rounded-md bg-transparent text-white placeholder-white focus:outline-none"
                         />
                         <div className="flex items-center gap-2">
                             <label className="cursor-pointer p-2 rounded hover:bg-white/10 transition">
                                 <input
                                     type="file"
                                     hidden
-                                    // onChange={handleFileUpload}
+                                    accept=".pdf"
+                                    ref={fileInputRef}
+                                    onChange={(e) => {
+                                        const file = e.target.files?.[0];
+                                        if (file) {
+                                            setUploadedFile(file);
+
+                                            if (fileInputRef.current) {
+                                                fileInputRef.current.value = "";
+                                            }
+                                        }
+                                    }}
                                 />
+
                                 <Paperclip className="h-5 w-5 text-white" />
                             </label>
-
-                            <button
-                                // onClick={handleStartVoice}
-                                className="p-2 rounded hover:bg-white/10 transition"
-                            >
+                            <button className={cn("p-2 rounded hover:bg-white/10 transition", isRecording && "bg-red-500")} onClick={toggleRecording}>
                                 <Mic className="h-5 w-5 text-white" />
                             </button>
-
-                            <button
-                                // onClick={handleDeepResearch}
-                                className="p-2 hover:bg-white/10 transition flex gap-2 items-center border rounded-xl"
-                            >
+                            <button className="p-2 hover:bg-white/10 transition flex gap-2 items-center border rounded-xl">
                                 <Search className="h-5 w-5 text-white" />
                                 <h1>Research</h1>
                             </button>
+                            {uploadedFile && (
+                                <div className="text-sm text-white opacity-80">
+                                    📎 File attached: <strong>{uploadedFile.name}</strong>
+                                </div>
+                            )}
                         </div>
                     </div>
-
-                    <button
-                        // onClick={() => handleSendMessage(inputValue)}
-                        disabled={!inputValue.trim() || isTyping}
-                        className="bg-white text-primary hover:bg-white/80 p-3 rounded-xl transition"
-                    >
+                    <button onClick={() => handleSendMessage(inputValue)} disabled={!inputValue.trim() || isTyping} className="bg-white text-primary hover:bg-white/80 p-3 rounded-xl transition">
                         {isTyping ? <Loader2 className="h-5 w-5 animate-spin" /> : <ChevronUp className="h-5 w-5" />}
                     </button>
                 </div>

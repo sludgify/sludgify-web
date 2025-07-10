@@ -87,7 +87,7 @@ export default function Page() {
             const dataApi = data.data;
             console.log("dataApi: ", dataApi);
             toast(dataApi.message);
-            push(`/sludgify/auth/account-active/status/${dataApi.token.token_web}`);
+            push(`/account-active/sent?token=${dataApi.token.token_web}`);
         },
     });
 
@@ -304,7 +304,7 @@ export default function Page() {
                             Continue with Google
                         </button>
 
-                        <div className="flex items-center justify-center gap-1 mt-6">
+                        <div className="flex items-center  gap-1 mt-6">
                             <p>Already have an account?</p>
                             <Link href="/login" className="text-[#173863]">
                                 Log in
