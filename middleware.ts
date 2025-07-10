@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { axiosInstance } from "./lib/axios";
-import { AxiosError } from "axios";
+import { axiosInstance } from "@/lib/axios";
+import axios, { AxiosError } from "axios";
+import { User } from "./interfaces/user";
 
 interface ErrorResponse {
     message: string;
@@ -15,11 +16,10 @@ const getAccountActivePage = async (token: string) => {
         const response = await axiosInstance.get(`/sludgify/auth/account-active/status/${token}`, {
             headers: { "Content-Type": "application/json" },
         });
-        console.log("Response data:", response.data?.data);
         return response.data?.data;
     } catch (err) {
         const error = err as AxiosError<ErrorResponse>;
-        console.error("Terjadi kesalahan:", error);
+        console.error("❌ Error getAccountActivePage:", error);
     }
 };
 
@@ -31,47 +31,95 @@ const getAccountActiveEmail = async (token: string) => {
         return response.data?.data;
     } catch (err) {
         const error = err as AxiosError<ErrorResponse>;
-        console.error("Terjadi kesalahan:", error);
+        console.error("❌ Error getAccountActiveEmail:", error);
     }
 };
 
 export async function middleware(request: NextRequest) {
-    const url = request.nextUrl.clone();
+    const url = request.nextUrl;
     const accessToken = request.cookies.get("accessToken")?.value;
+    const clientETag = request.cookies.get("me-etag")?.value;
+    const fromRedirect = url.searchParams.get("fromRedirect");
 
     if (url.pathname === "/account-active" || url.pathname === "/account-active/sent") {
         const token = url.searchParams.get("token");
-        console.log("Token from URL:", token);
-        if (!token) {
-            return NextResponse.redirect(new URL("/login", request.url));
-        }
+        if (!token) return NextResponse.redirect(new URL("/login", request.url));
 
-        if (url.pathname === "/account-active/sent") {
-            const getAccountActive = await getAccountActivePage(token || "");
-            console.log("Account Active Data line 51:", getAccountActive);
-            if (!getAccountActive) {
-                return NextResponse.redirect(new URL("/login", request.url));
-            }
-        }
+        const data =
+            url.pathname === "/account-active"
+                ? await getAccountActiveEmail(token)
+                : await getAccountActivePage(token);
 
-        if (url.pathname === "/account-active") {
-            const getAccountActive = await getAccountActiveEmail(token || "");
-            console.log("Account Active Data line 59:", getAccountActive);
-            if (!getAccountActive) {
-                return NextResponse.redirect(new URL("/login", request.url));
+        if (!data) return NextResponse.redirect(new URL("/login", request.url));
+    }
+
+    if (url.pathname.startsWith("/client-menu")) {
+        console.log(accessToken);
+        if (!accessToken) return NextResponse.redirect(new URL("/login", request.url));
+
+        try {
+            const headers: Record<string, string> = {
+                Authorization: `Bearer ${accessToken}`,
+            };
+            if (clientETag) headers["If-None-Match"] = clientETag;
+
+            const responseUserMe = await axiosInstance.get(`/sludgify/@me`, {
+                headers,
+                validateStatus: () => true,
+            });
+
+            const respUserMe = responseUserMe.data;
+
+            if (responseUserMe.status === 304) {
+                return NextResponse.next();
             }
+
+            if (responseUserMe.status === 200) {
+                const newETag = responseUserMe.headers["etag"];
+                const newUrl = request.nextUrl;
+                newUrl.searchParams.delete("fromRedirect");
+
+                const response = NextResponse.redirect(newUrl);
+
+                if (newETag) {
+                    response.cookies.set("me-etag", newETag, { httpOnly: false });
+                    response.cookies.set("me-data", JSON.stringify(respUserMe.data), {
+                        httpOnly: false,
+                    });
+                }
+
+                return response;
+            }
+
+            if (responseUserMe.status === 429) {
+                console.warn("⚠️ Rate limited, skip logout.");
+                return NextResponse.next();
+            }
+
+            const response = NextResponse.redirect(new URL("/login", request.url));
+            response.cookies.delete("accessToken");
+            response.cookies.delete("me-etag");
+            return response;
+        } catch (err) {
+            console.error("❌ Error validating /@me", err);
+            const response = NextResponse.redirect(new URL("/login", request.url));
+            response.cookies.delete("accessToken");
+            response.cookies.delete("me-etag");
+            return response;
         }
     }
 
     if (url.pathname === "/login" || url.pathname === "/register") {
-        if (accessToken) {
-            return NextResponse.redirect(new URL("/client-menu", request.url));
+        if (accessToken && fromRedirect !== "true") {
+            const redirectUrl = new URL("/client-menu", request.url);
+            redirectUrl.searchParams.set("fromRedirect", "true");
+            return NextResponse.redirect(redirectUrl);
         }
     }
 
-    if (url.pathname === "/client-menu") {
-        if (!accessToken) {
-            return NextResponse.redirect(new URL("/login", request.url));
-        }
-    }
+    return NextResponse.next();
 }
+
+export const config = {
+    matcher: ["/account-active/:path*", "/client-menu/:path*", "/login", "/register"],
+};

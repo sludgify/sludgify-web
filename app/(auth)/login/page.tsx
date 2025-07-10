@@ -12,6 +12,7 @@ import { useMutation } from "@tanstack/react-query";
 import clsx from "clsx";
 import { Separator } from "@/components/ui/separator";
 import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
 export default function Page() {
     const [showPassword, setShowPassword] = useState(false);
@@ -91,6 +92,7 @@ export default function Page() {
             localStorage.setItem("user", JSON.stringify(data.data));
             localStorage.setItem("accessToken", data.token.access_token);
             toast.success(data.message || "Login berhasil");
+            Cookies.set("accessToken", data.token.access_token);
             setTimeout(() => {
                 push("/client-menu");
             }, 1000);
