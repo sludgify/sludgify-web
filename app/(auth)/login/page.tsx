@@ -5,14 +5,14 @@ import { Lock } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 import { useGoogleLogin } from "@react-oauth/google";
-import { axiosInstance } from "@/lib/axios";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { useFormik } from "formik";
 import { useMutation } from "@tanstack/react-query";
 import clsx from "clsx";
 import { Separator } from "@/components/ui/separator";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
+import { axiosInstance } from "@/lib/axios";
 
 export default function Page() {
     const [showPassword, setShowPassword] = useState(false);
@@ -59,7 +59,7 @@ export default function Page() {
 
     const { mutate } = useMutation({
         mutationFn: async (formData: FormData) => {
-            const response = await axios.post("/api/login", formData);
+            const response = await axiosInstance.post("/sludgify/login", formData);
             return response.data;
         },
 
@@ -88,9 +88,6 @@ export default function Page() {
         },
 
         onSuccess: (data) => {
-            console.log("Login successful:", data);
-            localStorage.setItem("user", JSON.stringify(data.data));
-            localStorage.setItem("accessToken", data.token.access_token);
             toast.success(data.message || "Login berhasil");
             Cookies.set("accessToken", data.token.access_token);
             setTimeout(() => {
