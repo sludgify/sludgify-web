@@ -96,7 +96,7 @@ export default function Page() {
 
         onError: (error) => {
             const err = error as AxiosError<ErrorResponse>;
-            console.error("❌ Error:", err);
+            toast.error(err.response?.data.message);
         },
     })
 
