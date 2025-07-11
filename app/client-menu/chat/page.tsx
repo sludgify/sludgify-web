@@ -225,128 +225,131 @@ export default function Page() {
     };
 
     return (
-        <div className="space-y-6 px-6 w-[80%]">
-            <div className="flex-1 overflow-y-auto w-full h-[75vh] p-4 space-y-4">
-                {messages.length > 0 ? (
-                    messages.map((message) => (
-                        <div key={message.id} className={cn("flex", message.role === "user" ? "justify-end" : "justify-start")}>
-                            <div className={cn("max-w-[80%] rounded-lg p-3 whitespace-pre-wrap", message.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted")}>
-                                <div className="overflow-x-auto prose prose-sm prose-invert max-w-full break-words whitespace-pre-wrap [&>p]:mb-1 [&>ul]:mb-1 [&>li]:my-0">
-                                    {message.role === "assistant" ? (
-                                        <ReactMarkdown
-                                            components={{
-                                                a: ({ node, ...props }) => (
-                                                    <a
-                                                        {...props}
-                                                        className="text-blue-600 hover:underline" // ← styling warna link
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                    />
-                                                ),
-                                            }}
-                                            remarkPlugins={[remarkGfm]}
-                                            rehypePlugins={[rehypeRaw]}
-                                        >
-                                            {message.content}
-                                        </ReactMarkdown>
-                                    ) : (
-                                        <p className="mb-1">{message.content}</p>
-                                    )}
-                                </div>
-
-                                {message.links && message.links.length > 0 && (
-                                    <div className="mt-2 flex flex-wrap gap-2">
-                                        {message.links.map((link, i) => (
-                                            <button
-                                                key={i}
-                                                onClick={() => window.open(link, "_blank")}
-                                                className="px-3 py-1 text-xl bg-black text-white rounded-lg font-radley hover:bg-black/70 transition drop-shadow-xl hover:cursor-pointer"
+        <div className="flex w-[80%] items-start py-4">
+            <div className="space-y-6 px-6">
+                <div className="flex-1 overflow-y-auto w-full h-[75vh] p-2 space-y-4">
+                    {messages.length > 0 ? (
+                        messages.map((message) => (
+                            <div key={message.id} className={cn("flex", message.role === "user" ? "justify-end" : "justify-start")}>
+                                <div className={cn("max-w-[80%] rounded-lg p-3 whitespace-pre-wrap", message.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted")}>
+                                    <div className="overflow-x-auto prose prose-sm prose-invert max-w-full break-words whitespace-pre-wrap [&>p]:mb-1 [&>ul]:mb-1 [&>li]:my-0">
+                                        {message.role === "assistant" ? (
+                                            <ReactMarkdown
+                                                components={{
+                                                    a: ({ node, ...props }) => (
+                                                        <a
+                                                            {...props}
+                                                            className="text-blue-600 hover:underline" // ← styling warna link
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                        />
+                                                    ),
+                                                }}
+                                                remarkPlugins={[remarkGfm]}
+                                                rehypePlugins={[rehypeRaw]}
                                             >
-                                                Download Report {i + 1}
-                                                <Image src="/file-download.svg" alt="Download Icon" width={20} height={20} className="inline ml-2" />
-                                            </button>
-                                        ))}
+                                                {message.content}
+                                            </ReactMarkdown>
+                                        ) : (
+                                            <p className="mb-1">{message.content}</p>
+                                        )}
+                                    </div>
+
+                                    {message.links && message.links.length > 0 && (
+                                        <div className="mt-2 flex flex-wrap gap-2">
+                                            {message.links.map((link, i) => (
+                                                <button
+                                                    key={i}
+                                                    onClick={() => window.open(link, "_blank")}
+                                                    className="px-3 py-1 text-xl bg-black text-white rounded-lg font-radley hover:bg-black/70 transition drop-shadow-xl hover:cursor-pointer"
+                                                >
+                                                    Download Report {i + 1}
+                                                    <Image src="/file-download.svg" alt="Download Icon" width={20} height={20} className="inline ml-2" />
+                                                </button>
+                                            ))}
+                                        </div>
+                                    )}
+                                    <p className="text-xs opacity-70 mt-1 text-right">{formatTime(message.timestamp)}</p>
+                                </div>
+                            </div>
+                        ))
+                    ) : (
+                        <div className="flex justify-center items-center min-h-[70vh]">
+                            <h1 className="text-6xl font-bold w-[771px] text-center">Let’s Analyze Your Business ESG Performance</h1>
+                        </div>
+                    )}
+
+                    {isTyping && (
+                        <div className="flex justify-start">
+                            <div className="max-w-[80%] rounded-lg p-3 bg-muted">
+                                <div className="flex items-center gap-2">
+                                    <div className="w-3 h-3 bg-[#505050] animate-pulse" />
+                                    <h1 className="text-xl flex items-center gap-1">
+                                        Generating answer
+                                        <span className="animate-bounce delay-0">.</span>
+                                        <span className="animate-bounce delay-150">.</span>
+                                        <span className="animate-bounce delay-300">.</span>
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    <div ref={messagesEndRef} />
+                </div>
+                <div className="bg-primary p-3 text-secondary rounded-4xl">
+                    <div className="flex items-center gap-2">
+                        <div className="w-full space-y-3">
+                            <input
+                                ref={inputRef}
+                                value={inputValue}
+                                onChange={(e) => setInputValue(e.target.value)}
+                                onKeyDown={handleKeyDown}
+                                placeholder="What can I help you?"
+                                className="flex-1 px-4 py-3 w-full rounded-md bg-transparent text-white placeholder-white focus:outline-none"
+                            />
+                            <div className="flex items-center gap-2">
+                                <label className="cursor-pointer p-2 rounded hover:bg-white/10 transition">
+                                    <input
+                                        type="file"
+                                        hidden
+                                        accept=".pdf"
+                                        ref={fileInputRef}
+                                        onChange={(e) => {
+                                            const file = e.target.files?.[0];
+                                            if (file) {
+                                                setUploadedFile(file);
+
+                                                if (fileInputRef.current) {
+                                                    fileInputRef.current.value = "";
+                                                }
+                                            }
+                                        }}
+                                    />
+
+                                    <Paperclip className="h-5 w-5 text-white" />
+                                </label>
+                                <button className={cn("p-2 rounded hover:bg-white/10 transition", isRecording && "bg-red-500")} onClick={toggleRecording}>
+                                    <Mic className="h-5 w-5 text-white" />
+                                </button>
+                                <button className="p-2 hover:bg-white/10 transition flex gap-2 items-center border rounded-xl">
+                                    <Search className="h-5 w-5 text-white" />
+                                    <h1>Research</h1>
+                                </button>
+                                {uploadedFile && (
+                                    <div className="text-sm text-white opacity-80">
+                                        📎 File attached: <strong>{uploadedFile.name}</strong>
                                     </div>
                                 )}
-                                <p className="text-xs opacity-70 mt-1 text-right">{formatTime(message.timestamp)}</p>
                             </div>
                         </div>
-                    ))
-                ) : (
-                    <div className="flex justify-center items-center min-h-[70vh]">
-                        <h1 className="text-6xl font-bold w-[771px] text-center">Let’s Analyze Your Business ESG Performance</h1>
+                        <button onClick={() => handleSendMessage(inputValue)} disabled={!inputValue.trim() || isTyping} className="bg-white text-primary hover:bg-white/80 p-3 rounded-xl transition">
+                            {isTyping ? <Loader2 className="h-5 w-5 animate-spin" /> : <ChevronUp className="h-5 w-5" />}
+                        </button>
                     </div>
-                )}
-
-                {isTyping && (
-                    <div className="flex justify-start">
-                        <div className="max-w-[80%] rounded-lg p-3 bg-muted">
-                            <div className="flex items-center gap-2">
-                                <div className="w-3 h-3 bg-[#505050] animate-pulse" />
-                                <h1 className="text-xl flex items-center gap-1">
-                                    Generating answer
-                                    <span className="animate-bounce delay-0">.</span>
-                                    <span className="animate-bounce delay-150">.</span>
-                                    <span className="animate-bounce delay-300">.</span>
-                                </h1>
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-                <div ref={messagesEndRef} />
-            </div>
-            <div className="p-4 bg-primary text-secondary rounded-4xl">
-                <div className="flex items-center gap-2">
-                    <div className="w-full space-y-3">
-                        <input
-                            ref={inputRef}
-                            value={inputValue}
-                            onChange={(e) => setInputValue(e.target.value)}
-                            onKeyDown={handleKeyDown}
-                            placeholder="What can I help you?"
-                            className="flex-1 px-4 py-3 w-full rounded-md bg-transparent text-white placeholder-white focus:outline-none"
-                        />
-                        <div className="flex items-center gap-2">
-                            <label className="cursor-pointer p-2 rounded hover:bg-white/10 transition">
-                                <input
-                                    type="file"
-                                    hidden
-                                    accept=".pdf"
-                                    ref={fileInputRef}
-                                    onChange={(e) => {
-                                        const file = e.target.files?.[0];
-                                        if (file) {
-                                            setUploadedFile(file);
-
-                                            if (fileInputRef.current) {
-                                                fileInputRef.current.value = "";
-                                            }
-                                        }
-                                    }}
-                                />
-
-                                <Paperclip className="h-5 w-5 text-white" />
-                            </label>
-                            <button className={cn("p-2 rounded hover:bg-white/10 transition", isRecording && "bg-red-500")} onClick={toggleRecording}>
-                                <Mic className="h-5 w-5 text-white" />
-                            </button>
-                            <button className="p-2 hover:bg-white/10 transition flex gap-2 items-center border rounded-xl">
-                                <Search className="h-5 w-5 text-white" />
-                                <h1>Research</h1>
-                            </button>
-                            {uploadedFile && (
-                                <div className="text-sm text-white opacity-80">
-                                    📎 File attached: <strong>{uploadedFile.name}</strong>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                    <button onClick={() => handleSendMessage(inputValue)} disabled={!inputValue.trim() || isTyping} className="bg-white text-primary hover:bg-white/80 p-3 rounded-xl transition">
-                        {isTyping ? <Loader2 className="h-5 w-5 animate-spin" /> : <ChevronUp className="h-5 w-5" />}
-                    </button>
                 </div>
             </div>
+            <Image src={"/text-search.svg"} alt="search" width={35} height={35} />
         </div>
     );
 }

@@ -6,28 +6,43 @@ import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import clsx from "clsx";
 import { usePathname } from "next/navigation";
+import Cookies from "js-cookie";
+import { User } from "@/interfaces/user";
 
-type User = {
-    first_name: string;
-    last_name: string;
-    avatar: string;
-    // Add other properties if needed
-};
+interface Company {
+    id: string;
+    country: string;
+    email: string;
+    phone_number: string;
+    position: string;
+}
+
+interface MeData {
+    user: User;
+    company: Company;
+}
 
 export const ClientNavbar = () => {
     const [, setOpen] = useState(false);
     const pathname = usePathname();
-    const [user, setUser] = useState<User | null>(null);
+    const [userMe, setUserMe] = useState<MeData | null>(null);
 
     useEffect(() => {
         const storedOpen = localStorage.getItem("open");
         if (storedOpen !== null) {
             setOpen(JSON.parse(storedOpen));
         }
+    }, []);
 
-        const storedUser = localStorage.getItem("user");
-        if (storedUser !== null) {
-            setUser(JSON.parse(storedUser));
+    useEffect(() => {
+        const userMeCookie = Cookies.get("me-data");
+        if (userMeCookie) {
+            try {
+                const parsed = JSON.parse(userMeCookie) as MeData;
+                setUserMe(parsed);
+            } catch (e) {
+                console.error("❌ Gagal parse me-data cookie:", e);
+            }
         }
     }, []);
 
@@ -35,17 +50,17 @@ export const ClientNavbar = () => {
         {
             name: "Home",
             link: "/client-menu",
-            icon: (isActive: boolean, isHovered: boolean) => <Image src={isActive || isHovered ? "/home_white.svg" : "/home.svg"} alt="home" width={22} height={22} />,
+            icon: (isActive: boolean, isHovered: boolean) => <Image src={isActive || isHovered ? "/home_white.svg" : "/home.svg"} alt="home" width={18} height={18} />,
         },
         {
             name: "Dashboard",
             link: "/client-menu/dashboard",
-            icon: (isActive: boolean, isHovered: boolean) => <Image src={isActive || isHovered ? "/dashboard-white.svg" : "/dashboard.svg"} alt="dashboard" width={22} height={22} />,
+            icon: (isActive: boolean, isHovered: boolean) => <Image src={isActive || isHovered ? "/dashboard-white.svg" : "/dashboard.svg"} alt="dashboard" width={18} height={18} />,
         },
         {
             name: "AI Analyst",
             link: "/client-menu/chat",
-            icon: (isActive: boolean, isHovered: boolean) => <Image src={isActive || isHovered ? "/AI_white.svg" : "/AI.svg"} alt="AI Analyst" width={22} height={22} />,
+            icon: (isActive: boolean, isHovered: boolean) => <Image src={isActive || isHovered ? "/AI_white.svg" : "/AI.svg"} alt="AI Analyst" width={18} height={18} />,
         },
     ];
 
@@ -53,25 +68,25 @@ export const ClientNavbar = () => {
         {
             name: "Transactions",
             link: "/client-menu/transactions",
-            icon: (isActive: boolean, isHovered: boolean) => <Image src={isActive || isHovered ? "/cart_white.svg" : "/cart.svg"} alt="transactions" width={22} height={22} />,
+            icon: (isActive: boolean, isHovered: boolean) => <Image src={isActive || isHovered ? "/cart_white.svg" : "/cart.svg"} alt="transactions" width={18} height={18} />,
         },
         {
             name: "Settings",
             link: "/client-menu/settings",
-            icon: (isActive: boolean, isHovered: boolean) => <Image src={isActive || isHovered ? "/settings_white.svg" : "/settings.svg"} alt="settings" width={22} height={22} />,
+            icon: (isActive: boolean, isHovered: boolean) => <Image src={isActive || isHovered ? "/settings_white.svg" : "/settings.svg"} alt="settings" width={18} height={18} />,
         },
     ];
 
     return (
-        <div className="h-screen p-4 w-[262px] bg-white rounded-br-md border border-[#D9D9D9]">
+        <div className="h-screen p-4 font-calibri w-[262px] bg-white rounded-br-md border border-[#D9D9D9]">
             <nav className="flex flex-col h-full justify-between gap-5">
-                <div className="flex flex-col gap-2 space-y-1">
+                <div className="flex flex-col">
                     <div className="flex items-center gap-2 text-2xl font-radley">
-                        <Image src="/logo.svg" width={50} height={50} alt="logo" />
+                        <Image src="/logo.svg" width={40} height={40} alt="logo" />
                         <h1>Sludgify</h1>
                     </div>
                     <Separator className="my-4 bg-[#D1D5DB] h-[1px]" />
-                    <div className="flex flex-col space-y-3">
+                    <div className="flex flex-col gap-1">
                         {menu.map((item, index) => {
                             const isActive = pathname === item.link;
                             // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -83,7 +98,7 @@ export const ClientNavbar = () => {
                                     key={index}
                                     onMouseEnter={() => setIsHovered(true)}
                                     onMouseLeave={() => setIsHovered(false)}
-                                    className={clsx("flex items-center gap-5 text-xl p-2 min-h-[54px] rounded-lg transition", isActive ? "bg-black text-white" : "hover:bg-black text-[#525252] hover:text-white")}
+                                    className={clsx("flex items-center gap-5 text-lg p-2 min-h-[34px] rounded-lg transition", isActive ? "bg-black text-white" : "hover:bg-black text-[#525252] hover:text-white")}
                                 >
                                     <div className={clsx("flex-shrink-0", isActive || isHovered ? "text-white" : "text-[#525252]")}>{typeof item.icon === "function" && item.icon(isActive, isHovered)}</div>
                                     <span className="ml-2 font-bold font-calibri">{item.name}</span>
@@ -93,7 +108,7 @@ export const ClientNavbar = () => {
                     </div>
                 </div>
 
-                <div className="flex flex-col">
+                <div className="flex flex-col gap-1">
                     {menu2.map((item, index) => {
                         // eslint-disable-next-line react-hooks/rules-of-hooks
                         const [isHovered, setIsHovered] = React.useState(false);
@@ -104,7 +119,7 @@ export const ClientNavbar = () => {
                                 key={index}
                                 onMouseEnter={() => setIsHovered(true)}
                                 onMouseLeave={() => setIsHovered(false)}
-                                className={clsx("flex items-center gap-5 text-xl p-2 min-h-[64px] rounded-lg transition", isActive ? "bg-black text-white" : "hover:bg-black text-[#525252]  hover:text-white")}
+                                className={clsx("flex items-center gap-5 text-lg p-2 min-h-[34px] rounded-lg transition", isActive ? "bg-black text-white" : "hover:bg-black text-[#525252]  hover:text-white")}
                             >
                                 <div className={clsx("flex-shrink-0", isActive || isHovered ? "text-white" : "text-[#525252]")}>{typeof item.icon === "function" && item.icon(isActive, isHovered)}</div>
                                 <span className="ml-2 font-bold font-calibri">{item.name}</span>
@@ -112,10 +127,10 @@ export const ClientNavbar = () => {
                         );
                     })}
                     <div className="flex gap-2 items-center min-h-[64px]">
-                        <Image src="/Ellipse 1.svg" alt="Ellipse 2" width={45} height={45} />
+                        <Image src={userMe?.user.avatar || "/Ellipse 1.svg"} alt="Ellipse 2" width={45} height={45} className="rounded-full w-[45px] h-[45px] object-cover object-top" />
                         <div className="ml-2">
-                            <h1 className="text-xl text-[#525252] font-bold capitalize">
-                                {user?.first_name} {user?.last_name}
+                            <h1 className="text-lg text-[#525252] font-bold capitalize">
+                                {userMe?.user.first_name} {userMe?.user.last_name}
                             </h1>
                         </div>
                     </div>
