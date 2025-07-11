@@ -1,33 +1,147 @@
 import React from "react";
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
+import Image from "next/image";
+import clsx from "clsx";
 
 const data: Transactions[] = [
-    { id: "12501", type: "ID_SLB3", date: "2025-06-19", location: "Jakarta, ID", volume: 1000, status: "Completed" },
-    { id: "12502", type: "ID_SLNo", date: "2025-06-13", location: "Bandung, ID", volume: 850, status: "Pending" },
-    { id: "12503", type: "ID_SLB3", date: "2025-06-01", location: "Surabaya, ID", volume: 1200, status: "On Process" },
-    { id: "12504", type: "ID_SLNo", date: "2025-05-15", location: "Yogyakarta, ID", volume: 930, status: "Completed" },
-    { id: "12505", type: "ID_SLB3", date: "2024-11-10", location: "Medan, ID", volume: 1100, status: "Failed" },
-    { id: "12506", type: "ID_SLNo", date: "2025-06-18", location: "Depok, ID", volume: 760, status: "Completed" },
-    { id: "12507", type: "ID_SLB3", date: "2025-06-17", location: "Bogor, ID", volume: 890, status: "Pending" },
-    { id: "12508", type: "ID_SLNo", date: "2025-06-10", location: "Bekasi, ID", volume: 950, status: "Completed" },
-    { id: "12509", type: "ID_SLB3", date: "2025-05-28", location: "Malang, ID", volume: 1050, status: "On Process" },
-    { id: "12510", type: "ID_SLNo", date: "2025-04-30", location: "Cirebon, ID", volume: 820, status: "Completed" },
-    { id: "12511", type: "ID_SLB3", date: "2025-06-19", location: "Padang, ID", volume: 780, status: "Completed" },
-    { id: "12512", type: "ID_SLNo", date: "2025-06-14", location: "Bali, ID", volume: 660, status: "Pending" },
-    { id: "12513", type: "ID_SLB3", date: "2025-06-02", location: "Pontianak, ID", volume: 970, status: "Failed" },
-    { id: "12514", type: "ID_SLNo", date: "2025-05-12", location: "Palembang, ID", volume: 1120, status: "On Process" },
-    { id: "12515", type: "ID_SLB3", date: "2024-12-25", location: "Makassar, ID", volume: 980, status: "Completed" },
-    { id: "12516", type: "ID_SLNo", date: "2025-06-16", location: "Semarang, ID", volume: 810, status: "Completed" },
-    { id: "12517", type: "ID_SLB3", date: "2025-06-11", location: "Manado, ID", volume: 920, status: "Pending" },
-    { id: "12518", type: "ID_SLNo", date: "2025-05-07", location: "Batam, ID", volume: 870, status: "On Process" },
-    { id: "12519", type: "ID_SLB3", date: "2025-04-20", location: "Lombok, ID", volume: 940, status: "Completed" },
-    { id: "12520", type: "ID_SLNo", date: "2023-12-19", location: "Banjarmasin, ID", volume: 990, status: "Failed" },
+    {
+        id: "SLD240",
+        service_name: { name: "Sludge Management", type: "B3" },
+        time: "Thu, 23 May 2025",
+        location: "Jakarta, Indonesia",
+        volume: 1000,
+        status: "Completed",
+    },
+    {
+        id: "SLD241",
+        service_name: { name: "Non-B3 Collection", type: "Non-B3" },
+        time: "Fri, 24 May 2025",
+        location: "Bandung, Indonesia",
+        volume: 850,
+        status: "Waiting Payment",
+    },
+    {
+        id: "SLD242",
+        service_name: { name: "Oil Waste Pickup", type: "B3" },
+        time: "Sat, 25 May 2025",
+        location: "Surabaya, Indonesia",
+        volume: 760,
+        status: "On Process",
+    },
+    {
+        id: "SLD243",
+        service_name: { name: "Hazardous Sludge", type: "B3" },
+        time: "Sun, 26 May 2025",
+        location: "Medan, Indonesia",
+        volume: 1120,
+        status: "Failed",
+    },
+    {
+        id: "SLD244",
+        service_name: { name: "Chemical Waste", type: "B3" },
+        time: "Mon, 27 May 2025",
+        location: "Bekasi, Indonesia",
+        volume: 900,
+        status: "Completed",
+    },
+    {
+        id: "SLD245",
+        service_name: { name: "Food Waste", type: "Non-B3" },
+        time: "Tue, 28 May 2025",
+        location: "Yogyakarta, Indonesia",
+        volume: 650,
+        status: "Waiting Payment",
+    },
+    {
+        id: "SLD246",
+        service_name: { name: "Medical Waste", type: "B3" },
+        time: "Wed, 29 May 2025",
+        location: "Palembang, Indonesia",
+        volume: 980,
+        status: "Completed",
+    },
+    {
+        id: "SLD247",
+        service_name: { name: "Grease Trap Service", type: "Non-B3" },
+        time: "Thu, 30 May 2025",
+        location: "Depok, Indonesia",
+        volume: 770,
+        status: "On Process",
+    },
+    {
+        id: "SLD248",
+        service_name: { name: "Industrial Sludge", type: "B3" },
+        time: "Fri, 31 May 2025",
+        location: "Tangerang, Indonesia",
+        volume: 1020,
+        status: "Completed",
+    },
+    {
+        id: "SLD249",
+        service_name: { name: "Plastic Waste", type: "Non-B3" },
+        time: "Sat, 01 Jun 2025",
+        location: "Bali, Indonesia",
+        volume: 880,
+        status: "Failed",
+    },
+];
+
+const stats = [
+    {
+        icon: "/Frame 527.svg",
+        title: "Completed",
+        value: 150,
+        percentage: 8,
+        change: "positive",
+    },
+    {
+        icon: "/Frame 464.svg",
+        title: "Waiting Payments",
+        value: 50,
+        percentage: 15,
+        change: "positive",
+    },
+    {
+        icon: "/Frame 529.svg",
+        title: "On Process",
+        value: 100,
+        percentage: 30,
+        change: "positive",
+    },
+    {
+        icon: "/Frame 530.svg",
+        title: "Cancelled",
+        value: 15,
+        percentage: 32,
+        change: "negative",
+    },
 ];
 
 export default function Page() {
     return (
-        <div className="py-8 px-36 space-y-6">
+        <div className="py-8 px-36 space-y-6 font-calibri">
+            <h1 className="font-bold text-4xl">Transaction</h1>
+            <div className="flex justify-between gap-5">
+                {stats.map((stat, index) => (
+                    <div key={index} className="border rounded-[10px] border-[#D9D9D9] w-full">
+                        <div className="flex items-center gap-2 border-b p-4">
+                            <Image src={stat.icon} alt="Completed" width={50} height={50} />
+                            <div>
+                                <h1>{stat.title}</h1>
+                                <h1 className="text-2xl font-bold">{stat.value}</h1>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-3 p-2">
+                            <div className="flex items-center gap-1">
+                                {stat.change == "positive" ? <Image src={"/line-md_arrow-up.svg"} alt="up" width={15} height={15} /> : <Image src={"/line-md_arrow-down.svg"} alt="up" width={15} height={15} />}
+                                <h1 className={clsx(stat.change === "positive" ? "text-[#20FF0C]" : "text-[#FF0707]")}>{stat.percentage}%</h1>
+                            </div>
+                            <h1>From The Last Month</h1>
+                        </div>
+                    </div>
+                ))}
+            </div>
             <DataTable columns={columns} data={data} />
         </div>
     );
