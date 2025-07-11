@@ -138,6 +138,7 @@ export default function Page() {
                 formData2.append("position", company.position);
                 formData2.append("email", company.email);
                 formData2.append("phone_number", company.phone_number);
+                formData2.append("address", company.address);
 
                 mutate({ formData1, formData2 });
             } catch (error) {
@@ -223,8 +224,8 @@ export default function Page() {
                             <input type="text" name="company.phone_number" value={formik.values.company.phone_number} onChange={formik.handleChange} className="border border-black rounded-md px-3 py-2 focus:outline-none " />
                         </div>
                         <div className="flex flex-col col-span-2 gap-2">
-                            <label htmlFor="country">Country</label>
-                            <input type="text" name="company.country" value={formik.values.company.country} onChange={formik.handleChange} className="border border-black rounded-md px-3 py-2 focus:outline-none " />
+                            <label htmlFor="address">Address</label>
+                            <input type="text" name="company.address" value={formik.values.company.address} onChange={formik.handleChange} className="border border-black rounded-md px-3 py-2 focus:outline-none " />
                         </div>
                     </div>
                 </div>
