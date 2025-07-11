@@ -45,10 +45,7 @@ export async function middleware(request: NextRequest) {
         const token = url.searchParams.get("token");
         if (!token) return NextResponse.redirect(new URL("/login", request.url));
 
-        const data =
-            url.pathname === "/account-active"
-                ? await getAccountActiveEmail(token)
-                : await getAccountActivePage(token);
+        const data = url.pathname === "/account-active" ? await getAccountActiveEmail(token) : await getAccountActivePage(token);
 
         if (!data) return NextResponse.redirect(new URL("/login", request.url));
     }
@@ -68,7 +65,13 @@ export async function middleware(request: NextRequest) {
                 validateStatus: () => true,
             });
 
+            const responseCompanyData = await axiosInstance.get("/sludgify/company-information", {
+                headers,
+                validateStatus: () => true,
+            });
+
             const respUserMe = responseUserMe.data;
+            const respCompanyData = responseCompanyData.data;
 
             if (responseUserMe.status === 304) {
                 return NextResponse.next();
@@ -83,9 +86,16 @@ export async function middleware(request: NextRequest) {
 
                 if (newETag) {
                     response.cookies.set("me-etag", newETag, { httpOnly: false });
-                    response.cookies.set("me-data", JSON.stringify(respUserMe.data), {
-                        httpOnly: false,
-                    });
+                    response.cookies.set(
+                        "me-data",
+                        JSON.stringify({
+                            user: respUserMe.data,
+                            company: respCompanyData.data,
+                        }),
+                        {
+                            httpOnly: false,
+                        }
+                    );
                 }
 
                 return response;
