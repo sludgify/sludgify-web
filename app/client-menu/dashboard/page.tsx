@@ -1,10 +1,12 @@
 "use client";
 import { FileDown } from "lucide-react";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import { ChartConfig } from "@/components/ui/chart";
 import { Barchart } from "@/components/barchart";
 import { Areachart } from "@/components/areachart";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { axiosInstance } from "@/lib/axios";
 
 const chartConfig = {
     sludgeB3: {
@@ -31,6 +33,11 @@ const carbonEmissionChartConfig = {
 export const description = "A multiple line chart";
 
 export default function Page() {
+    const [calculateCarbon, setCalculateCarbon] = useState({
+        massa: 0,
+        sludge_type: "",
+    });
+
     const chartData = [
         { month: "January", sludgeB3: 186, sludgeNonB3: 80 },
         { month: "February", sludgeB3: 305, sludgeNonB3: 200 },
@@ -75,6 +82,23 @@ export default function Page() {
             icon: <Image src="/document.svg" alt="co2" width={30} height={30} />,
         },
     ];
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setCalculateCarbon((prev) => ({ ...prev, [name]: value }));
+        console.log(calculateCarbon);
+    };
+
+    const handleCalculate = async () => {
+        const token = localStorage.getItem("accessToken");
+        await axiosInstance.get("/sludgify/carbon-emissions/calculator", {
+            params: calculateCarbon,
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+    };
+
     return (
         <div className="py-8 px-36 space-y-6">
             <div className="flex justify-between items-center">
@@ -152,19 +176,23 @@ export default function Page() {
                     <div className="flex gap-3 justify-between">
                         <div className="space-y-2 w-full">
                             <h1 className="text-xl">Volume Sudge (ton)</h1>
-                            <input type="ltext" className="border border-gray-300 rounded-md p-2 focus:outline-none w-full" />
+                            <input type="text" name="massa" onChange={handleChange} className="border border-gray-300 rounded-md px-3 h-[36px] text-base focus:outline-none w-full" />
                         </div>
                         <div className="space-y-2 text-xl w-full">
                             <h1>Sludge Type</h1>
-                            <div className="border border-gray-300 rounded-md px-3 py-2 w-full">
-                                <select name="sludgeType" className="w-full focus:outline-none" required>
-                                    <option value="B3">B3</option>
-                                    <option value="Non B3">Non B3</option>
-                                </select>
-                            </div>
+
+                            <Select name="sludge_type" onValueChange={handleChange}>
+                                <SelectTrigger className="border border-gray-300 rounded-md px-3 text-base w-full">
+                                    <SelectValue placeholder="B3" defaultValue={"B3"} />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="B3">B3</SelectItem>
+                                    <SelectItem value="Non-B3">Non-B3</SelectItem>
+                                </SelectContent>
+                            </Select>
                         </div>
                     </div>
-                    <button type="button" className="bg-primary text-white rounded-md px-4 py-2 font-radley w-full">
+                    <button type="button" onClick={handleCalculate} className="bg-primary text-white rounded-md px-4 py-2 font-radley w-full">
                         Calculate Emissions
                     </button>
                     <div className="flex-1 border-t border-primary"></div>
@@ -172,11 +200,11 @@ export default function Page() {
                     <div className="flex justify-between gap-2 w-full">
                         <div className="bg-[#FFB2B273] py-6 px-4 w-full">
                             <h1>Emissions Produced</h1>
-                            <h1 className="font-bold text-[#C63B3B]">2.5 ton CO2</h1>
+                            <h1 className="font-bold text-[#C63B3B]">ton CO2</h1>
                         </div>
                         <div className="bg-[#20FF0C33] py-6 px-4 w-full">
                             <h1>Emissions Produced</h1>
-                            <h1 className="font-bold text-[#3CAA32]">2.5 ton CO2</h1>
+                            <h1 className="font-bold text-[#3CAA32]"> ton CO2</h1>
                         </div>
                     </div>
                 </div>
