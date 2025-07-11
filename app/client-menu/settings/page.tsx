@@ -169,66 +169,6 @@ export default function Page() {
         }
     }, []);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>, isCompany: boolean) => {
-        const { name, value } = e.target;
-        if (isCompany) {
-            setCompanyData((prev) => ({ ...prev, [name]: value }));
-        } else {
-            setFormData((prev) => ({ ...prev, [name]: value }));
-        }
-    };
-
-    const handleDelete = () => {
-        setPhoto(null);
-        if (fileInputRef.current) {
-            fileInputRef.current.value = null; // Reset nilai input file
-        }
-    };
-
-    const handleSave = async () => {
-        const token = localStorage.getItem("accessToken");
-        try {
-            const userForm = new FormData();
-            Object.entries(formData).forEach(([key, value]) => {
-                userForm.append(key, value as string | Blob);
-            });
-            if (photo) {
-                userForm.append("avatar", photo);
-            }
-
-            await axiosInstance.patch("/sludgify/user", userForm, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "multipart/form-data",
-                },
-            });
-            console.log("user form: ", formData);
-            console.log(Object.fromEntries(userForm.entries()));
-            await axiosInstance.patch("/sludgify/user", userForm, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-
-            const companyForm = new FormData();
-            Object.entries(companyData).forEach(([key, value]) => {
-                companyForm.append(key, value as string | Blob);
-            });
-
-            console.log(Object.fromEntries(companyForm.entries()));
-
-            await axiosInstance.patch("/sludgify/company-information", companyForm, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-
-            alert("Profile updated successfully!");
-        } catch (err) {
-            console.error("Failed to save data", err);
-            alert("Failed to save data.");
-        }
-    };
     return (
         <div className="py-8 px-36 space-y-6">
             <form onSubmit={formik.handleSubmit} className="border flex gap-14 items-start max-w-[1077px] border-[#D9D9D9] rounded-md p-6">
