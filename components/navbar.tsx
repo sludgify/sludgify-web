@@ -12,7 +12,7 @@ export const Navbar = () => {
     const parentPath = pathname.split("/")[1];
 
     return (
-        <nav className="flex items-center justify-between p-6 font-radley h-[142px]">
+        <nav className="flex items-center justify-between p-6 font-radley h-[100px]">
             <div className="flex items-center gap-2  text-4xl ">
                 <Image src={"/logo.svg"} width={50} height={50} alt="logo"></Image>
                 <h1>Sludgify</h1>

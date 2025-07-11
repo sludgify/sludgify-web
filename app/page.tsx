@@ -59,9 +59,9 @@ export default function Home() {
         },
     ];
     return (
-        <div className="flex min-h-screen w-screen flex-col">
+        <div className="flex min-h-screen w-full flex-col overflow-hidden">
             <Navbar />
-            <main className="flex-1 w-full">
+            <main className="flex-1 w-full overflow-hidden">
                 {/* Hero Section*/}
                 <div className="bg-[url('/bg-about.svg')] text-secondary w-full bg-no-repeat bg-cover bg-center h-[690px] space-y-3 flex flex-col justify-center gap-3 p-20 ">
                     <h1 className="text-6xl font-radley">One Platform for Waste Compliance, ESG Reporting, and Carbon Reduction</h1>
@@ -80,7 +80,7 @@ export default function Home() {
                     </div>
                 </div>
                 {/* Content Section */}
-                <div className="container flex gap-8 px-10 mx-auto py-10">
+                <div className="container flex justify-center gap-8 px-10 mx-auto py-10">
                     <Image src={"/image-about.svg"} width={448.35} height={472} alt="Sludgify illustration" />
                     <div className="max-w-[700px] flex flex-col space-y-6 justify-center">
                         <h1 className="text-4xl font-radley">We transform your ESG strategy into quantifiable business value and competitive advantage</h1>
@@ -99,7 +99,7 @@ export default function Home() {
                     </div>
                 </div>
                 {/* Core Value Section */}
-                <div className="bg-[#FAFAFA] font-radley w-screen p-12 flex items-start justify-evenly gap-8">
+                <div className="bg-[#FAFAFA] font-radley  p-12 flex items-start justify-evenly gap-8">
                     {value.map((item, index) => (
                         <div key={index} className="flex flex-col gap-4 text-balance px-12 text-lg mb-8 w-[750px]">
                             <div className="flex items-center gap-4">
@@ -135,20 +135,23 @@ export default function Home() {
                     </div>
                 </div>
                 {/* Services Section */}
-                <div className="container mx-auto px-10 py-20">
+                <div className="container flex flex-col justify-center items-center mx-auto px-10 py-20">
                     <h1 className="text-6xl font-radley text-center mb-12">Our Services</h1>
-                    <div className="columns-1 md:columns-2 gap-8">
-                        {services.map((service, index) => (
-                            <div key={index} className="mb-8 break-inside-avoid bg-white p-6 w-[592px] inline-block">
-                                <Image src={service.url} alt={service.title} width={592} height={400} className="mb-4 object-cover" />
-                                <h2 className="text-4xl font-radley  mb-4">{service.title}</h2>
-                                <p className="text-xl text-[#505050]">{service.desc}</p>
-                            </div>
-                        ))}
+
+                    <div className="w-full">
+                        <div className="columns-1 md:columns-2 gap-8 max-w-[1248px] mx-auto">
+                            {services.map((service, index) => (
+                                <div key={index} className="mb-8 break-inside-avoid bg-white p-6 w-[592px] inline-block">
+                                    <Image src={service.url} alt={service.title} width={592} height={400} className="mb-4 object-cover" />
+                                    <h2 className="text-4xl font-radley mb-4">{service.title}</h2>
+                                    <p className="text-xl text-[#505050]">{service.desc}</p>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
-                <BannerFooter />
             </main>
+            <BannerFooter />
             <Footer />
         </div>
     );

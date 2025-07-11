@@ -30,8 +30,6 @@ const carbonEmissionChartConfig = {
     },
 } satisfies ChartConfig;
 
-export const description = "A multiple line chart";
-
 export default function Page() {
     const [calculateCarbon, setCalculateCarbon] = useState({
         massa: 0,

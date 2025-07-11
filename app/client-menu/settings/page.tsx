@@ -4,6 +4,7 @@ import Image from "next/image";
 import React, { useState, useEffect, useRef } from "react";
 import Cookies from "js-cookie";
 import { User } from "@/interfaces/user";
+import { toast } from "sonner";
 
 interface Company {
     id: string;
@@ -11,6 +12,7 @@ interface Company {
     email: string;
     phone_number: string;
     position: string;
+    address: string;
 }
 
 interface MeData {
@@ -91,10 +93,10 @@ export default function Page() {
                 },
             });
 
-            alert("Profile updated successfully!");
+            toast.success("Profile updated successfully!");
         } catch (err) {
             console.error("Failed to save data", err);
-            alert("Failed to save data.");
+            toast.error("Failed to save data.");
         }
     };
 
@@ -108,27 +110,27 @@ export default function Page() {
                     <div className="grid grid-cols-2 gap-4 mt-2">
                         <div className="flex flex-col gap-2">
                             <label htmlFor="firstname">First Name</label>
-                            <input type="text" placeholder={userMe?.user.first_name || "none"} name="first_name" className="border border-black rounded-md px-3 py-2 focus:outline-none " />
+                            <input type="text" placeholder={userMe?.user?.first_name || "none"} name="first_name" className="border border-black rounded-md px-3 py-2 focus:outline-none " />
                         </div>
                         <div className="flex flex-col gap-2">
                             <label htmlFor="lastname">Last Name</label>
-                            <input type="text" placeholder={userMe?.user.last_name || "none"} name="last_name" className="border border-black rounded-md px-3 py-2 focus:outline-none " />
+                            <input type="text" placeholder={userMe?.user?.last_name || "none"} name="last_name" className="border border-black rounded-md px-3 py-2 focus:outline-none " />
                         </div>
                         <div className="flex flex-col gap-2">
                             <label htmlFor="country">Country</label>
-                            <input type="text" name="country" placeholder={userMe?.user.country || "none"} className="border border-black rounded-md px-3 py-2 focus:outline-none " />
+                            <input type="text" name="country" placeholder={userMe?.user?.country || "none"} className="border border-black rounded-md px-3 py-2 focus:outline-none " />
                         </div>
                         <div className="flex flex-col gap-2">
                             <label htmlFor="position">Position</label>
-                            <input type="text" name="position" placeholder={userMe?.user.position || "none"} className="border border-black rounded-md px-3 py-2 focus:outline-none " />
+                            <input type="text" name="position" placeholder={userMe?.user?.position || "none"} className="border border-black rounded-md px-3 py-2 focus:outline-none " />
                         </div>
                         <div className="flex flex-col gap-2">
                             <label htmlFor="email">Email</label>
-                            <input type="text" name="email" placeholder={userMe?.user.email || "none"} className="border border-black rounded-md px-3 py-2 focus:outline-none " />
+                            <input type="text" name="email" placeholder={userMe?.user?.email || "none"} className="border border-black rounded-md px-3 py-2 focus:outline-none " />
                         </div>
                         <div className="flex flex-col gap-2">
                             <label htmlFor="phone">Phone Number</label>
-                            <input type="text" name="phone_number" placeholder={userMe?.user.phone_number || "none"} className="border border-black rounded-md px-3 py-2 focus:outline-none " />
+                            <input type="text" name="phone_number" placeholder={userMe?.user?.phone_number || "none"} className="border border-black rounded-md px-3 py-2 focus:outline-none " />
                         </div>
                     </div>
                     <h1 className="text-primary text-xl font-bold">Company Information</h1>
@@ -137,19 +139,19 @@ export default function Page() {
                     <div className="grid grid-cols-2 gap-4 mt-2">
                         <div className="flex flex-col gap-2">
                             <label htmlFor="country">Country</label>
-                            <input type="text" name="country" placeholder={userMe?.company.country || "none"} onChange={(e) => handleChange(e, true)} className="border border-black rounded-md px-3 py-2 focus:outline-none " />
+                            <input type="text" name="country" placeholder={userMe?.company?.country || "none"} onChange={(e) => handleChange(e, true)} className="border border-black rounded-md px-3 py-2 focus:outline-none " />
                         </div>
                         <div className="flex flex-col gap-2">
                             <label htmlFor="position">Position</label>
-                            <input type="text" name="position" placeholder={userMe?.company.position || "none"} onChange={(e) => handleChange(e, true)} className="border border-black rounded-md px-3 py-2 focus:outline-none " />
+                            <input type="text" name="position" placeholder={userMe?.company?.position || "none"} onChange={(e) => handleChange(e, true)} className="border border-black rounded-md px-3 py-2 focus:outline-none " />
                         </div>
                         <div className="flex flex-col gap-2">
                             <label htmlFor="email">Email</label>
-                            <input type="text" name="email" placeholder={userMe?.company.email || "none"} onChange={(e) => handleChange(e, true)} className="border border-black rounded-md px-3 py-2 focus:outline-none " />
+                            <input type="text" name="email" placeholder={userMe?.company?.email || "none"} onChange={(e) => handleChange(e, true)} className="border border-black rounded-md px-3 py-2 focus:outline-none " />
                         </div>
                         <div className="flex flex-col gap-2">
                             <label htmlFor="phone">Phone Number</label>
-                            <input type="text" name="phone_number" placeholder={userMe?.company.phone_number || "none"} onChange={(e) => handleChange(e, true)} className="border border-black rounded-md px-3 py-2 focus:outline-none " />
+                            <input type="text" name="phone_number" placeholder={userMe?.company?.phone_number || "none"} onChange={(e) => handleChange(e, true)} className="border border-black rounded-md px-3 py-2 focus:outline-none " />
                         </div>
                         <div className="flex flex-col col-span-2 gap-2">
                             <label htmlFor="country">Country</label>

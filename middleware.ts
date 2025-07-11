@@ -86,16 +86,9 @@ export async function middleware(request: NextRequest) {
 
                 if (newETag) {
                     response.cookies.set("me-etag", newETag, { httpOnly: false });
-                    response.cookies.set(
-                        "me-data",
-                        JSON.stringify({
-                            user: respUserMe.data,
-                            company: respCompanyData.data,
-                        }),
-                        {
-                            httpOnly: false,
-                        }
-                    );
+                    response.cookies.set("me-data", JSON.stringify({ user: respUserMe.data, company: respCompanyData.data }), {
+                        httpOnly: false,
+                    });
                 }
 
                 return response;
@@ -130,6 +123,6 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
 }
 
-export const config = {
-    matcher: ["/account-active/:path*", "/client-menu/:path*", "/login", "/register"],
-};
+// export const config = {
+//     matcher: ["/account-active/:path*", "/client-menu/:path*", "/login", "/register"],
+// };

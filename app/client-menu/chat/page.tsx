@@ -225,25 +225,19 @@ export default function Page() {
     };
 
     return (
-        <div className="flex w-[80%] items-start py-4">
-            <div className="space-y-6 px-6">
-                <div className="flex-1 overflow-y-auto w-full h-[75vh] p-2 space-y-4">
+        <div className="flex flex-col min-h-screen">
+            {/* Area pesan/chat */}
+            <div className="flex-1 overflow-y-auto px-4 py-6 flex justify-center">
+                <div className="w-full max-w-[700px] space-y-4">
                     {messages.length > 0 ? (
                         messages.map((message) => (
                             <div key={message.id} className={cn("flex", message.role === "user" ? "justify-end" : "justify-start")}>
-                                <div className={cn("max-w-[80%] rounded-lg p-3 whitespace-pre-wrap", message.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted")}>
+                                <div className={cn("whitespace-pre-wrap", message.role === "user" ? "max-w-[80%] rounded-lg p-3 bg-primary text-primary-foreground" : "")}>
                                     <div className="overflow-x-auto prose prose-sm prose-invert max-w-full break-words whitespace-pre-wrap [&>p]:mb-1 [&>ul]:mb-1 [&>li]:my-0">
                                         {message.role === "assistant" ? (
                                             <ReactMarkdown
                                                 components={{
-                                                    a: ({ node, ...props }) => (
-                                                        <a
-                                                            {...props}
-                                                            className="text-blue-600 hover:underline" // ← styling warna link
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                        />
-                                                    ),
+                                                    a: ({ node, ...props }) => <a {...props} className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer" />,
                                                 }}
                                                 remarkPlugins={[remarkGfm]}
                                                 rehypePlugins={[rehypeRaw]}
@@ -255,33 +249,29 @@ export default function Page() {
                                         )}
                                     </div>
 
-                                    {message.links && message.links.length > 0 && (
+                                    {message.links?.length > 0 && (
                                         <div className="mt-2 flex flex-wrap gap-2">
                                             {message.links.map((link, i) => (
-                                                <button
-                                                    key={i}
-                                                    onClick={() => window.open(link, "_blank")}
-                                                    className="px-3 py-1 text-xl bg-black text-white rounded-lg font-radley hover:bg-black/70 transition drop-shadow-xl hover:cursor-pointer"
-                                                >
+                                                <button key={i} onClick={() => window.open(link, "_blank")} className="px-3 py-1 text-xl bg-black text-white rounded-lg font-radley hover:bg-black/70 transition drop-shadow-xl">
                                                     Download Report {i + 1}
                                                     <Image src="/file-download.svg" alt="Download Icon" width={20} height={20} className="inline ml-2" />
                                                 </button>
                                             ))}
                                         </div>
                                     )}
-                                    <p className="text-xs opacity-70 mt-1 text-right">{formatTime(message.timestamp)}</p>
+                                    <p className={`text-xs opacity-70 mt-1 ${message.role === "user" ? "text-right" : "text-left"}`}>{formatTime(message.timestamp)}</p>
                                 </div>
                             </div>
                         ))
                     ) : (
-                        <div className="flex justify-center items-center min-h-[70vh]">
+                        <div className="flex justify-center items-center min-h-[60vh]">
                             <h1 className="text-6xl font-bold w-[771px] text-center">Let’s Analyze Your Business ESG Performance</h1>
                         </div>
                     )}
 
                     {isTyping && (
                         <div className="flex justify-start">
-                            <div className="max-w-[80%] rounded-lg p-3 bg-muted">
+                            <div className="max-w-[80%] rounded-lg p-3">
                                 <div className="flex items-center gap-2">
                                     <div className="w-3 h-3 bg-[#505050] animate-pulse" />
                                     <h1 className="text-xl flex items-center gap-1">
@@ -294,10 +284,14 @@ export default function Page() {
                             </div>
                         </div>
                     )}
-
                     <div ref={messagesEndRef} />
                 </div>
-                <div className="bg-primary p-3 text-secondary rounded-4xl">
+                <Image src={"/text-search.svg"} alt={"text-search"} width={35} height={35} className="absolute top-3 right-10" />
+            </div>
+
+            {/* Sticky Input */}
+            <div className="sticky bottom-0  w-full z-10 flex justify-center px-4 py-3">
+                <div className="w-full max-w-[800px] bg-primary p-3 text-secondary rounded-2xl">
                     <div className="flex items-center gap-2">
                         <div className="w-full space-y-3">
                             <input
@@ -319,14 +313,10 @@ export default function Page() {
                                             const file = e.target.files?.[0];
                                             if (file) {
                                                 setUploadedFile(file);
-
-                                                if (fileInputRef.current) {
-                                                    fileInputRef.current.value = "";
-                                                }
+                                                if (fileInputRef.current) fileInputRef.current.value = "";
                                             }
                                         }}
                                     />
-
                                     <Paperclip className="h-5 w-5 text-white" />
                                 </label>
                                 <button className={cn("p-2 rounded hover:bg-white/10 transition", isRecording && "bg-red-500")} onClick={toggleRecording}>
@@ -349,7 +339,6 @@ export default function Page() {
                     </div>
                 </div>
             </div>
-            <Image src={"/text-search.svg"} alt="search" width={35} height={35} />
         </div>
     );
 }
