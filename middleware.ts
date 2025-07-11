@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { axiosInstance } from "@/lib/axios";
-import axios, { AxiosError } from "axios";
-import { User } from "./interfaces/user";
+import { AxiosError } from "axios";
 
 interface ErrorResponse {
     message: string;
@@ -35,6 +34,44 @@ const getAccountActiveEmail = async (token: string) => {
     }
 };
 
+const getUserCompany = async (accessToken: string, etag?: string) => {
+    try {
+        const headers: Record<string, string> = {
+            Authorization: `Bearer ${accessToken}`,
+        };
+        if (etag) headers["If-None-Match"] = etag;
+
+        const response = await axiosInstance.get(`/sludgify/company-information`, {
+            headers,
+            validateStatus: () => true,
+        });
+
+        return response;
+    } catch (err) {
+        const error = err as AxiosError<ErrorResponse>;
+        console.error("❌ Error getUserCompany:", error);
+    }
+};
+
+const getUserMe = async (accessToken: string, etag?: string) => {
+    try {
+        const headers: Record<string, string> = {
+            Authorization: `Bearer ${accessToken}`,
+        };
+        if (etag) headers["If-None-Match"] = etag;
+
+        const response = await axiosInstance.get(`/sludgify/@me`, {
+            headers,
+            validateStatus: () => true,
+        });
+
+        return response;
+    } catch (err) {
+        const error = err as AxiosError<ErrorResponse>;
+        console.error("❌ Error getUserMe:", error);
+    }
+};
+
 export async function middleware(request: NextRequest) {
     const url = request.nextUrl;
     const accessToken = request.cookies.get("accessToken")?.value;
@@ -54,7 +91,6 @@ export async function middleware(request: NextRequest) {
     }
 
     if (url.pathname.startsWith("/client-menu")) {
-        console.log(accessToken);
         if (!accessToken) return NextResponse.redirect(new URL("/login", request.url));
 
         try {
@@ -63,23 +99,24 @@ export async function middleware(request: NextRequest) {
             };
             if (clientETag) headers["If-None-Match"] = clientETag;
 
-            const responseUserMe = await axiosInstance.get(`/sludgify/@me`, {
-                headers,
-                validateStatus: () => true,
-            });
+            const responseUserMe = await getUserMe(accessToken, clientETag);
+
+            if (!responseUserMe) {
+                throw new Error("❌ getUserMe returned null/undefined");
+            }
 
             const respUserMe = responseUserMe.data;
 
-            if (responseUserMe.status === 304) {
-                return NextResponse.next();
-            }
+            let response: NextResponse = NextResponse.next();
 
             if (responseUserMe.status === 200) {
+                console.log("✅ Validating /@me", respUserMe.data);
                 const newETag = responseUserMe.headers["etag"];
+                console.log("newETag", newETag);
                 const newUrl = request.nextUrl;
                 newUrl.searchParams.delete("fromRedirect");
 
-                const response = NextResponse.redirect(newUrl);
+                response = NextResponse.redirect(newUrl);
 
                 if (newETag) {
                     response.cookies.set("me-etag", newETag, { httpOnly: false });
@@ -87,18 +124,28 @@ export async function middleware(request: NextRequest) {
                         httpOnly: false,
                     });
                 }
-
-                return response;
-            }
-
-            if (responseUserMe.status === 429) {
+            } else if (responseUserMe.status === 429) {
                 console.warn("⚠️ Rate limited, skip logout.");
-                return NextResponse.next();
+                return response;
+            } else if (responseUserMe.status !== 304) {
+                const redirect = NextResponse.redirect(new URL("/login", request.url));
+                redirect.cookies.delete("accessToken");
+                redirect.cookies.delete("me-etag");
+                redirect.cookies.delete("company-etag");
+                return redirect;
             }
 
-            const response = NextResponse.redirect(new URL("/login", request.url));
-            response.cookies.delete("accessToken");
-            response.cookies.delete("me-etag");
+            const companyETag = request.cookies.get("company-etag")?.value;
+            const companyResp = await getUserCompany(accessToken, companyETag);
+
+            if (companyResp?.status === 200) {
+                const newCompanyETag = companyResp.headers["etag"];
+                response.cookies.set("company-etag", newCompanyETag ?? "", { httpOnly: false });
+                response.cookies.set("company-data", JSON.stringify(companyResp.data?.data ?? {}), {
+                    httpOnly: false,
+                });
+            }
+
             return response;
         } catch (err) {
             console.error("❌ Error validating /@me", err);
