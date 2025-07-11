@@ -70,6 +70,7 @@ export default function Page() {
         setFormErrorsCompanyInformation(errors);
     }
 
+
     const { mutate } = useMutation({
         mutationFn: async ({
             formData1,
