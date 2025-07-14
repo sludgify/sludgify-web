@@ -82,7 +82,10 @@ export async function middleware(request: NextRequest) {
         const token = url.searchParams.get("token");
         if (!token) return NextResponse.redirect(new URL("/login", request.url));
 
-        const data = url.pathname === "/account-active" ? await getAccountActiveEmail(token) : await getAccountActivePage(token);
+        const data =
+            url.pathname === "/account-active"
+                ? await getAccountActiveEmail(token)
+                : await getAccountActivePage(token);
 
         if (!data) return NextResponse.redirect(new URL("/login", request.url));
     }
@@ -102,20 +105,12 @@ export async function middleware(request: NextRequest) {
                 throw new Error("❌ getUserMe returned null/undefined");
             }
 
-            const responseCompanyData = await axiosInstance.get("/sludgify/company-information", {
-                headers,
-                validateStatus: () => true,
-            });
-
             const respUserMe = responseUserMe.data;
-            const respCompanyData = responseCompanyData.data;
 
             let response: NextResponse = NextResponse.next();
 
             if (responseUserMe.status === 200) {
-                console.log("✅ Validating /@me", respUserMe.data);
                 const newETag = responseUserMe.headers["etag"];
-                console.log("newETag", newETag);
                 const newUrl = request.nextUrl;
                 newUrl.searchParams.delete("fromRedirect");
 
@@ -123,7 +118,7 @@ export async function middleware(request: NextRequest) {
 
                 if (newETag) {
                     response.cookies.set("me-etag", newETag, { httpOnly: false });
-                    response.cookies.set("me-data", JSON.stringify({ user: respUserMe.data, company: respCompanyData.data }), {
+                    response.cookies.set("me-data", JSON.stringify(respUserMe.data), {
                         httpOnly: false,
                     });
                 }
@@ -170,6 +165,6 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
 }
 
-// export const config = {
-//     matcher: ["/account-active/:path*", "/client-menu/:path*", "/login", "/register"],
-// };
+export const config = {
+    matcher: ["/account-active/:path*", "/client-menu/:path*", "/login", "/register"],
+};

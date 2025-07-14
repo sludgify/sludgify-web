@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
@@ -7,31 +6,17 @@ import Link from "next/link";
 import clsx from "clsx";
 import { usePathname, useRouter } from "next/navigation";
 import Cookies from "js-cookie";
-import { User } from "@/interfaces/user";
-import { LogOut, Router } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { Button } from "./ui/button";
 import { axiosInstance } from "@/lib/axios";
-import { tr } from "date-fns/locale";
 import { toast } from "sonner";
-
-interface Company {
-    id: string;
-    country: string;
-    email: string;
-    phone_number: string;
-    position: string;
-}
-
-interface MeData {
-    user: User;
-    company: Company;
-}
 
 export const ClientNavbar = () => {
     const [, setOpen] = useState(false);
     const pathname = usePathname();
     const router = useRouter();
-    const [userMe, setUserMe] = useState<MeData | null>(null);
+    const [userMe, setUserMe] = useState<User | null>(null);
+    const [accessToken, setAccessToken] = useState<string | null>(null);
 
     useEffect(() => {
         const storedOpen = localStorage.getItem("open");
@@ -42,14 +27,22 @@ export const ClientNavbar = () => {
 
     useEffect(() => {
         const userMeCookie = Cookies.get("me-data");
-        console.log(userMeCookie);
-        if (userMeCookie) {
+        const companyCookie = Cookies.get("company-data");
+        const accessTokenCookie = Cookies.get("accessToken");
+
+        if (userMeCookie && companyCookie) {
+            console.log("userMeCookie", userMeCookie);
             try {
-                const parsed = JSON.parse(userMeCookie) as MeData;
-                setUserMe(parsed);
+                const parsedMe = JSON.parse(userMeCookie) as User;
+                setUserMe(parsedMe);
             } catch (e) {
                 console.error("❌ Gagal parse me-data cookie:", e);
             }
+        }
+
+        if (accessTokenCookie) {
+            console.log("accessTokenCookie", accessTokenCookie);
+            setAccessToken(accessTokenCookie);
         }
     }, []);
 
@@ -82,18 +75,27 @@ export const ClientNavbar = () => {
     ];
 
     const handleLogout = async () => {
-        const token = localStorage.getItem("accessToken");
-        console.log("token: ", token);
+        console.log("accessToken", accessToken);
         try {
-            await axiosInstance.post("/sludgify/logout", null, {
+            const response = await axiosInstance.post("/sludgify/logout", null, {
                 headers: {
-                    Authorization: `bearer ${token}`,
+                    Authorization: `bearer ${accessToken}`,
                 },
             });
-            toast.success("Logout berhasil!");
-            setTimeout(() => {
-                router.push("/");
-            }, 1000);
+            if (response.status === 201) {
+                Cookies.remove("accessToken");
+                toast.success("Logout berhasil!");
+                [
+                    "accessToken",
+                    "me-data",
+                    "company-data",
+                    "me-etag",
+                    "company-etag"
+                ].forEach((cookie) => Cookies.remove(cookie));
+                setTimeout(() => {
+                    router.push("/");
+                }, 1000);
+            }
         } catch (e) {
             console.error("❌ Gagal logout:", e);
         }
@@ -131,10 +133,10 @@ export const ClientNavbar = () => {
 
                 <div className="flex flex-col gap-1">
                     <div className="flex gap-2 items-center min-h-[64px]">
-                        <Image src={userMe?.user.avatar || "/Ellipse 1.svg"} alt="Ellipse 2" width={45} height={45} className="rounded-full w-[45px] h-[45px] object-cover object-top" />
+                        <Image src={userMe?.avatar || "/Ellipse 1.svg"} alt="Ellipse 2" width={45} height={45} className="rounded-full w-[45px] h-[45px] object-cover object-top" />
                         <div className="ml-2">
                             <h1 className="text-lg text-[#525252] font-bold capitalize">
-                                {userMe?.user.first_name} {userMe?.user.last_name}
+                                {userMe?.first_name} {userMe?.last_name}
                             </h1>
                         </div>
                     </div>

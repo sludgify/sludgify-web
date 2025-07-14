@@ -2,8 +2,6 @@
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import Cookies from "js-cookie";
-import { User } from "@/interfaces/user";
-import { Company } from "@/interfaces/company";
 import { useMutation } from "@tanstack/react-query";
 import { axiosInstance } from "@/lib/axios";
 import { AxiosError } from "axios";
@@ -232,10 +230,14 @@ export default function Page() {
 
                 <div className=" w-[330px]">
                     <div className="flex gap-2 items-center mt-4 min-h-[64px]">
-                        <Image src={previewAvatar || userMe?.avatar || "/Ellipse 2.svg"} alt="Ellipse 2" width={50} height={50} />
-                        <div className="overflow-hidden transition-all font-bold duration-300 whitespace-nowrap">
-                            <h1 className="text-xl">Kim Gimyung</h1>
-                            <p className="text-[#525252]">HSE Manager at PT Eco Solution</p>
+                        <Image src={previewAvatar || userMe?.avatar || "/Ellipse 2.svg"} alt="Ellipse 2" width={50} height={50} className="rounded-full h-[45px] w-[45px] object-cover object-top" />
+                        <div className="overflow-hidden transition-all capitalize font-bold duration-300 whitespace-nowrap">
+                            <h1 className="text-xl">
+                                {userMe?.first_name} {userMe?.last_name}
+                            </h1>
+                            <p className="text-[#525252]">
+                                {userMe?.position} at {userMe?.company_name}
+                            </p>
                         </div>
                     </div>
                     <div>
@@ -258,13 +260,13 @@ export default function Page() {
                             }}
                         />
                         <div className="grid grid-cols-2 gap-4 mt-2 font-radley">
-                            <button type="button" className="bg-[#DC0000] text-white rounded-md py-2">
+                            <button type="button" className="bg-[#DC0000] text-white rounded-md py-2 cursor-pointer">
                                 Delete
                             </button>
                             <label htmlFor="upload-photo" className="border border-black rounded-md py-2 text-center cursor-pointer">
                                 Upload
                             </label>
-                            <button type="submit" className="col-span-2 bg-black rounded-md text-white py-2">
+                            <button type="submit" className="col-span-2 bg-black rounded-md text-white py-2 cursor-pointer">
                                 Save Changes
                             </button>
                         </div>
