@@ -81,16 +81,21 @@ export default function Page() {
         },
     ];
 
-    const handleChange = (e) => {
+    const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setCalculateCarbon((prev) => ({ ...prev, [name]: value }));
-        console.log(calculateCarbon);
+        setCalculateCarbon((prev) => ({
+            ...prev,
+            [name]: name === "massa" ? parseFloat(value) : value,
+        }));
+    };
+
+    const handleSelectChange = (value) => {
+        setCalculateCarbon((prev) => ({ ...prev, sludge_type: value }));
     };
 
     const handleCalculate = async () => {
         const token = localStorage.getItem("accessToken");
-        await axiosInstance.get("/sludgify/carbon-emissions/calculator", {
-            params: calculateCarbon,
+        await axiosInstance.post("/sludgify/carbon-emissions/calculator", calculateCarbon, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -174,12 +179,12 @@ export default function Page() {
                     <div className="flex gap-3 justify-between">
                         <div className="space-y-2 w-full">
                             <h1 className="text-xl">Volume Sudge (ton)</h1>
-                            <input type="text" name="massa" onChange={handleChange} className="border border-gray-300 rounded-md px-3 h-[36px] text-base focus:outline-none w-full" />
+                            <input type="number" name="massa" onChange={handleInputChange} className="border border-gray-300 rounded-md px-3 h-[36px] text-base focus:outline-none w-full" />
                         </div>
                         <div className="space-y-2 text-xl w-full">
                             <h1>Sludge Type</h1>
 
-                            <Select name="sludge_type" onValueChange={handleChange}>
+                            <Select name="sludge_type" onValueChange={handleSelectChange}>
                                 <SelectTrigger className="border border-gray-300 rounded-md px-3 text-base w-full">
                                     <SelectValue placeholder="B3" defaultValue={"B3"} />
                                 </SelectTrigger>

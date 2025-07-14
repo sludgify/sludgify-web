@@ -123,7 +123,7 @@ export async function middleware(request: NextRequest) {
 
                 if (newETag) {
                     response.cookies.set("me-etag", newETag, { httpOnly: false });
-                    response.cookies.set("me-data", JSON.stringify({ user: respUserMe.data, company: respCompanyData.data }), {
+                    response.cookies.set("me-data", JSON.stringify(respUserMe.data), {
                         httpOnly: false,
                     });
                 }
