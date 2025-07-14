@@ -32,7 +32,7 @@ export default function Page() {
     const login = useGoogleLogin({
         onSuccess: async (tokenResponse) => {
             try {
-                const response = await axiosInstance.post("/api/auth/login", {
+                const response = await axiosInstance.post("sludgify/login", {
                     provider: "google",
                     token: tokenResponse.access_token,
                 });
