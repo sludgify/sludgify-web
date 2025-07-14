@@ -4,27 +4,87 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { TransactionTimeline } from "@/components/transaction-timeline";
 
-const transactions: Transactions[] = [
-    { id: "12501", type: "ID_SLB3", date: "2025-06-19", location: "Jakarta, ID", volume: 1000, status: "Completed" },
-    { id: "12502", type: "ID_SLNo", date: "2025-06-13", location: "Bandung, ID", volume: 850, status: "Pending" },
-    { id: "12503", type: "ID_SLB3", date: "2025-06-01", location: "Surabaya, ID", volume: 1200, status: "On Process" },
-    { id: "12504", type: "ID_SLNo", date: "2025-05-15", location: "Yogyakarta, ID", volume: 930, status: "Completed" },
-    { id: "12505", type: "ID_SLB3", date: "2024-11-10", location: "Medan, ID", volume: 1100, status: "Failed" },
-    { id: "12506", type: "ID_SLNo", date: "2025-06-18", location: "Depok, ID", volume: 760, status: "Completed" },
-    { id: "12507", type: "ID_SLB3", date: "2025-06-17", location: "Bogor, ID", volume: 890, status: "Pending" },
-    { id: "12508", type: "ID_SLNo", date: "2025-06-10", location: "Bekasi, ID", volume: 950, status: "Completed" },
-    { id: "12509", type: "ID_SLB3", date: "2025-05-28", location: "Malang, ID", volume: 1050, status: "On Process" },
-    { id: "12510", type: "ID_SLNo", date: "2025-04-30", location: "Cirebon, ID", volume: 820, status: "Completed" },
-    { id: "12511", type: "ID_SLB3", date: "2025-06-19", location: "Padang, ID", volume: 780, status: "Completed" },
-    { id: "12512", type: "ID_SLNo", date: "2025-06-14", location: "Bali, ID", volume: 660, status: "Pending" },
-    { id: "12513", type: "ID_SLB3", date: "2025-06-02", location: "Pontianak, ID", volume: 970, status: "Failed" },
-    { id: "12514", type: "ID_SLNo", date: "2025-05-12", location: "Palembang, ID", volume: 1120, status: "On Process" },
-    { id: "12515", type: "ID_SLB3", date: "2024-12-25", location: "Makassar, ID", volume: 980, status: "Completed" },
-    { id: "12516", type: "ID_SLNo", date: "2025-06-16", location: "Semarang, ID", volume: 810, status: "Completed" },
-    { id: "12517", type: "ID_SLB3", date: "2025-06-11", location: "Manado, ID", volume: 920, status: "Pending" },
-    { id: "12518", type: "ID_SLNo", date: "2025-05-07", location: "Batam, ID", volume: 870, status: "On Process" },
-    { id: "12519", type: "ID_SLB3", date: "2025-04-20", location: "Lombok, ID", volume: 940, status: "Completed" },
-    { id: "12520", type: "ID_SLNo", date: "2023-12-19", location: "Banjarmasin, ID", volume: 990, status: "Failed" },
+const data: Transactions[] = [
+    {
+        id: "SLD240",
+        service_name: { name: "Sludge Management", type: "B3" },
+        time: "Thu, 23 May 2025",
+        location: "Jakarta, Indonesia",
+        volume: 1000,
+        status: "Completed",
+    },
+    {
+        id: "SLD241",
+        service_name: { name: "Non-B3 Collection", type: "Non-B3" },
+        time: "Fri, 24 May 2025",
+        location: "Bandung, Indonesia",
+        volume: 850,
+        status: "Waiting Payment",
+    },
+    {
+        id: "SLD242",
+        service_name: { name: "Oil Waste Pickup", type: "B3" },
+        time: "Sat, 25 May 2025",
+        location: "Surabaya, Indonesia",
+        volume: 760,
+        status: "On Process",
+    },
+    {
+        id: "SLD243",
+        service_name: { name: "Hazardous Sludge", type: "B3" },
+        time: "Sun, 26 May 2025",
+        location: "Medan, Indonesia",
+        volume: 1120,
+        status: "Failed",
+    },
+    {
+        id: "SLD244",
+        service_name: { name: "Chemical Waste", type: "B3" },
+        time: "Mon, 27 May 2025",
+        location: "Bekasi, Indonesia",
+        volume: 900,
+        status: "Completed",
+    },
+    {
+        id: "SLD245",
+        service_name: { name: "Food Waste", type: "Non-B3" },
+        time: "Tue, 28 May 2025",
+        location: "Yogyakarta, Indonesia",
+        volume: 650,
+        status: "Waiting Payment",
+    },
+    {
+        id: "SLD246",
+        service_name: { name: "Medical Waste", type: "B3" },
+        time: "Wed, 29 May 2025",
+        location: "Palembang, Indonesia",
+        volume: 980,
+        status: "Completed",
+    },
+    {
+        id: "SLD247",
+        service_name: { name: "Grease Trap Service", type: "Non-B3" },
+        time: "Thu, 30 May 2025",
+        location: "Depok, Indonesia",
+        volume: 770,
+        status: "On Process",
+    },
+    {
+        id: "SLD248",
+        service_name: { name: "Industrial Sludge", type: "B3" },
+        time: "Fri, 31 May 2025",
+        location: "Tangerang, Indonesia",
+        volume: 1020,
+        status: "Completed",
+    },
+    {
+        id: "SLD249",
+        service_name: { name: "Plastic Waste", type: "Non-B3" },
+        time: "Sat, 01 Jun 2025",
+        location: "Bali, Indonesia",
+        volume: 880,
+        status: "Failed",
+    },
 ];
 
 function generateTrackingSteps(status: string): TrackingStep[] {
@@ -64,20 +124,20 @@ function generateTrackingSteps(status: string): TrackingStep[] {
 }
 
 export default function TransactionDetail({ params }: { params: { id: string } }) {
-    const transaction = transactions.find((item) => item.id === params.id);
+    const transaction = data.find((item) => item.id === params.id);
 
     if (!transaction) return notFound();
     const steps = generateTrackingSteps(transaction.status);
 
     return (
-        <div className="py-8 px-36 space-y-6 w-screen">
+        <div className="p-8 space-y-6 w-full">
             <div className="flex items-center font-radley">
                 <Link href="/client-menu/transactions" className="text-primary">
                     <ArrowLeft className="inline-block mr-2" size={24} />
                 </Link>
                 <h1 className="text-xl text-primary font-radley">Transaction</h1>
             </div>
-            <div className="border border-[#D9D9D9] rounded-lg py-10 flex gap-10">
+            <div className="border border-[#D9D9D9] rounded-lg p-5 flex gap-10">
                 <TransactionTimeline steps={steps} transaction={transaction} />
             </div>
         </div>
