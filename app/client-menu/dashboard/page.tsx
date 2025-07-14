@@ -7,6 +7,7 @@ import { Barchart } from "@/components/barchart";
 import { Areachart } from "@/components/areachart";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { axiosInstance } from "@/lib/axios";
+import Cookies from "js-cookie";
 
 const chartConfig = {
     sludgeB3: {
@@ -94,10 +95,10 @@ export default function Page() {
     };
 
     const handleCalculate = async () => {
-        const token = localStorage.getItem("accessToken");
+        const accessToken = Cookies.get("accessToken");
         await axiosInstance.post("/sludgify/carbon-emissions/calculator", calculateCarbon, {
             headers: {
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${accessToken}`,
             },
         });
     };
