@@ -7,6 +7,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import Image from "next/image";
+import Cookies from "js-cookie";
 
 interface Message {
     id: string;
@@ -49,15 +50,18 @@ export default function Page() {
     const recognitionRef = useRef<InstanceType<SpeechRecognitionType> | null>(null);
 
     useEffect(() => {
-        const userData = localStorage.getItem("accessToken");
-        if (userData) {
-            setToken(userData);
+        const accessToken = Cookies.get("accessToken");
+
+        const userMeCookie = Cookies.get("me-data");
+        const parsedMe = JSON.parse(userMeCookie as string) as User;
+        if (accessToken) {
+            setToken(accessToken);
             const newSocket = io("http://localhost:5000");
             setSocket(newSocket);
 
             newSocket.on("connect", () => {
                 console.log("Connected to server");
-                newSocket.emit("join", { room: "default", token: userData });
+                newSocket.emit("join", { room: parsedMe.id, token: accessToken });
             });
 
             newSocket.on("chat_history", (msgs: SocketMessage[]) => {

@@ -7,6 +7,7 @@ import { axiosInstance } from "@/lib/axios";
 import { AxiosError } from "axios";
 import { useFormik } from "formik";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface ErrorResponse {
     message: string;
@@ -43,6 +44,8 @@ export default function Page() {
 
     const [accessToken, setAccessToken] = useState<string | null>(null);
 
+    const { push } = useRouter();
+
     const [formErrorsPersonalInformation, setFormErrorsPersonalInformation] = useState<PersonalInformationFormErrors>({
         first_name: [],
         last_name: [],
@@ -66,6 +69,27 @@ export default function Page() {
 
     const handleValidationCompanyInformation = (errors: CompanyInformationFormErrors) => {
         setFormErrorsCompanyInformation(errors);
+    }
+
+    const handleDeletedAccount = async () => {
+        const headers: Record<string, string> = {
+            Authorization: `Bearer ${accessToken}`,
+        };
+        const response = await axiosInstance.delete("/sludgify/user", { headers });
+        if (response.status === 201) {
+            Cookies.remove("accessToken");
+            toast.success(response.data.message);
+            [
+                "accessToken",
+                "me-data",
+                "company-data",
+                "me-etag",
+                "company-etag"
+            ].forEach((cookie) => Cookies.remove(cookie));
+            setTimeout(() => {
+                push("/");
+            }, 1000);
+        }
     }
 
     const { mutate } = useMutation({
@@ -94,7 +118,12 @@ export default function Page() {
 
         onError: (error) => {
             const err = error as AxiosError<ErrorResponse>;
-            toast.error(err.response?.data.message);
+            if (err.status == 401) {
+                Cookies.remove("accessToken");
+                setTimeout(() => {
+                    push("/client-menu");
+                }, 1000);
+            }
         },
     })
 
@@ -260,7 +289,7 @@ export default function Page() {
                             }}
                         />
                         <div className="grid grid-cols-2 gap-4 mt-2 font-radley">
-                            <button type="button" className="bg-[#DC0000] text-white rounded-md py-2 cursor-pointer">
+                            <button type="button" className="bg-[#DC0000] text-white rounded-md py-2 cursor-pointer" onClick={handleDeletedAccount}>
                                 Delete
                             </button>
                             <label htmlFor="upload-photo" className="border border-black rounded-md py-2 text-center cursor-pointer">
