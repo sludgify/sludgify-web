@@ -8,6 +8,8 @@ import { Areachart } from "@/components/areachart";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { axiosInstance } from "@/lib/axios";
 import Cookies from "js-cookie";
+import { toast } from "sonner";
+import { AxiosError } from "axios";
 
 const chartConfig = {
     sludgeB3: {
@@ -34,6 +36,17 @@ const carbonEmissionChartConfig = {
 export default function Page() {
     const [calculateCarbon, setCalculateCarbon] = useState({
         massa: 0,
+        sludge_type: "",
+    });
+    const [calculateResult, setCalculateResult] = useState({
+        co_processing: {
+            emisi_kg_CO2: 0,
+            massa_ton: 0,
+            methode: "",
+        },
+        emisi_kg_CO2: 0,
+        massa_ton: 0,
+        methode: "",
         sludge_type: "",
     });
 
@@ -95,12 +108,20 @@ export default function Page() {
     };
 
     const handleCalculate = async () => {
-        const accessToken = Cookies.get("accessToken");
-        await axiosInstance.post("/sludgify/carbon-emissions/calculator", calculateCarbon, {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
-        });
+        try {
+            const accessToken = Cookies.get("accessToken");
+            const response = await axiosInstance.post("/sludgify/carbon-emissions/calculator", calculateCarbon, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            });
+            const data = response.data.data;
+            console.log(data);
+            setCalculateResult(data);
+        } catch (err) {
+            const error = err as AxiosError<ErrorResponse>;
+            toast.error(error.response?.data.message);
+        }
     };
 
     return (
@@ -170,7 +191,7 @@ export default function Page() {
                             <h1>Total Price</h1>
                             <h1 className="font-bold">IDR 150.000</h1>
                         </div>
-                        <button className="bg-primary text-white rounded-md px-4 py-2 font-radley">Buy Now</button>
+                        <button className="bg-primary text-white rounded-md px-4 py-2 font-radley cursor-pointer">Buy Now</button>
                     </div>
                 </div>
 
@@ -196,7 +217,7 @@ export default function Page() {
                             </Select>
                         </div>
                     </div>
-                    <button type="button" onClick={handleCalculate} className="bg-primary text-white rounded-md px-4 py-2 font-radley w-full">
+                    <button type="button" onClick={handleCalculate} className="bg-primary text-white rounded-md px-4 py-2 font-radley w-full cursor-pointer">
                         Calculate Emissions
                     </button>
                     <div className="flex-1 border-t border-primary"></div>
@@ -204,11 +225,11 @@ export default function Page() {
                     <div className="flex justify-between gap-2 w-full">
                         <div className="bg-[#FFB2B273] py-6 px-4 w-full">
                             <h1>Emissions Produced</h1>
-                            <h1 className="font-bold text-[#C63B3B]">ton CO2</h1>
+                            <h1 className="font-bold text-[#C63B3B]">{calculateResult?.emisi_kg_CO2} ton CO2</h1>
                         </div>
                         <div className="bg-[#20FF0C33] py-6 px-4 w-full">
                             <h1>Emissions Produced</h1>
-                            <h1 className="font-bold text-[#3CAA32]"> ton CO2</h1>
+                            <h1 className="font-bold text-[#3CAA32]">{calculateResult?.co_processing?.emisi_kg_CO2} ton CO2</h1>
                         </div>
                     </div>
                 </div>
