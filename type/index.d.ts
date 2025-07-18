@@ -3,6 +3,11 @@ declare type service_name = {
     type: string;
 };
 
+declare type PaymentData = {
+    amount: string;
+    method: string;
+}
+
 declare type Transactions = {
     id: string;
     service_name: service_name;
