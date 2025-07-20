@@ -68,10 +68,10 @@ export const Navbar = () => {
                 </Link>
                 <div className="flex flex-col">
                     <span className={clsx(parentPath === "services" && "border-b-2 w-fit  border-primary", "py-1 outline-none")}>Services</span>
-                    <Link href="/services/sludge-management" onClick={() => setIsOpen(false)} className="pl-4 py-1">
+                    <Link href="/services/sludge-management" onClick={() => setIsOpen(false)} className="text-base pl-4 py-1">
                         Sludge Management Service
                     </Link>
-                    <Link href="/services/sustainability-report" onClick={() => setIsOpen(false)} className="pl-4 py-1">
+                    <Link href="/services/sustainability-report" onClick={() => setIsOpen(false)} className="text-base pl-4 py-1">
                         Sustainability Report Service
                     </Link>
                 </div>
