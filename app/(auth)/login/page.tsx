@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { use, useState } from "react";
 import Image from "next/image";
 import { Lock } from "lucide-react";
 import Link from "next/link";
@@ -14,9 +14,22 @@ import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { axiosInstance } from "@/lib/axios";
 import { useMediaQuery } from 'react-responsive';
+import BackgroundResponsiveMobileLogin from "../../../public/responsive-login-mobile.png";
+import {
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card"
+import Group16 from "../../../public/Group 16.png";
+import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button";
+import IconGoogle from "../../../public/flat-color-icons_google.png";
 
 export default function Page() {
     const isDesktop = useMediaQuery({ minWidth: 1024 });
+    const isMobile = useMediaQuery({ maxWidth: 767 });
 
     const [showPassword, setShowPassword] = useState(false);
     const { push } = useRouter();
@@ -130,17 +143,90 @@ export default function Page() {
         },
     });
 
+
+    if (isMobile) {
+        return (
+            <div className="h-screen bg-cover bg-center pt-10" style={{ backgroundImage: `url(${BackgroundResponsiveMobileLogin.src})` }}>
+                <Card className="w-[80%] h-[83%] mx-auto">
+                    <CardHeader>
+                        <CardTitle className="flex flex-row justify-center items-center gap-4">
+                            <div className="flex flex-row items-center gap-2">
+                                <Image
+                                    src={Group16}
+                                    alt="logo"
+                                    width={28}
+                                    height={15}
+                                />
+                                <p className="text-sm font-semibold text-black">Sludgify</p>
+                            </div>
+
+                            <div className="flex items-center">
+                                <div className="h-5 w-px bg-gray-400 mx-4 ms-7" />
+                                <p className="text-sm text-black">One Platform for ESG, Waste, and Carbon Impact</p>
+                            </div>
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <h1 className="text-xl">Create Account</h1>
+                        <form action="">
+                            <div className="flex flex-col gap-1">
+                                <div className="flex flex-col mt-2">
+                                    <Label htmlFor="email" className="text-sm font-normal">First Name</Label>
+                                    <Input type="text" />
+                                </div>
+                                <div className="flex flex-col mt-2">
+                                    <Label htmlFor="email" className="text-sm font-normal">Last Name</Label>
+                                    <Input type="text" />
+                                </div>
+                                <div className="flex flex-col mt-2">
+                                    <Label htmlFor="email" className="text-sm font-normal">Company Name</Label>
+                                    <Input type="text" />
+                                </div>
+                                <div className="flex flex-col mt-2">
+                                    <Label htmlFor="email" className="text-sm font-normal">Email</Label>
+                                    <Input type="text" />
+                                </div>
+                                <div className="flex flex-col mt-2">
+                                    <Label htmlFor="email" className="text-sm font-normal">Password</Label>
+                                    <Input type="text" />
+                                </div>
+                                <div className="flex flex-col mt-2">
+                                    <Label htmlFor="email" className="text-sm font-normal">Confirm Password</Label>
+                                    <Input type="text" />
+                                </div>
+                                <Button type="submit" className="w-full mt-4">Sign Up</Button>
+                                <div className="flex items-center justify-center w-full mt-1 mb-1">
+                                    <div className="flex-grow h-px bg-[#525252]" />
+                                    <span className="mx-4 text-sm text-black">OR</span>
+                                    <div className="flex-grow h-px bg-[#525252]" />
+                                </div>
+                                <Button type="submit" className="w-full flex flex-row">
+                                    <Image src={IconGoogle} alt="logo" width={24} height={24} />
+                                    <span className="ml-2">Sign Up with Google</span>
+                                </Button>
+                            </div>
+                        </form>
+                        <div className="flex flex-row items-center mt-2">
+                            <p className="text-sm">Already have account?</p>
+                            <Link href="/login" className="ml-2 text-blue-500 text-sm">Login</Link>
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
+        )
+    }
+
     if (isDesktop) {
         return (
             <div className="flex h-screen w-screen">
                 <div className="flex w-1/2 items-center justify-center relative"><div className="absolute top-7 left-7 flex items-center gap-2 h-10 text-black  ">
-                        <Image src={"/logo.svg"} width={50} height={50} alt="logo"></Image>
-                        <h1 className="text-4xl">Sludgify</h1>
-                        <Separator orientation="vertical" className="w-[10px] h-full bg-black mx-4" />
-                        <p>
-                            One Platform for ESG, Waste, <br /> and Carbon Impact
-                        </p>
-                    </div>
+                    <Image src={"/logo.svg"} width={50} height={50} alt="logo"></Image>
+                    <h1 className="text-4xl">Sludgify</h1>
+                    <Separator orientation="vertical" className="w-[10px] h-full bg-black mx-4" />
+                    <p>
+                        One Platform for ESG, Waste, <br /> and Carbon Impact
+                    </p>
+                </div>
                     <div className="mt-10 flex justify-center items-center p-12">
                         <div className="right-0 space-y-2 w-[446px] h-[582px]">
                             <div className="text-center space-y-1">
