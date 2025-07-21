@@ -122,7 +122,7 @@ export default function Page() {
     if (isMobile) {
         return (
             <div className="h-screen bg-cover bg-center pt-10" style={{ backgroundImage: `url(${BackgroundResponsiveMobileLogin.src})` }}>
-                <Card className={`w-[80%] ${((formErrors.email?.length ?? 0) > 0 || (formErrors.password?.length ?? 0) > 0) ? 'h-[55%]' : 'h-[48%]'} mx-auto`}>
+                <Card className={`w-[80%] ${((formErrors.email?.length ?? 0) > 0 || (formErrors.password?.length ?? 0) > 0) ? 'h-[65%]' : 'h-[58%]'} mx-auto`}>
                     <CardHeader>
                         <CardTitle className="flex flex-row justify-center items-center gap-4">
                             <div className="flex flex-row items-center gap-2">
@@ -142,7 +142,10 @@ export default function Page() {
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <h1 className="text-xl">Create Account</h1>
+                        <div className="text-center space-y-1 ms-12 me-12 mb-8">
+                            <h1 className="text-4xl">Welcome Back!</h1>
+                            <h2>Kindly enter your email address and password to sign in</h2>
+                        </div>
                         <form onSubmit={formik.isSubmitting ? () => { } : formik.handleSubmit}>
                             <div className="flex flex-col gap-1">
                                 <div className="flex flex-col mt-2">
