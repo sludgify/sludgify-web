@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import clsx from "clsx";
 import { Button } from "@/components/ui/button";
+import { ClientNavbarMobile } from "@/components/client-navbar-mobile";
 
 export default function ClientMenu() {
     const stats = [
@@ -35,8 +36,11 @@ export default function ClientMenu() {
     ];
 
     return (
-        <div className="md:px-8  py-4 md:py-12 font-calibri space-y-5 max-w-[1280px]">
-            <h1 className="md:text-4xl px-8 text-xl font-bold font-calibri border-b border-[#D9D9D9] pb-3">Your ESG Journey Starts Here</h1>
+        <div className="md:px-8 py-4 md:py-12 font-calibri space-y-5 max-w-[1280px]">
+            <div className="flex items-center justify-between border-b border-[#D9D9D9] pb-3">
+                <h1 className="md:text-4xl px-8 text-xl font-bold font-calibri ">Your ESG Journey Starts Here</h1>
+                <ClientNavbarMobile />
+            </div>
             <div className="space-y-5">
                 {/*Stats */}
                 <div className="overflow-x-auto hide-scrollbar scroll-smooth snap-x snap-mandatory w-full">
@@ -99,7 +103,7 @@ export default function ClientMenu() {
                                 credible disclosures that support regulatory compliance, investor confidence, and long-term value creation
                             </p>
                         </div>
-                        <div className="flex justify-start">
+                        <div className="flex md:justify-start justify-end">
                             <Link href={"/request/sustainability-reports"}>
                                 <Button className="font-radley md:text-xl px-5 md:px-9 py-2">Request Report</Button>
                             </Link>
