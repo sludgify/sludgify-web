@@ -33,7 +33,7 @@ export default function Page() {
             <Navbar />
             {/* Banner */}
             <div className="bg-[url('/bg-sludge-management.svg')] text-secondary w-full bg-no-repeat bg-cover bg-center h-[300px] md:h-[690px] md:space-y-3 flex flex-col justify-center gap-3 p-8 md:p-20 ">
-                <h1 className="text-2xl md:text-6xl  font-radley">We Transform Industrial Sludge Into Competitive Advantage And Accelerate Your ESG Performance</h1>
+                <h1 className="text-2xl md:text-6xl font-radley">We Transform Industrial Sludge Into Competitive Advantage And Accelerate Your ESG Performance</h1>
                 <p className="max-w-[815px] text-[10px] md:text-base">
                     Sludgify transforms industrial waste into competitive advantage, delivering zero-waste sludge solutions that drive ESG performance, ensure regulatory compliance, and create measurable value for forward-thinking
                     manufacturers
