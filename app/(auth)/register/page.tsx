@@ -33,8 +33,6 @@ export default function Page() {
     const isSm = useMediaQuery({ minWidth: 465, maxWidth: 639 });
     const isDefault = useMediaQuery({ maxWidth: 464 });
 
-    const [totalError, setTotalError] = useState<number>(0);
-
     const { push } = useRouter();
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -99,7 +97,6 @@ export default function Page() {
                 });
                 console.log(err?.response?.data);
                 toast.error(err?.response?.data?.message);
-                setTotalError(err?.response?.data?.total_errors);
                 return;
             }
             console.log(err?.response?.data?.message);
@@ -260,7 +257,7 @@ export default function Page() {
                                 </Button>
                                 <div className="flex items-center  gap-1 mt-6 text-sm">
                                     <p>Already have an account?</p>
-                                    <Link href="/register" className="text-blue-500">
+                                    <Link href="/login" className="text-blue-500">
                                         Login
                                     </Link>
                                 </div>
