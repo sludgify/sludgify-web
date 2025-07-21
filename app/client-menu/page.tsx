@@ -44,10 +44,10 @@ export default function ClientMenu() {
             <div className="space-y-5">
                 {/*Stats */}
                 <div className="overflow-x-auto hide-scrollbar scroll-smooth snap-x snap-mandatory w-full">
-                    <div className="flex gap-4 w-max px-4 md:px-0 mb-2">
+                    <div className="flex gap-4 px-4 md:px-0 mb-2 md:w-full">
                         {stats.map((stat, index) => {
                             return (
-                                <div key={index} className="bg-[#FAFAFA] border border-[#D9D9D9] w-[160px] md:w-[251px] rounded-2xl shadow-md p-3 space-y-2 snap-center">
+                                <div key={index} className="bg-[#FAFAFA] border border-[#D9D9D9] flex-shrink-0 md:flex-shrink md:w-full rounded-2xl shadow-md p-3 space-y-2 snap-center">
                                     <div className="flex items-center justify-between">
                                         <h1 className="md:text-base text-[10px]">{stat.title}</h1>
                                         <div
@@ -65,7 +65,7 @@ export default function ClientMenu() {
                             );
                         })}
 
-                        <div className="bg-[#FAFAFA] w-[160px] border border-[#D9D9D9] md:w-[251px] rounded-2xl shadow-md p-3 flex flex-col snap-center">
+                        <div className="bg-[#FAFAFA] border border-[#D9D9D9] flex-shrink-0 md:flex-shrink md:w-full rounded-2xl shadow-md p-3 flex flex-col snap-center">
                             <h1 className="text-left">Active Projects</h1>
                             <div className="flex-1 flex items-center justify-center">
                                 <div className="flex items-center gap-2">
@@ -122,17 +122,17 @@ export default function ClientMenu() {
                             </p>
                         </div>
                         <div className="font-calibri border-b pb-2">
-                            <h1 className="text-[10px] md:text-xl font-bold">Indonesia’s Journey to Net Zero by 2060</h1>
+                            <h1 className="text-[10px] md:text-xl font-bold">New Industrial Waste Regulations Create Reporting Opportunities</h1>
                             <p className="text-[#525252] md:text-base text-[8px]">
-                                The Indonesian government has launched a new roadmap to achieve net zero emissions by 2060. The plan places strong emphasis on the industrial and waste management sectors, aiming for a 41% reduction in
-                                emissions from waste by 2030.
+                                A new regulation mandates manufacturing companies to disclose the carbon footprint of their waste management activities. With a compliance deadline set for Q4 2025, this opens significant opportunities for
+                                sustainability reporting services.
                             </p>
                         </div>
                         <div className="font-calibri border-b pb-2">
-                            <h1 className="text-[10px] md:text-xl font-bold">Indonesia’s Journey to Net Zero by 2060</h1>
+                            <h1 className="text-[10px] md:text-xl font-bold">Carbon Credit Prices Surge, Driving Sustainability Investments</h1>
                             <p className="text-[#525252] md:text-base text-[8px]">
-                                The Indonesian government has launched a new roadmap to achieve net zero emissions by 2060. The plan places strong emphasis on the industrial and waste management sectors, aiming for a 41% reduction in
-                                emissions from waste by 2030.
+                                Carbon credit prices have risen by 15% over the past three months, reaching $45 per ton of CO2. This upward trend is accelerating investments in waste management technologies and sustainability projects
+                                across Southeast Asia.
                             </p>
                         </div>
                         <div className="flex gap-2 items-center border border-[#D9D9D9] rounded-md p-2 w-fit">
