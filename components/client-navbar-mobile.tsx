@@ -13,17 +13,14 @@ import { toast } from "sonner";
 
 const MenuItem = ({ item, pathname, onClick }: any) => {
     const isActive = pathname === item.link;
-    const [isHovered, setIsHovered] = useState(false);
 
     return (
         <Link
             href={item.link}
             onClick={onClick}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
             className={clsx("flex items-center gap-5 text-lg p-2 min-h-[34px] rounded-lg transition", isActive ? "bg-black text-white" : "hover:bg-black text-[#525252] hover:text-white")}
         >
-            <div className="flex-shrink-0">{item.icon(isActive, isHovered)}</div>
+            <div className="flex-shrink-0">{item.icon(isActive)}</div>
             <span className="ml-2 font-bold">{item.name}</span>
         </Link>
     );
