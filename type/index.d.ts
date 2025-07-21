@@ -35,6 +35,7 @@ declare interface ErrorResponse {
     token?: {
         [field: string]: string[];
     };
+    total_errors: number;
 }
 
 declare interface FormErrors {
