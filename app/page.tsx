@@ -1,11 +1,9 @@
-"use client";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { BannerFooter } from "@/components/banner-footer";
-
 import { ValuesCarousel } from "@/components/values-carousel";
 
 export default function Home() {
