@@ -31,6 +31,7 @@ export default function Page() {
     const isDesktop = useMediaQuery({ minWidth: 1024 });
     const isTablet = useMediaQuery({ minWidth: 768, maxWidth: 1023 });
     const isMobile = useMediaQuery({ maxWidth: 767 });
+    const isUltraMobile = useMediaQuery({ maxWidth: 465 });
 
     const [showPassword, setShowPassword] = useState(false);
     const { push } = useRouter();
@@ -122,7 +123,7 @@ export default function Page() {
     if (isMobile) {
         return (
             <div className="h-screen bg-cover bg-center pt-10" style={{ backgroundImage: `url(${BackgroundResponsiveMobileLogin.src})` }}>
-                <Card className={`w-[80%] ${((formErrors.email?.length ?? 0) > 0 || (formErrors.password?.length ?? 0) > 0) ? 'h-[65%]' : 'h-[58%]'} mx-auto`}>
+                <Card className={!isUltraMobile ? `w-[80%] ${((formErrors.email?.length ?? 0) > 0 || (formErrors.password?.length ?? 0) > 0) ? 'h-[70%]' : 'h-[65%]'} mx-auto` : `w-[80%] ${((formErrors.email?.length ?? 0) > 0 || (formErrors.password?.length ?? 0) > 0) ? 'h-[75%]' : 'h-[68%]'} mx-auto`}>
                     <CardHeader>
                         <CardTitle className="flex flex-row justify-center items-center gap-4">
                             <div className="flex flex-row items-center gap-2">
@@ -180,6 +181,12 @@ export default function Page() {
                                     <Image src={IconGoogle} alt="logo" width={24} height={24} />
                                     <span className="ml-2">Continue with Google</span>
                                 </Button>
+                                <div className="flex items-center  gap-1 mt-6">
+                                    <p>Does not have an account?</p>
+                                    <Link href="/register" className="text-[#173863]">
+                                        Sign Up
+                                    </Link>
+                                </div>
                             </div>
                         </form>
                     </CardContent>
