@@ -39,7 +39,7 @@ export default function ClientMenu() {
             <h1 className="md:text-4xl px-8 text-xl font-bold font-calibri border-b border-[#D9D9D9] pb-3">Your ESG Journey Starts Here</h1>
             <div className="space-y-5">
                 {/*Stats */}
-                <div className="overflow-x-auto scroll-smooth snap-x snap-mandatory w-full">
+                <div className="overflow-x-auto hide-scrollbar scroll-smooth snap-x snap-mandatory w-full">
                     <div className="flex gap-4 w-max px-4 md:px-0 mb-2">
                         {stats.map((stat, index) => {
                             return (
@@ -91,7 +91,7 @@ export default function ClientMenu() {
                     </div>
                 </div>
                 <div className="flex flex-col-reverse items-center md:flex-row md:justify-around w-fit h-fit md:w-full border border-[#D9D9D9] bg-[#FAFAFA] rounded-2xl shadow-md mx-4 md:mx-0 md:p-6 p-4">
-                    <div className="md:space-y-10 space-y-5 -mt-10 md:mt-0">
+                    <div className="md:space-y-10 space-y-5">
                         <div className="space-y-2 md:w-[538px]">
                             <h1 className="text-sm md:text-4xl font-calibri font-bold">Sustainability Reporting</h1>
                             <p className="text-[10px] md:text-xl font-calibri text-[#505050]">
@@ -107,7 +107,7 @@ export default function ClientMenu() {
                     </div>
                     <Image src={"/Rectangle 135.svg"} alt="bg-client" height={279} width={490} className="w-[490px] md:h-[279px]" />
                 </div>
-                <div className="grid grid-cols-2 md:grid-cols-12 gap-5 p-3">
+                <div className="grid grid-cols-2 md:grid-cols-12 gap-3 p-3">
                     <h1 className="text-sm md:text-4xl font-bold font-calibri order-3 md:order-1 col-span-2 md:col-span-12">Industry Updates</h1>
                     <div className="w-full col-span-2 md:col-span-8 order-4 md:order-2 row-span-2 bg-[#FAFAFA] border border-[#D9D9D9] rounded-2xl shadow-md flex flex-col justify-around p-6">
                         <div className="font-calibri border-b pb-2">
@@ -133,56 +133,56 @@ export default function ClientMenu() {
                         </div>
                         <div className="flex gap-2 items-center border border-[#D9D9D9] rounded-md p-2 w-fit">
                             <div className="flex md:-space-x-6 -space-x-1">
-                                <Image src={"/Ellipse 7.svg"} alt="badge" width={47} height={47} className="md:w-[47px] md:h-[47px] w-[15px] h-[15px]"/>
-                                <Image src={"/Ellipse 8.svg"} alt="badge" width={47} height={47} className="md:w-[47px] md:h-[47px] w-[15px] h-[15px]"/>
-                                <Image src={"/Ellipse 9.svg"} alt="badge" width={47} height={47} className="md:w-[47px] md:h-[47px] w-[15px] h-[15px]"/>
+                                <Image src={"/Ellipse 7.svg"} alt="badge" width={47} height={47} className="md:w-[47px] md:h-[47px] w-[15px] h-[15px]" />
+                                <Image src={"/Ellipse 8.svg"} alt="badge" width={47} height={47} className="md:w-[47px] md:h-[47px] w-[15px] h-[15px]" />
+                                <Image src={"/Ellipse 9.svg"} alt="badge" width={47} height={47} className="md:w-[47px] md:h-[47px] w-[15px] h-[15px]" />
                             </div>
                             <h1 className="text-[#525252] text-[10px] md:text-xl font-bold">100 Source</h1>
                         </div>
                     </div>
-                    <div className="w-full md:col-span-4 order-1 md:order-3  bg-[#FAFAFA] border border-[#D9D9D9] rounded-2xl shadow-md space-y-5 p-6">
+                    <div className="w-full md:col-span-4 order-1 md:order-3  bg-[#FAFAFA] border border-[#D9D9D9] rounded-2xl shadow-md space-y-5 p-3 md:p-6">
                         <h1 className="font-bold text-xs md:text-xl text-center">Most Polluted Industry</h1>
                         <div className="flex justify-between font-calibri border-b pb-2 w-full">
                             <div className="flex items-center gap-2">
-                                <Image src={"/Rectangle 219.svg"} alt="manufacture" width={29} height={29}  className="w-[15px] h-[15px] md:w-[29px] md:h-[29px]"/>
+                                <Image src={"/Rectangle 219.svg"} alt="manufacture" width={29} height={29} className="w-[15px] h-[15px] md:w-[29px] md:h-[29px]" />
                                 <h1 className="text-[8px] md:text-base">Manufacture</h1>
                             </div>
                             <h1 className="text-[#FF0707] text-[8px] md:text-base">7,000,000 ton CO2</h1>
                         </div>
                         <div className="flex justify-between font-calibri border-b pb-2 w-full">
                             <div className="flex items-center gap-2">
-                                <Image src={"/Rectangle 220.svg"} alt="Oil and Gas" width={29} height={29} className="w-[15px] h-[15px] md:w-[29px] md:h-[29px]"/>
+                                <Image src={"/Rectangle 220.svg"} alt="Oil and Gas" width={29} height={29} className="w-[15px] h-[15px] md:w-[29px] md:h-[29px]" />
                                 <h1 className="text-[8px] md:text-base">Oil and Gas</h1>
                             </div>
                             <h1 className="text-[#FF0707] text-[8px] md:text-base">2,000,000 ton CO2</h1>
                         </div>
                         <div className="flex justify-between font-calibri border-b pb-2 w-full">
                             <div className="flex items-center gap-2">
-                                <Image src={"/Rectangle 221.svg"} alt="Mining and Energy" width={29} height={29} className="w-[15px] h-[15px] md:w-[29px] md:h-[29px]"/>
+                                <Image src={"/Rectangle 221.svg"} alt="Mining and Energy" width={29} height={29} className="w-[15px] h-[15px] md:w-[29px] md:h-[29px]" />
                                 <h1 className="text-[8px] md:text-base">Mining and Energy</h1>
                             </div>
                             <h1 className="text-[#FF0707] text-[8px] md:text-base">1,000,000 ton CO2</h1>
                         </div>
                     </div>
-                    <div className="w-full md:col-span-4 order-2 md:order-4 bg-[#FAFAFA] border border-[#D9D9D9] rounded-2xl shadow-md space-y-5 p-6">
+                    <div className="w-full md:col-span-4 order-2 md:order-4 bg-[#FAFAFA] border border-[#D9D9D9] rounded-2xl shadow-md space-y-5 p-3 md:p-6">
                         <h1 className="font-bold text-xs md:text-xl text-center">Top Performing Client</h1>
                         <div className="flex justify-between font-calibri border-b pb-2 w-full">
                             <div className="flex items-center gap-2">
-                                <Image src={"/Ellipse 10.svg"} alt="PT Unilever" width={29} height={29} className="w-[15px] h-[15px] md:w-[29px] md:h-[29px]"/>
+                                <Image src={"/Ellipse 10.svg"} alt="PT Unilever" width={29} height={29} className="w-[15px] h-[15px] md:w-[29px] md:h-[29px]" />
                                 <h1 className="text-[8px] md:text-base">PT Unilever</h1>
                             </div>
                             <h1 className="text-[#3CAA32] text-[8px] md:text-base">32,000 ton CO2</h1>
                         </div>
                         <div className="flex justify-between font-calibri border-b pb-2 w-full">
                             <div className="flex items-center gap-2">
-                                <Image src={"/Ellipse 10 (1).svg"} alt="PT Hartadinata" width={29} height={29} className="w-[15px] h-[15px] md:w-[29px] md:h-[29px]"/>
+                                <Image src={"/Ellipse 10 (1).svg"} alt="PT Hartadinata" width={29} height={29} className="w-[15px] h-[15px] md:w-[29px] md:h-[29px]" />
                                 <h1 className="text-[8px] md:text-base">PT Hartadinata</h1>
                             </div>
                             <h1 className="text-[#3CAA32] text-[8px] md:text-base">28,000 ton CO2</h1>
                         </div>
                         <div className="flex justify-between font-calibri border-b pb-2 w-full">
                             <div className="flex items-center gap-2">
-                                <Image src={"/Ellipse 10 (2).svg"} alt="PT Sri Rejeki Isman" width={29} height={29} className="w-[15px] h-[15px] md:w-[29px] md:h-[29px]"/>
+                                <Image src={"/Ellipse 10 (2).svg"} alt="PT Sri Rejeki Isman" width={29} height={29} className="w-[15px] h-[15px] md:w-[29px] md:h-[29px]" />
                                 <h1 className="text-[8px] md:text-base">PT Sri Rejeki Isman</h1>
                             </div>
                             <h1 className="text-[#3CAA32] text-[8px] md:text-base">25,800 ton CO2</h1>
