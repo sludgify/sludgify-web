@@ -85,13 +85,7 @@ export const ClientNavbar = () => {
             if (response.status === 201) {
                 Cookies.remove("accessToken");
                 toast.success("Logout berhasil!");
-                [
-                    "accessToken",
-                    "me-data",
-                    "company-data",
-                    "me-etag",
-                    "company-etag"
-                ].forEach((cookie) => Cookies.remove(cookie));
+                ["accessToken", "me-data", "company-data", "me-etag", "company-etag"].forEach((cookie) => Cookies.remove(cookie));
                 setTimeout(() => {
                     router.push("/");
                 }, 1000);
@@ -101,7 +95,7 @@ export const ClientNavbar = () => {
         }
     };
     return (
-        <div className="hidden md:block h-screen p-4 font-calibri w-[262px] bg-white rounded-br-md border border-[#D9D9D9]">
+        <div className="hidden lg:block h-screen p-4 font-calibri w-[262px] bg-white rounded-br-md border border-[#D9D9D9]">
             <nav className="flex flex-col h-full justify-between gap-5">
                 <div className="flex flex-col">
                     <div className="flex items-center gap-2 text-2xl font-radley">
