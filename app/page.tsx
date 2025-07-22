@@ -5,6 +5,7 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { BannerFooter } from "@/components/banner-footer";
 import { ValuesCarousel } from "@/components/values-carousel";
+import { RevealOnScroll } from "@/components/reveal-oncsroll";
 
 export default function Home() {
     const content = [
@@ -84,7 +85,7 @@ export default function Home() {
         <div className="flex min-h-screen w-full flex-col overflow-hidden">
             <Navbar />
             <main className="flex-1 w-full overflow-hidden">
-                {/* Hero Section*/}
+                {/* Hero Section*/
                 <div className="bg-[url('/bg-about.svg')] text-secondary w-full bg-no-repeat bg-cover bg-center h-[300px] lg:h-[690px] flex flex-col justify-center ">
                     <RevealOnScroll className="flex flex-col justify-center gap-3 p-8 lg:space-y-3 lg:p-20" delay={300}>
                         <h1 className="text-2xl md:text-4xl lg:text-6xl font-radley">One Platform for Waste Compliance, ESG Reporting, and Carbon Reduction</h1>

@@ -6,6 +6,7 @@ import clsx from "clsx";
 import { BannerFooter } from "@/components/banner-footer";
 import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
+import { RevealOnScroll } from "@/components/reveal-oncsroll";
 
 export default function Page() {
     const [selectedSection, setSelectedSection] = useState<number>(1);
@@ -154,7 +155,6 @@ export default function Page() {
                 </RevealOnScroll>
             </div>
             {/* Sludge Management Workflow*/}
-
             <div className="lg:h-screen p-10 lg:p-0 lg:my-36">
                 {selectedSection === 1 && (
                     <div>

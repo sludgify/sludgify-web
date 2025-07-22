@@ -3,6 +3,11 @@ declare type service_name = {
     type: string;
 };
 
+declare type PaymentData = {
+    amount: string;
+    method: string;
+}
+
 declare type Transactions = {
     id: string;
     service_name: service_name;
@@ -30,27 +35,28 @@ declare interface ErrorResponse {
     token?: {
         [field: string]: string[];
     };
+    total_errors: number;
 }
 
 declare interface FormErrors {
-    first_name: string[];
-    last_name: string[];
-    company_name: string[];
-    email: string[];
-    password: string[];
-    confirm_password: string[];
-    password_security: string[];
-    password_match: string[];
+    first_name?: string[];
+    last_name?: string[];
+    company_name?: string[];
+    email?: string[];
+    password?: string[];
+    confirm_password?: string[];
+    password_security?: string[];
+    password_match?: string[];
 }
 
 declare interface FormData {
-    first_name: string;
-    last_name: string;
-    company_name: string;
-    email: string;
-    password: string;
-    confirm_password: string;
-    provider: string;
+    first_name?: string;
+    last_name?: string;
+    company_name?: string;
+    email?: string;
+    password?: string;
+    confirm_password?: string;
+    provider?: string;
 }
 
 declare interface User {

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { BannerFooter } from "@/components/banner-footer";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
+import { RevealOnScroll } from "@/components/reveal-oncsroll";
 
 export default function Page() {
     const services = [
