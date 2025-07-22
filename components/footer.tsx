@@ -30,7 +30,7 @@ export const Footer = () => {
         },
     ];
     return (
-        <div className="h-[373px] md:h-[470px] bg-gradient-to-b from-[#2E2B2B] to-[#000000] p-8 md:p-14 space-y-3">
+        <div className="h-[373px] w-screen md:h-[470px] bg-gradient-to-b from-[#2E2B2B] to-[#000000] p-8 md:p-14 space-y-3">
             <div className="flex md:flex-row flex-col justify-between gap-3 md:p-10 mt-16 md:mt-10">
                 <div className="flex justify-between gap-4 md:w-[802px] ">
                     {menu.map((section, index) => (

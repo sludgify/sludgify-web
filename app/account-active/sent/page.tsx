@@ -67,7 +67,7 @@ const AccountActiveSentPage = () => {
                     <Image src={"/logo.svg"} width={50} height={50} alt="logo"></Image>
                     <h1>Sludgify</h1>
                 </div>
-                <Card className="sm:w-[50%] md:w-[60%] lg:w-[40%] xl:w-[30%]">
+                <Card className="sm:w-[50%] lg:w-[60%] lg:w-[40%] xl:w-[30%]">
                     <CardHeader>
                         <CardTitle className="flex flex-col justify-center items-center">
                             {/* <Image src={Email} alt="Email" width={100} height={100} /> */}
