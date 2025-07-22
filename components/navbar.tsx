@@ -16,13 +16,13 @@ export const Navbar = () => {
     return (
         <nav className="p-6 font-radley h-[100px] flex items-center justify-between relative">
             {/* Logo */}
-            <div className="flex items-center gap-2 text-2xl md:text-4xl">
-                <Image src={"/logo.svg"} width={30} height={30} alt="logo" className="w-[30px] h-[30px] md:w-[50px] md:h-[50px]" />
+            <div className="flex items-center gap-2 text-2xl lg:text-4xl">
+                <Image src={"/logo.svg"} width={30} height={30} alt="logo" className="w-[30px] h-[30px] lg:w-[50px] lg:h-[50px]" />
                 <h1>Sludgify</h1>
             </div>
 
             {/* Desktop Menu */}
-            <div className="hidden md:flex items-center gap-6 text-2xl">
+            <div className="hidden lg:flex items-center gap-6 text-2xl">
                 <Link href="/" className={clsx(pathname === "/" && "border-b-2 border-primary", "py-1")}>
                     About
                 </Link>
@@ -42,7 +42,7 @@ export const Navbar = () => {
                 </Link>
             </div>
 
-            <div className="hidden md:flex items-center gap-2">
+            <div className="hidden lg:flex items-center gap-2">
                 <Button variant="outline" className="text-xl p-5 rounded-lg">
                     <Link href="/login">Sign In</Link>
                 </Button>
@@ -52,7 +52,7 @@ export const Navbar = () => {
             </div>
 
             {/* Mobile Menu Toggle */}
-            <div className="md:hidden">
+            <div className="lg:hidden">
                 <button onClick={() => setIsOpen(!isOpen)}>{isOpen ? <X size={28} /> : <Menu size={28} />}</button>
             </div>
 
