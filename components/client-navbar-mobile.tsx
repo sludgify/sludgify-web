@@ -15,11 +15,7 @@ const MenuItem = ({ item, pathname, onClick }: any) => {
     const isActive = pathname === item.link;
 
     return (
-        <Link
-            href={item.link}
-            onClick={onClick}
-            className={clsx("flex items-center gap-5 text-lg p-2 min-h-[34px] rounded-lg transition", isActive ? "bg-black text-white" : "hover:bg-black text-[#525252] hover:text-white")}
-        >
+        <Link href={item.link} onClick={onClick} className={clsx("flex items-center gap-5 text-lg p-2 min-h-[34px] rounded-lg transition", isActive ? "bg-black text-white" : "hover:bg-black text-[#525252] hover:text-white")}>
             <div className="flex-shrink-0">{item.icon(isActive)}</div>
             <span className="ml-2 font-bold">{item.name}</span>
         </Link>
@@ -111,16 +107,16 @@ export const ClientNavbarMobile = () => {
         }
     };
     return (
-        <aside className="relative md:hidden font-calibri">
+        <aside className="relative lg:hidden font-calibri">
             {/* Mobile Toggle */}
-            <div className="md:hidden p-4">
+            <div className="lg:hidden p-4">
                 <button onClick={() => setIsOpen(!isOpen)}>{isOpen ? <X size={28} /> : <Menu size={28} />}</button>
             </div>
 
             {/* Mobile Sidebar */}
             <div
                 className={clsx(
-                    "md:hidden absolute top-[80px] right-0 z-50 w-[250px] h-[500px] bg-white px-6 py-4 shadow-md flex flex-col justify-between transform transition-all duration-300 ease-in-out",
+                    "lg:hidden absolute top-[80px] right-0 z-50 w-[250px] h-[500px] bg-white px-6 py-4 shadow-md flex flex-col justify-between transform transition-all duration-300 ease-in-out",
                     isOpen ? "translate-x-0 opacity-100" : "translate-x-full opacity-0 pointer-events-none"
                 )}
             >

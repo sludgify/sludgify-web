@@ -76,30 +76,30 @@ export default function Page() {
         {
             title: "Total Slude Manage",
             value: "23,560 tons",
-            icon_change: <Image src="/trendup.svg" alt="recycle" width={30} height={30} className="md:w-[30px] md:h-[30px] w-[15px] h-[15px]" />,
+            icon_change: <Image src="/trendup.svg" alt="recycle" width={30} height={30} className="lg:w-[30px] lg:h-[30px] w-[15px] h-[15px]" />,
             change: "12% from last month",
             changeType: "positive",
-            icon: <Image src="/recycle.svg" alt="recycle" width={30} height={30} className="md:w-[30px] md:h-[30px] w-[15px] h-[15px]" />,
+            icon: <Image src="/recycle.svg" alt="recycle" width={30} height={30} className="lg:w-[30px] lg:h-[30px] w-[15px] h-[15px]" />,
         },
         {
             title: "CO2 Emission Reduction",
             value: "4,712 tons",
-            icon_change: <Image src="/trendup.svg" alt="recycle" width={30} height={30} className="md:w-[30px] md:h-[30px] w-[15px] h-[15px]" />,
+            icon_change: <Image src="/trendup.svg" alt="recycle" width={30} height={30} className="lg:w-[30px] lg:h-[30px] w-[15px] h-[15px]" />,
             change: "8% from last month",
             changeType: "positive",
-            icon: <Image src="/co2.svg" alt="co2" width={30} height={30} className="md:w-[30px] md:h-[30px] w-[15px] h-[15px]" />,
+            icon: <Image src="/co2.svg" alt="co2" width={30} height={30} className="lg:w-[30px] lg:h-[30px] w-[15px] h-[15px]" />,
         },
         {
             title: "Project Completed",
             value: "30",
-            icon_change: <Image src="/progress.svg" alt="recycle" width={30} height={30} className="md:w-[30px] md:h-[30px] w-[15px] h-[15px]" />,
+            icon_change: <Image src="/progress.svg" alt="recycle" width={30} height={30} className="lg:w-[30px] lg:h-[30px] w-[15px] h-[15px]" />,
             change: "5 in progress",
             changeType: "progress",
-            icon: <Image src="/document.svg" alt="co2" width={30} height={30} className="md:w-[30px] md:h-[30px] w-[15px] h-[15px]" />,
+            icon: <Image src="/document.svg" alt="co2" width={30} height={30} className="lg:w-[30px] lg:h-[30px] w-[15px] h-[15px]" />,
         },
     ];
 
-    const handleInputChange = (e) => {
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setCalculateCarbon((prev) => ({
             ...prev,
@@ -107,7 +107,7 @@ export default function Page() {
         }));
     };
 
-    const handleSelectChange = (value) => {
+    const handleSelectChange = (value: string) => {
         setCalculateCarbon((prev) => ({ ...prev, sludge_type: value }));
     };
 
@@ -129,20 +129,20 @@ export default function Page() {
     };
 
     return (
-        <div className="py-6 md:py-8 md:px-36 space-y-6">
-            <div className="flex md:flex-row flex-col justify-between items-center w-full px-3 md:px-0">
+        <div className="py-6 md:py-8 md:px-5 lg:px-16 space-y-6">
+            <div className="flex lg:flex-row flex-col justify-between md:items-start md:gap-2 items-center w-full px-3 lg:px-0">
                 <div className="flex w-full justify-between items-start h-full">
                     <div>
-                        <h1 className="md:text-4xl font-bold">Welcome Back, PT Eco Solution!</h1>
-                        <p className="text-sm md:text-2xl text-[#525252]">Here’s your sludge management summary</p>
+                        <h1 className="md:text-2xl lg:text-4xl font-bold">Welcome Back, PT Eco Solution!</h1>
+                        <p className="text-sm md:text-xl lg:text-2xl text-[#525252]">Here’s your sludge management summary</p>
                     </div>
                     <ClientNavbarMobile />
                 </div>
                 <div className="font-radley flex gap-2 h-fit">
-                    <button className="flex gap-2 border bg-black text-white md:w-[200px] md:text-center px-4 py-2 rounded-md">Download Report</button>
+                    <button className="flex gap-2 border bg-black text-white md:w-[200px] lg:text-center px-4 py-2 rounded-md">Download Report</button>
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <button className="border px-4 py-2 rounded-md min-w-[120px] md:w-[160px] flex items-center justify-between">
+                            <button className="border px-4 py-2 rounded-md min-w-[120px] lg:w-[160px] flex items-center justify-between">
                                 {selectedPeriod}
                                 <ChevronDown size={18} />
                             </button>
@@ -156,13 +156,13 @@ export default function Page() {
             </div>
             {/* Stats */}
             <div className="overflow-x-auto hide-scrollbar scroll-smooth snap-x snap-mandatory w-full">
-                <div className="flex gap-4 px-4 md:px-0 mb-2 md:w-full">
+                <div className="flex gap-4 px-4 lg:px-0 mb-2 lg:w-full">
                     {stats.map((stat, index) => {
                         return (
-                            <div key={index} className="bg-[#FAFAFA] border flex-shrink-0 md:flex-shrink md:w-full p-3 border-[#D9D9D9] rounded-2xl shadow-md md:p-6">
+                            <div key={index} className="bg-[#FAFAFA] border flex-shrink-0 md:flex-shrink md:w-full p-3 border-[#D9D9D9] rounded-2xl shadow-md lg:p-6">
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <p className="text-xs md:text-sm font-medium text-gray-600">{stat.title}</p>
+                                        <p className="text-xs md:text-sm  font-medium text-gray-600">{stat.title}</p>
                                         <p className="text-base md:text-2xl font-bold text-gray-900 mt-2">{stat.value}</p>
                                     </div>
                                     <div className="p-3 rounded-xl">{stat.icon}</div>
@@ -178,50 +178,50 @@ export default function Page() {
                     })}
                 </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 p-3 md:p-0">
-                <div className="bg-[#FAFAFA] border border-[#D9D9D9] rounded-2xl space-y-2 shadow-md  p-4 md:p-6">
-                    <h1 className="text-sm md:text-2xl font-bold">Sludge Management Summary</h1>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-3 lg:p-0">
+                <div className="bg-[#FAFAFA] border border-[#D9D9D9] rounded-2xl space-y-2 shadow-md  p-4 lg:p-6">
+                    <h1 className="text-sm md:text-xl lg:text-2xl font-bold">Sludge Management Summary</h1>
                     <Barchart chartConfig={chartConfig} chartData={chartData} />
                 </div>
-                <div className="bg-[#FAFAFA] border border-[#D9D9D9] rounded-2xl space-y-2 shadow-md  p-4 md:p-6">
-                    <h1 className="text-sm md:text-2xl font-bold">Carbon Emission Comparison</h1>
+                <div className="bg-[#FAFAFA] border border-[#D9D9D9] rounded-2xl space-y-2 shadow-md  p-4 lg:p-6">
+                    <h1 className="text-sm md:text-xl lg:text-2xl font-bold">Carbon Emission Comparison</h1>
                     <Areachart chartConfig={carbonEmissionChartConfig} chartData={carbonEmissionData} />
                 </div>
 
-                <div className="bg-[#FAFAFA] border border-[#D9D9D9] rounded-2xl space-y-8 shadow-md p-4 md:p-6">
-                    <h1 className="text-sm md:text-2xl font-bold">Carbon Credit Status</h1>
+                <div className="bg-[#FAFAFA] border border-[#D9D9D9] rounded-2xl space-y-8 shadow-md p-4 lg:p-6">
+                    <h1 className="text-sm md:text-xl lg:text-2xl font-bold">Carbon Credit Status</h1>
                     <div className="flex gap-3">
-                        <div className="bg-white border border-[#D9D9D9] md:rounded-2xl rounded-[10px] w-full shadow-md  p-4 md:p-6">
-                            <h1 className="text-[10px] md:text-base">Credit Price (1 ton of CO2)</h1>
-                            <p className="text-sm md:text-2xl font-bold">IDR 150.000</p>
+                        <div className="bg-white border border-[#D9D9D9] lg:rounded-2xl rounded-[10px] w-full shadow-md  p-4 lg:p-6">
+                            <h1 className="text-[10px] md:text-sm lg:text-base">Credit Price (1 ton of CO2)</h1>
+                            <p className="text-sm md:text-base lg:text-2xl font-bold">IDR 150.000</p>
                         </div>
-                        <div className="bg-white border border-[#D9D9D9] md:rounded-2xl rounded-[10px] w-full shadow-md p-4 md:p-6">
-                            <h1 className="text-[10px] md:text-base">Total Available Credit</h1>
-                            <p className="text-sm md:text-2xl font-bold">350 tons of CO2</p>
+                        <div className="bg-white border border-[#D9D9D9] lg:rounded-2xl rounded-[10px] w-full shadow-md p-4 lg:p-6">
+                            <h1 className="text-[10px] md:text-sm  lg:text-base">Total Available Credit</h1>
+                            <p className="text-sm md:text-base lg:text-2xl font-bold">350 tons of CO2</p>
                         </div>
                     </div>
                     <div className="flex-1 border-t border-primary"></div>
-                    <h1 className="text-sm md:text-2xl font-bold">Buy Carbon Credit</h1>
-                    <div className="flex justify-between">
-                        <input type="text" className="border border-gray-300 rounded-md p-2 focus:outline-none" />
-                        <div className="hidden md:block">
+                    <h1 className="text-sm md:text-xl lg:text-2xl font-bold">Buy Carbon Credit</h1>
+                    <div className="flex gap-3 justify-between ">
+                        <input type="text" className="border border-gray-300 rounded-md p-2 focus:outline-none " />
+                        <div className="hidden lg:block lg:text-sm">
                             <h1>Total Price</h1>
                             <h1 className="font-bold">IDR 150.000</h1>
                         </div>
-                        <button className="bg-primary text-white rounded-md px-4 py-2 font-radley cursor-pointer">Buy Now</button>
+                        <button className="bg-primary text-white rounded-md p-2 lg:px-4 lg:py-2 text-[clamp(0.5rem,1vw+0.5rem,1.25rem)] font-radley cursor-pointer">Buy Now</button>
                     </div>
                 </div>
 
-                <div className="bg-[#FAFAFA] border border-[#D9D9D9] rounded-2xl space-y-4 md:space-y-8 shadow-md p-4 md:p-6">
-                    <h1 className="text-sm md:text-2xl font-bold">Carbon Emissions Calculator</h1>
+                <div className="bg-[#FAFAFA] border border-[#D9D9D9] rounded-2xl space-y-4 lg:space-y-8 shadow-md p-4 lg:p-6">
+                    <h1 className="text-sm md:text-xl lg:text-2xl font-bold">Carbon Emissions Calculator</h1>
                     <p className="text-[10px] md:text-base">Input sludge volume to predict carbon emissions produced</p>
                     <div className="flex gap-3 justify-between">
                         <div className="space-y-2 w-full">
-                            <h1 className="text-[10px] md:text-xl">Volume Sudge (ton)</h1>
+                            <h1 className="text-[10px] md:text-base lg:text-xl">Volume Sudge (ton)</h1>
                             <input type="number" name="massa" onChange={handleInputChange} className="border border-gray-300 rounded-md px-3 h-[36px] text-base focus:outline-none w-full" />
                         </div>
                         <div className="space-y-2 text-xl w-full">
-                            <h1 className="text-[10px] md:text-xl">Sludge Type</h1>
+                            <h1 className="text-[10px] md:text-base lg:text-xl">Sludge Type</h1>
 
                             <Select name="sludge_type" onValueChange={handleSelectChange}>
                                 <SelectTrigger className="border border-gray-300 rounded-md px-3 text-base w-full">
@@ -238,15 +238,15 @@ export default function Page() {
                         Calculate Emissions
                     </button>
                     <div className="flex-1 border-t border-primary"></div>
-                    <h1 className="text-sm md:text-2xl font-bold">Calculation Result</h1>
+                    <h1 className="text-sm md:text-xl lg:text-2xl font-bold">Calculation Result</h1>
                     <div className="flex justify-between gap-2 w-full">
                         <div className="bg-[#FFB2B273] py-6 px-4 w-full">
-                            <h1 className="text-sm md:text-base">Emissions Produced</h1>
-                            <h1 className="text-sm md:text-base font-bold text-[#C63B3B]">{calculateResult?.emisi_kg_CO2} ton CO2</h1>
+                            <h1 className="text-sm lg:text-base">Emissions Produced</h1>
+                            <h1 className="text-sm lg:text-base font-bold text-[#C63B3B]">{calculateResult?.emisi_kg_CO2} ton CO2</h1>
                         </div>
                         <div className="bg-[#20FF0C33] py-6 px-4 w-full">
-                            <h1 className="text-sm md:text-base">Emissions Produced</h1>
-                            <h1 className="text-sm md:text-base font-bold text-[#3CAA32]">{calculateResult?.co_processing?.emisi_kg_CO2} ton CO2</h1>
+                            <h1 className="text-sm lg:text-base">Emissions Produced</h1>
+                            <h1 className="text-sm lg:text-base font-bold text-[#3CAA32]">{calculateResult?.co_processing?.emisi_kg_CO2} ton CO2</h1>
                         </div>
                     </div>
                 </div>
