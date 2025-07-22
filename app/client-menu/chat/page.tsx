@@ -8,6 +8,7 @@ import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import Image from "next/image";
 import Cookies from "js-cookie";
+import { useMediaQuery } from "react-responsive";
 
 interface Message {
     id: string;
@@ -33,6 +34,12 @@ function formatTime(date: string | number | Date) {
 }
 
 export default function Page() {
+    const isXl = useMediaQuery({ minWidth: 1280 });
+    const isLg = useMediaQuery({ minWidth: 768, maxWidth: 1279 });
+    const isMd = useMediaQuery({ minWidth: 640, maxWidth: 767 });
+    const isSm = useMediaQuery({ minWidth: 465, maxWidth: 639 });
+    const isDefault = useMediaQuery({ maxWidth: 464 });
+
     const [messages, setMessages] = useState<Message[]>([]);
     const [uploadedFile, setUploadedFile] = useState<File | null>(null);
     const [isTyping, setIsTyping] = useState(false);
@@ -44,7 +51,6 @@ export default function Page() {
     const [isRecording, setIsRecording] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [voiceBase64, setVoiceBase64] = useState<string | null>(null);
-    // Add SpeechRecognition type for TypeScript
     type SpeechRecognitionType = typeof window extends { SpeechRecognition: infer T } ? T : typeof window extends { webkitSpeechRecognition: infer T } ? T : any;
 
     const recognitionRef = useRef<InstanceType<SpeechRecognitionType> | null>(null);
@@ -72,7 +78,6 @@ export default function Page() {
                 msgs.forEach((msg, index) => {
                     const timestamp = new Date().toISOString();
 
-                    // Tambahkan pesan user jika ada original_message
                     if (msg.original_message) {
                         formatted.push({
                             id: `${index}-user`,
@@ -82,7 +87,6 @@ export default function Page() {
                         });
                     }
 
-                    // Tambahkan jawaban dari bot jika ada response_message
                     if (msg.response_message) {
                         formatted.push({
                             id: `${index}-bot`,
@@ -113,7 +117,6 @@ export default function Page() {
             newSocket.on("message_with_links", (data) => {
                 setIsTyping(false);
 
-                // Tampilkan balasan dari bot
                 setMessages((prev) => [
                     ...prev,
                     {
@@ -197,13 +200,13 @@ export default function Page() {
             const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
             const recognition = new SpeechRecognition();
 
-            recognition.lang = "id-ID"; // ubah sesuai bahasa
+            recognition.lang = "id-ID";
             recognition.interimResults = false;
             recognition.maxAlternatives = 1;
 
             recognition.onresult = (event: SpeechRecognitionEvent) => {
                 const transcript = event.results[0][0].transcript;
-                setInputValue(transcript); // Langsung masukkan ke input
+                setInputValue(transcript);
             };
 
             recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
@@ -230,7 +233,6 @@ export default function Page() {
 
     return (
         <div className="flex flex-col min-h-screen">
-            {/* Area pesan/chat */}
             <div className="flex-1 overflow-y-auto px-4 py-6 flex justify-center">
                 <div className="w-full max-w-[700px] space-y-4">
                     {messages.length > 0 ? (
@@ -253,12 +255,22 @@ export default function Page() {
                                         )}
                                     </div>
 
-                                    {message.links?.length > 0 && (
+                                    {Array.isArray(message.links) && message.links.length > 0 && (
                                         <div className="mt-2 flex flex-wrap gap-2">
                                             {message.links.map((link, i) => (
-                                                <button key={i} onClick={() => window.open(link, "_blank")} className="px-3 py-1 text-xl bg-black text-white rounded-lg font-radley hover:bg-black/70 transition drop-shadow-xl">
+                                                <button
+                                                    key={i}
+                                                    onClick={() => window.open(link, "_blank")}
+                                                    className="px-3 py-1 text-xl bg-black text-white rounded-lg font-radley hover:bg-black/70 transition drop-shadow-xl"
+                                                >
                                                     Download Report {i + 1}
-                                                    <Image src="/file-download.svg" alt="Download Icon" width={20} height={20} className="inline ml-2" />
+                                                    <Image
+                                                        src="/file-download.svg"
+                                                        alt="Download Icon"
+                                                        width={20}
+                                                        height={20}
+                                                        className="inline ml-2"
+                                                    />
                                                 </button>
                                             ))}
                                         </div>

@@ -99,7 +99,7 @@ export default function Page() {
         },
     ];
 
-    const handleInputChange = (e) => {
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setCalculateCarbon((prev) => ({
             ...prev,
@@ -107,7 +107,7 @@ export default function Page() {
         }));
     };
 
-    const handleSelectChange = (value) => {
+    const handleSelectChange = (value: string) => {
         setCalculateCarbon((prev) => ({ ...prev, sludge_type: value }));
     };
 
