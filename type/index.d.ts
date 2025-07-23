@@ -38,6 +38,31 @@ declare interface ErrorResponse {
     total_errors: number;
 }
 
+declare interface SpeechRecognitionAlternative {
+    transcript: string;
+    confidence: number;
+}
+
+declare interface SpeechRecognitionResult {
+    [index: number]: SpeechRecognitionAlternative;
+    length: number;
+    isFinal: boolean;
+}
+
+declare interface SpeechRecognitionResultList {
+    [index: number]: SpeechRecognitionResult;
+    length: number;
+}
+
+declare interface SpeechRecognitionEvent extends Event {
+    results: SpeechRecognitionResultList;
+}
+
+declare interface SpeechRecognitionErrorEvent extends Event {
+    error: string;
+    message: string;
+}
+
 declare interface FormErrors {
     first_name?: string[];
     last_name?: string[];

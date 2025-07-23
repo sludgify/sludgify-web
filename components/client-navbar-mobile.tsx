@@ -7,23 +7,42 @@ import clsx from "clsx";
 import { usePathname, useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { LogOut, Menu, X } from "lucide-react";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 import { axiosInstance } from "@/lib/axios";
 import { toast } from "sonner";
 
-const MenuItem = ({ item, pathname, onClick }: any) => {
+interface MenuItemProps {
+    item: {
+        name: string;
+        link: string;
+        icon: (isActive: boolean, isHovered: boolean) => React.ReactNode;
+    };
+}
+
+export const MobileMenuItem = ({ item }: MenuItemProps) => {
+    const [isHovered, setIsHovered] = useState(false);
+    const pathname = usePathname();
     const isActive = pathname === item.link;
 
     return (
-        <Link href={item.link} onClick={onClick} className={clsx("flex items-center gap-5 text-lg p-2 min-h-[34px] rounded-lg transition", isActive ? "bg-black text-white" : "hover:bg-black text-[#525252] hover:text-white")}>
-            <div className="flex-shrink-0">{item.icon(isActive)}</div>
-            <span className="ml-2 font-bold">{item.name}</span>
+        <Link
+            href={item.link}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+            className={clsx(
+                "flex items-center gap-5 text-lg p-2 min-h-[34px] rounded-lg transition",
+                isActive ? "bg-black text-white" : "hover:bg-black text-[#525252] hover:text-white"
+            )}
+        >
+            <div className={clsx("flex-shrink-0", isActive || isHovered ? "text-white" : "text-[#525252]")}>
+                {item.icon(isActive, isHovered)}
+            </div>
+            <span className="ml-2 font-bold font-calibri">{item.name}</span>
         </Link>
     );
 };
 
 export const ClientNavbarMobile = () => {
-    const [, setOpen] = useState(false);
     const pathname = usePathname();
     const router = useRouter();
     const [userMe, setUserMe] = useState<User | null>(null);
@@ -31,19 +50,10 @@ export const ClientNavbarMobile = () => {
     const [isOpen, setIsOpen] = useState(false);
 
     useEffect(() => {
-        const storedOpen = localStorage.getItem("open");
-        if (storedOpen !== null) {
-            setOpen(JSON.parse(storedOpen));
-        }
-    }, []);
-
-    useEffect(() => {
         const userMeCookie = Cookies.get("me-data");
-        const companyCookie = Cookies.get("company-data");
         const accessTokenCookie = Cookies.get("accessToken");
 
-        if (userMeCookie && companyCookie) {
-            console.log("userMeCookie", userMeCookie);
+        if (userMeCookie) {
             try {
                 const parsedMe = JSON.parse(userMeCookie) as User;
                 setUserMe(parsedMe);
@@ -53,7 +63,6 @@ export const ClientNavbarMobile = () => {
         }
 
         if (accessTokenCookie) {
-            console.log("accessTokenCookie", accessTokenCookie);
             setAccessToken(accessTokenCookie);
         }
     }, []);
@@ -62,42 +71,78 @@ export const ClientNavbarMobile = () => {
         {
             name: "Home",
             link: "/client-menu",
-            icon: (isActive: boolean, isHovered: boolean) => <Image src={isActive || isHovered ? "/home_white.svg" : "/home.svg"} alt="home" width={18} height={18} />,
+            icon: (isActive: boolean, isHovered: boolean) => (
+                <Image
+                    src={isActive || isHovered ? "/home_white.svg" : "/home.svg"}
+                    alt="home"
+                    width={18}
+                    height={18}
+                />
+            ),
         },
         {
             name: "Dashboard",
             link: "/client-menu/dashboard",
-            icon: (isActive: boolean, isHovered: boolean) => <Image src={isActive || isHovered ? "/dashboard-white.svg" : "/dashboard.svg"} alt="dashboard" width={18} height={18} />,
+            icon: (isActive: boolean, isHovered: boolean) => (
+                <Image
+                    src={isActive || isHovered ? "/dashboard-white.svg" : "/dashboard.svg"}
+                    alt="dashboard"
+                    width={18}
+                    height={18}
+                />
+            ),
         },
         {
             name: "AI Analyst",
             link: "/client-menu/chat",
-            icon: (isActive: boolean, isHovered: boolean) => <Image src={isActive || isHovered ? "/AI_white.svg" : "/AI.svg"} alt="AI Analyst" width={18} height={18} />,
+            icon: (isActive: boolean, isHovered: boolean) => (
+                <Image
+                    src={isActive || isHovered ? "/AI_white.svg" : "/AI.svg"}
+                    alt="AI Analyst"
+                    width={18}
+                    height={18}
+                />
+            ),
         },
         {
             name: "Transactions",
             link: "/client-menu/transactions",
-            icon: (isActive: boolean, isHovered: boolean) => <Image src={isActive || isHovered ? "/cart_white.svg" : "/cart.svg"} alt="transactions" width={18} height={18} />,
+            icon: (isActive: boolean, isHovered: boolean) => (
+                <Image
+                    src={isActive || isHovered ? "/cart_white.svg" : "/cart.svg"}
+                    alt="transactions"
+                    width={18}
+                    height={18}
+                />
+            ),
         },
         {
             name: "Settings",
             link: "/client-menu/settings",
-            icon: (isActive: boolean, isHovered: boolean) => <Image src={isActive || isHovered ? "/settings_white.svg" : "/settings.svg"} alt="settings" width={18} height={18} />,
+            icon: (isActive: boolean, isHovered: boolean) => (
+                <Image
+                    src={isActive || isHovered ? "/settings_white.svg" : "/settings.svg"}
+                    alt="settings"
+                    width={18}
+                    height={18}
+                />
+            ),
         },
     ];
 
     const handleLogout = async () => {
-        console.log("accessToken", accessToken);
         try {
             const response = await axiosInstance.post("/sludgify/logout", null, {
                 headers: {
                     Authorization: `bearer ${accessToken}`,
                 },
             });
+
             if (response.status === 201) {
-                Cookies.remove("accessToken");
+                ["accessToken", "me-data", "company-data", "me-etag", "company-etag"].forEach((cookieName) => {
+                    Cookies.remove(cookieName);
+                });
                 toast.success("Logout berhasil!");
-                ["accessToken", "me-data", "company-data", "me-etag", "company-etag"].forEach((cookie) => Cookies.remove(cookie));
                 setTimeout(() => {
                     router.push("/");
                 }, 1000);
@@ -106,11 +151,14 @@ export const ClientNavbarMobile = () => {
             console.error("❌ Gagal logout:", e);
         }
     };
+
     return (
         <aside className="relative lg:hidden font-calibri">
             {/* Mobile Toggle */}
             <div className="lg:hidden p-4">
-                <button onClick={() => setIsOpen(!isOpen)}>{isOpen ? <X size={28} /> : <Menu size={28} />}</button>
+                <button onClick={() => setIsOpen(!isOpen)}>
+                    {isOpen ? <X size={28} /> : <Menu size={28} />}
+                </button>
             </div>
 
             {/* Mobile Sidebar */}
@@ -127,19 +175,26 @@ export const ClientNavbarMobile = () => {
                     </div>
                     <Separator className="my-4 bg-[#D1D5DB] h-[1px]" />
                     <div className="flex flex-col gap-2">
-                        {menu.map((item, idx) => (
-                            <MenuItem key={idx} item={item} pathname={pathname} onClick={() => setIsOpen(false)} />
+                        {menu.map((item, index) => (
+                            <MobileMenuItem key={index} item={item} />
                         ))}
                     </div>
                 </div>
+
                 <div className="flex flex-col gap-2 justify-center mt-4">
                     <div className="flex items-center gap-2">
-                        <Image src={userMe?.avatar || "/Ellipse 1.svg"} alt="avatar" width={45} height={45} className="rounded-full object-cover" />
+                        <Image
+                            src={userMe?.avatar || "/Ellipse 1.svg"}
+                            alt="avatar"
+                            width={45}
+                            height={45}
+                            className="rounded-full object-cover"
+                        />
                         <p className="font-bold capitalize text-[#525252]">
                             {userMe?.first_name} {userMe?.last_name}
                         </p>
                     </div>
-                    <Button variant="outline" onClick={handleLogout} className=" gap-2 py-2 px-4 text-sm">
+                    <Button variant="outline" onClick={handleLogout} className="gap-2 py-2 px-4 text-sm">
                         <LogOut size={18} /> Logout
                     </Button>
                 </div>

@@ -12,6 +12,8 @@ import { toast } from "sonner";
 import { AxiosError } from "axios";
 import { ClientNavbarMobile } from "@/components/client-navbar-mobile";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { useMediaQuery } from "react-responsive";
+import clsx from "clsx";
 
 const chartConfig = {
     sludgeB3: {
@@ -36,6 +38,8 @@ const carbonEmissionChartConfig = {
 } satisfies ChartConfig;
 
 export default function Page() {
+    const is1380 = useMediaQuery({ minWidth: 1380 });
+
     const [selectedPeriod, setSelectedPeriod] = useState("Monthly");
 
     const [calculateCarbon, setCalculateCarbon] = useState({
@@ -190,26 +194,44 @@ export default function Page() {
 
                 <div className="bg-[#FAFAFA] border border-[#D9D9D9] rounded-2xl space-y-8 shadow-md p-4 lg:p-6">
                     <h1 className="text-sm md:text-xl lg:text-2xl font-bold">Carbon Credit Status</h1>
-                    <div className="flex gap-3">
-                        <div className="bg-white border border-[#D9D9D9] lg:rounded-2xl rounded-[10px] w-full shadow-md  p-4 lg:p-6">
-                            <h1 className="text-[10px] md:text-sm lg:text-base">Credit Price (1 ton of CO2)</h1>
-                            <p className="text-sm md:text-base lg:text-2xl font-bold">IDR 150.000</p>
-                        </div>
-                        <div className="bg-white border border-[#D9D9D9] lg:rounded-2xl rounded-[10px] w-full shadow-md p-4 lg:p-6">
-                            <h1 className="text-[10px] md:text-sm  lg:text-base">Total Available Credit</h1>
-                            <p className="text-sm md:text-base lg:text-2xl font-bold">350 tons of CO2</p>
-                        </div>
-                    </div>
+                    <div className={clsx("w-full", "flex", is1380 ? "flex-row" : "flex-col", "gap-3")}>
+            <div className="bg-white border border-[#D9D9D9] lg:rounded-2xl rounded-[10px] w-full shadow-md p-4 lg:p-6">
+                <h1 className="text-[10px] md:text-sm lg:text-base">Credit Price (1 ton of CO2)</h1>
+                <p className="text-sm md:text-base lg:text-2xl font-bold">IDR 150.000</p>
+            </div>
+
+            <div className="bg-white border border-[#D9D9D9] lg:rounded-2xl rounded-[10px] w-full shadow-md p-4 lg:p-6">
+                <h1 className="text-[10px] md:text-sm lg:text-base">Total Available Credit</h1>
+                <p className="text-sm md:text-base lg:text-2xl font-bold">350 tons of CO2</p>
+            </div>
+        </div>
                     <div className="flex-1 border-t border-primary"></div>
                     <h1 className="text-sm md:text-xl lg:text-2xl font-bold">Buy Carbon Credit</h1>
-                    <div className="flex gap-3 justify-between ">
-                        <input type="text" className="border border-gray-300 rounded-md p-2 focus:outline-none " />
-                        <div className="hidden lg:block lg:text-sm">
-                            <h1>Total Price</h1>
-                            <h1 className="font-bold">IDR 150.000</h1>
+                    {is1380 ? (
+                        <div className="flex gap-3 justify-between ">
+                            <input type="text" className="border border-gray-300 rounded-md p-2 focus:outline-none " />
+                            <div className="hidden lg:block lg:text-sm">
+                                <h1>Total Price</h1>
+                                <h1 className="font-bold">IDR 150.000</h1>
+                            </div>
+                            <button className="bg-primary text-white rounded-md p-2 lg:px-4 lg:py-2 text-[clamp(0.5rem,1vw+0.5rem,1.25rem)] font-radley cursor-pointer">Buy Now</button>
                         </div>
-                        <button className="bg-primary text-white rounded-md p-2 lg:px-4 lg:py-2 text-[clamp(0.5rem,1vw+0.5rem,1.25rem)] font-radley cursor-pointer">Buy Now</button>
-                    </div>
+                    ) : (
+                        <>
+                            <div className="flex w-full">
+                                <input type="text" className="border border-gray-300 rounded-md p-2 focus:outline-none w-full" />
+                            </div>
+                            <div className="flex items-center gap-4">
+                                <div className="hidden lg:block lg:text-sm">
+                                    <h1>Total Price</h1>
+                                    <h1 className="font-bold">IDR 150.000</h1>
+                                </div>
+                                <button className="bg-primary text-white rounded-md p-2 lg:px-4 lg:py-2 text-[clamp(0.5rem,1vw+0.5rem,1.25rem)] font-radley cursor-pointer">
+                                    Buy Now
+                                </button>
+                            </div>
+                        </>
+                    )}
                 </div>
 
                 <div className="bg-[#FAFAFA] border border-[#D9D9D9] rounded-2xl space-y-4 lg:space-y-8 shadow-md p-4 lg:p-6">
