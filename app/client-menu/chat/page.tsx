@@ -231,7 +231,7 @@ export default function Page() {
 
     return (
         <div className="flex flex-col min-h-screen">
-            <div className="flex-1 overscroll-x-none overflow-y-auto px-4 py-6 flex justify-center">
+            <div className="flex-1 overflow-x-hidden overflow-y-auto px-4 py-6 flex justify-center">
                 <div className="w-full max-w-[700px] space-y-4">
                     {messages.length > 0 ? (
                         messages.map((message) => (
@@ -300,12 +300,18 @@ export default function Page() {
                     )}
                     <div ref={messagesEndRef} />
                 </div>
-                {/* {is1023 ? (
+                {is1023 ? (
                     <ClientNavbarMobile />
                 ) : (
-                    <Image src={"/text-search.svg"} alt={"text-search"} width={35} height={35} className={`${is1130 ? 'hidden': 'absolute'}`} />
-                )} */}
-                {/* <Image src={"/text-search.svg"} alt={"text-search"} width={35} height={35} className={`absolute`} /> */}
+                    <Image
+                        src="/text-search.svg"
+                        alt="text-search"
+                        width={35}
+                        height={35}
+                        className="absolute top-3 right-10 flex lg:hidden md:block xl:block"
+                        unoptimized
+                    />
+                )}
             </div>
 
             {/* Sticky Input */}
