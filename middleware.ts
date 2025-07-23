@@ -78,17 +78,17 @@ export async function middleware(request: NextRequest) {
     const clientETag = request.cookies.get("me-etag")?.value;
     const fromRedirect = url.searchParams.get("fromRedirect");
 
-    // if (url.pathname === "/account-active" || url.pathname === "/account-active/sent") {
-    //     const token = url.searchParams.get("token");
-    //     if (!token) return NextResponse.redirect(new URL("/login", request.url));
+    if (url.pathname === "/account-active" || url.pathname === "/account-active/sent") {
+        const token = url.searchParams.get("token");
+        if (!token) return NextResponse.redirect(new URL("/login", request.url));
 
-    //     const data =
-    //         url.pathname === "/account-active"
-    //             ? await getAccountActiveEmail(token)
-    //             : await getAccountActivePage(token);
+        const data =
+            url.pathname === "/account-active"
+                ? await getAccountActiveEmail(token)
+                : await getAccountActivePage(token);
 
-    //     if (!data) return NextResponse.redirect(new URL("/login", request.url));
-    // }
+        if (!data) return NextResponse.redirect(new URL("/login", request.url));
+    }
 
     if (url.pathname.startsWith("/client-menu")) {
         if (!accessToken) return NextResponse.redirect(new URL("/login", request.url));
