@@ -1,10 +1,14 @@
+'use client';
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ClientNavbarMobile } from "@/components/client-navbar-mobile";
+import { useMediaQuery } from "react-responsive";
 
 export default function ClientMenu() {
+    const is1290 = useMediaQuery({ minWidth: 1290 });
+
     const stats = [
         {
             title: "Carbon Credit",
@@ -48,9 +52,8 @@ export default function ClientMenu() {
                                     <div className="flex items-center justify-between">
                                         <h1 className="lg:text-base text-[10px]">{stat.title}</h1>
                                         <div
-                                            className={`flex items-center gap-2 text-lg font-medium rounded-[5px] p-1 ${
-                                                stat.changeType === "positive" ? "text-[#407E8B] bg-[#EAF1EF]" : stat.changeType === "negative" ? "text-[#A74941] bg-[#F5EBE7]" : ""
-                                            }`}
+                                            className={`flex items-center gap-2 text-lg font-medium rounded-[5px] p-1 ${stat.changeType === "positive" ? "text-[#407E8B] bg-[#EAF1EF]" : stat.changeType === "negative" ? "text-[#A74941] bg-[#F5EBE7]" : ""
+                                                }`}
                                         >
                                             <h1>{stat.icon_change}</h1>
                                             <h1>{stat.change}</h1>
@@ -74,7 +77,7 @@ export default function ClientMenu() {
                     </div>
                 </div>
 
-                <div className="flex flex-col items-center lg:flex-row lg:gap-4 lg:justify-around w-fit h-fit lg:w-full border border-[#D9D9D9] bg-[#FAFAFA] rounded-2xl shadow-lg mx-4 lg:mx-0 lg:p-6 p-4">
+                <div className={`flex ${is1290 ? 'flex-row' : 'flex-col'} items-center gap-4 justify-around w-fit h-fit lg:w-full border border-[#D9D9D9] bg-[#FAFAFA] rounded-2xl shadow-lg mx-4 lg:mx-0 lg:p-6 p-4`}>
                     <Image src="/Rectangle 134.svg" alt="bg-client" height={279} width={490} className="w-full lg:max-w-[490px] h-auto object-contain" />
                     <div className="flex flex-col space-y-5 lg:space-y-10 w-full min-w-0">
                         <div className="space-y-2 w-full">
@@ -92,7 +95,7 @@ export default function ClientMenu() {
                     </div>
                 </div>
 
-                <div className="flex flex-col-reverse items-center lg:flex-row lg:gap-4 lg:justify-around w-fit h-fit lg:w-full border border-[#D9D9D9] bg-[#FAFAFA] rounded-2xl shadow-lg mx-4 lg:mx-0 lg:p-6 p-4">
+                <div className={`flex ${is1290 ? 'flex-row' : 'flex-col-reverse'} items-center gap-4 justify-around w-fit h-fit lg:w-full border border-[#D9D9D9] bg-[#FAFAFA] rounded-2xl shadow-lg mx-4 lg:mx-0 lg:p-6 p-4`}>
                     <div className="flex flex-col space-y-5 lg:space-y-10 w-full min-w-0">
                         <div className="space-y-2 w-full">
                             <h1 className="text-lg lg:text-4xl font-calibri font-bold">Sustainability Reporting</h1>
@@ -102,12 +105,18 @@ export default function ClientMenu() {
                             </p>
                         </div>
                         <div className="flex lg:justify-start justify-end">
-                            <Link href={"/request/sustainability-reports"}>
+                            <Link href="/request/sustainability-reports">
                                 <Button className="font-radley lg:text-xl px-5 lg:px-9 py-2">Request Report</Button>
                             </Link>
                         </div>
                     </div>
-                    <Image src={"/Rectangle 135.svg"} alt="bg-client" height={279} width={490} className="w-full lg:max-w-[490px] h-auto" />
+                    <Image
+                        src="/Rectangle 135.svg"
+                        alt="bg-client"
+                        height={279}
+                        width={490}
+                        className="w-full lg:max-w-[490px] h-auto object-contain"
+                    />
                 </div>
                 <div className="grid grid-cols-2 lg:grid-cols-12 gap-3 p-3">
                     <h1 className="text-lg lg:text-4xl font-bold font-calibri order-3 lg:order-1 col-span-2 lg:col-span-12">Industry Updates</h1>

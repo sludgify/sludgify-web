@@ -10,17 +10,7 @@ import { LogOut, Menu, X } from "lucide-react";
 import { Button } from "./ui/button";
 import { axiosInstance } from "@/lib/axios";
 import { toast } from "sonner";
-
-const MenuItem = ({ item, pathname, onClick }: any) => {
-    const isActive = pathname === item.link;
-
-    return (
-        <Link href={item.link} onClick={onClick} className={clsx("flex items-center gap-5 text-lg p-2 min-h-[34px] rounded-lg transition", isActive ? "bg-black text-white" : "hover:bg-black text-[#525252] hover:text-white")}>
-            <div className="flex-shrink-0">{item.icon(isActive)}</div>
-            <span className="ml-2 font-bold">{item.name}</span>
-        </Link>
-    );
-};
+import MenuItem from "./menuItemMobile";
 
 export const ClientNavbarMobile = () => {
     const [, setOpen] = useState(false);
@@ -127,9 +117,24 @@ export const ClientNavbarMobile = () => {
                     </div>
                     <Separator className="my-4 bg-[#D1D5DB] h-[1px]" />
                     <div className="flex flex-col gap-2">
-                        {menu.map((item, idx) => (
-                            <MenuItem key={idx} item={item} pathname={pathname} onClick={() => setIsOpen(false)} />
-                        ))}
+                        {menu.map((item, index) => {
+                            const isActive = pathname === item.link;
+                            // eslint-disable-next-line react-hooks/rules-of-hooks
+                            const [isHovered, setIsHovered] = React.useState(false); // Per item hover (untuk icon fungsi)
+
+                            return (
+                                <Link
+                                    href={item.link}
+                                    key={index}
+                                    onMouseEnter={() => setIsHovered(true)}
+                                    onMouseLeave={() => setIsHovered(false)}
+                                    className={clsx("flex items-center gap-5 text-lg p-2 min-h-[34px] rounded-lg transition", isActive ? "bg-black text-white" : "hover:bg-black text-[#525252] hover:text-white")}
+                                >
+                                    <div className={clsx("flex-shrink-0", isActive || isHovered ? "text-white" : "text-[#525252]")}>{typeof item.icon === "function" && item.icon(isActive, isHovered)}</div>
+                                    <span className="ml-2 font-bold font-calibri">{item.name}</span>
+                                </Link>
+                            );
+                        })}
                     </div>
                 </div>
                 <div className="flex flex-col gap-2 justify-center mt-4">
