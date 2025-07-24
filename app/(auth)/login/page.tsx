@@ -125,14 +125,19 @@ export default function Page() {
                 >
                     <CardHeader>
                         <CardTitle className="flex flex-row justify-center items-center gap-4">
-                            <div className="sm:flex flex-row items-center gap-2 hidden">
-                                <Image src={Group16} alt="logo" width={28} height={15} />
+                            <div className="flex flex-row items-center gap-2">
+                                <Image
+                                    src={Group16}
+                                    alt="logo"
+                                    width={28}
+                                    height={15}
+                                />
                                 <p className="text-sm font-semibold text-black">Sludgify</p>
                             </div>
 
                             <div className="flex items-center">
-                                <div className="h-5 w-px bg-gray-400 mx-2 sm:block hidden" />
-                                <p className="text-sm text-black sm:block hidden">One Platform for ESG, Waste, and Carbon Impact</p>
+                                <div className="h-5 w-px bg-gray-400 mx-4 ms-7" />
+                                <p className="text-sm text-black">One Platform for ESG, Waste, and Carbon Impact</p>
                             </div>
                         </CardTitle>
                     </CardHeader>
