@@ -190,16 +190,16 @@ export default function Page() {
     }, []);
 
     return (
-        <div className="p-6 lg:py-8 lg:px-36 space-y-6">
-            <div className="border-b pb-2 flex lg:hidden font-calibri items-center justify-between">
-                <div>
+        <div className="lg:py-8 lg:px-36 lg:space-y-6">
+            <div className=" flex lg:hidden font-calibri items-center justify-between">
+                <div className="px-6">
                     <h1 className="text-primary text-xl font-bold">Personal Information</h1>
                     <h1 className="text-xs text-[#525252]">Edit or complete your personal information</h1>
                 </div>
                 <ClientNavbarMobile />
             </div>
 
-            <form onSubmit={formik.handleSubmit} className="md:border md:p-6 flex md:gap-14 md:flex-row flex-col-reverse w-full items-start  md:max-w-[1077px] border-[#D9D9D9] rounded-md">
+            <form onSubmit={formik.handleSubmit} className="px-6 border-t md:border md:p-6 flex md:gap-14 md:flex-row flex-col-reverse w-full items-start  md:max-w-[1077px] border-[#D9D9D9] md:rounded-md">
                 <div className="flex flex-col gap-4 w-full md:w-[50%]">
                     <h1 className="hidden md:block text-primary text-xl font-bold">Personal Information</h1>
                     <h1 className="hidden md:block">Edit or complete your personal information</h1>
