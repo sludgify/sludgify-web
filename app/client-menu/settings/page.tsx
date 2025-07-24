@@ -255,7 +255,7 @@ export default function Page() {
                             <label htmlFor="phone">Phone Number</label>
                             <input type="text" name="company.phone_number" value={formik.values.company.phone_number} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
                         </div>
-                        <div className="flex flex-col md:col-span-2 gap-2 text-[#525252]">
+                        <div className="flex flex-col gap-2 text-[#525252]">
                             <label htmlFor="address">Address</label>
                             <input type="text" name="company.address" value={formik.values.company.address} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
                         </div>
