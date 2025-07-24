@@ -8,6 +8,7 @@ import { AxiosError } from "axios";
 import { useFormik } from "formik";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { ClientNavbarMobile } from "@/components/client-navbar-mobile";
 
 interface ErrorResponse {
     message: string;
@@ -54,22 +55,22 @@ export default function Page() {
         email: [],
         phone_number: [],
         avatar: [],
-    })
+    });
 
     const [formErrorsCompanyInformation, setFormErrorsCompanyInformation] = useState<CompanyInformationFormErrors>({
         country: [],
         position: [],
         email: [],
         phone_number: [],
-    })
+    });
 
     const handleValidationPersonalInformation = (errors: PersonalInformationFormErrors) => {
         setFormErrorsPersonalInformation(errors);
-    }
+    };
 
     const handleValidationCompanyInformation = (errors: CompanyInformationFormErrors) => {
         setFormErrorsCompanyInformation(errors);
-    }
+    };
 
     const handleDeletedAccount = async () => {
         const headers: Record<string, string> = {
@@ -79,27 +80,15 @@ export default function Page() {
         if (response.status === 201) {
             Cookies.remove("accessToken");
             toast.success(response.data.message);
-            [
-                "accessToken",
-                "me-data",
-                "company-data",
-                "me-etag",
-                "company-etag"
-            ].forEach((cookie) => Cookies.remove(cookie));
+            ["accessToken", "me-data", "company-data", "me-etag", "company-etag"].forEach((cookie) => Cookies.remove(cookie));
             setTimeout(() => {
                 push("/");
             }, 1000);
         }
-    }
+    };
 
     const { mutate } = useMutation({
-        mutationFn: async ({
-            formData1,
-            formData2,
-        }: {
-            formData1: FormData;
-            formData2: FormData;
-        }) => {
+        mutationFn: async ({ formData1, formData2 }: { formData1: FormData; formData2: FormData }) => {
             const headers = {
                 Authorization: `Bearer ${accessToken}`,
                 "Content-Type": "multipart/form-data",
@@ -113,7 +102,7 @@ export default function Page() {
         onSuccess: ({ personalInformationResponse, companyInformationResponse }) => {
             const personalData = personalInformationResponse.data;
             const companyData = companyInformationResponse.data;
-            toast.success('successfully updated profile');
+            toast.success("successfully updated profile");
         },
 
         onError: (error) => {
@@ -125,26 +114,26 @@ export default function Page() {
                 }, 1000);
             }
         },
-    })
+    });
 
     const formik = useFormik({
         enableReinitialize: true,
         initialValues: {
             personal: {
-                first_name: userMe?.first_name || '',
-                last_name: userMe?.last_name || '',
-                country: userMe?.country || '',
-                position: userMe?.position || '',
-                email: userMe?.email || '',
-                phone_number: userMe?.phone_number || '',
+                first_name: userMe?.first_name || "",
+                last_name: userMe?.last_name || "",
+                country: userMe?.country || "",
+                position: userMe?.position || "",
+                email: userMe?.email || "",
+                phone_number: userMe?.phone_number || "",
                 avatar: null as File | null,
             },
             company: {
-                country: companyData?.country || '',
-                position: companyData?.position || '',
-                email: companyData?.email || '',
-                phone_number: companyData?.phone_number || '',
-                address: companyData?.address || '',
+                country: companyData?.country || "",
+                position: companyData?.position || "",
+                email: companyData?.email || "",
+                phone_number: companyData?.phone_number || "",
+                address: companyData?.address || "",
             },
         },
         onSubmit: ({ personal, company }, { setSubmitting }) => {
@@ -169,13 +158,12 @@ export default function Page() {
 
                 mutate({ formData1, formData2 });
             } catch (error) {
-                console.error('Terjadi kesalahan:', error);
+                console.error("Terjadi kesalahan:", error);
             } finally {
                 setSubmitting(false);
             }
         },
-    })
-
+    });
 
     useEffect(() => {
         const userMeCookie = Cookies.get("me-data");
@@ -198,81 +186,93 @@ export default function Page() {
     }, []);
 
     return (
-        <div className="py-8 px-36 space-y-6">
-            <form onSubmit={formik.handleSubmit} className="border flex gap-14 items-start max-w-[1077px] border-[#D9D9D9] rounded-md p-6">
-                <div className="flex flex-col gap-4 w-[50%]">
+        <div className="p-6 lg:py-8 lg:px-36 space-y-6">
+            <div className="border-b pb-2 flex lg:hidden font-calibri items-center justify-between">
+                <div>
                     <h1 className="text-primary text-xl font-bold">Personal Information</h1>
-                    <h1>Edit or complete your personal information</h1>
+                    <h1 className="text-xs text-[#525252]">Edit or complete your personal information</h1>
+                </div>
+                <ClientNavbarMobile />
+            </div>
 
-                    <div className="grid grid-cols-2 gap-4 mt-2">
-                        <div className="flex flex-col gap-2">
+            <form onSubmit={formik.handleSubmit} className="md:border md:p-6 flex md:gap-14 md:flex-row flex-col-reverse w-full items-start  md:max-w-[1077px] border-[#D9D9D9] rounded-md">
+                <div className="flex flex-col gap-4 w-full md:w-[50%]">
+                    <h1 className="hidden md:block text-primary text-xl font-bold">Personal Information</h1>
+                    <h1 className="hidden md:block">Edit or complete your personal information</h1>
+
+                    <div className="grid grid-cols-1 text-xs md:text-base md:grid-cols-2 gap-4 mt-2">
+                        <div className="flex flex-col gap-2 text-[#525252]">
                             <label htmlFor="firstname">First Name</label>
-                            <input type="text" name="personal.first_name" value={formik.values.personal.first_name} onChange={formik.handleChange} className="border border-black rounded-md px-3 py-2 focus:outline-none " />
+                            <input type="text" name="personal.first_name" value={formik.values.personal.first_name} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
                         </div>
-                        <div className="flex flex-col gap-2">
+                        <div className="flex flex-col gap-2 text-[#525252]">
                             <label htmlFor="lastname">Last Name</label>
-                            <input type="text" name="personal.last_name" value={formik.values.personal.last_name} onChange={formik.handleChange} className="border border-black rounded-md px-3 py-2 focus:outline-none " />
+                            <input type="text" name="personal.last_name" value={formik.values.personal.last_name} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
                         </div>
-                        <div className="flex flex-col gap-2">
+                        <div className="flex flex-col gap-2 text-[#525252]">
                             <label htmlFor="country">Country</label>
-                            <input type="text" name="personal.country" value={formik.values.personal.country} onChange={formik.handleChange} className="border border-black rounded-md px-3 py-2 focus:outline-none " />
+                            <input type="text" name="personal.country" value={formik.values.personal.country} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
                         </div>
-                        <div className="flex flex-col gap-2">
+                        <div className="flex flex-col gap-2 text-[#525252]">
                             <label htmlFor="position">Position</label>
-                            <input type="text" name="personal.position" value={formik.values.personal.position} onChange={formik.handleChange} className="border border-black rounded-md px-3 py-2 focus:outline-none " />
+                            <input type="text" name="personal.position" value={formik.values.personal.position} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
                         </div>
-                        <div className="flex flex-col gap-2">
+                        <div className="flex flex-col gap-2 text-[#525252]">
                             <label htmlFor="email">Email</label>
-                            <input type="text" name="personal.email" value={formik.values.personal.email} onChange={formik.handleChange} className="border border-black rounded-md px-3 py-2 focus:outline-none " />
+                            <input type="text" name="personal.email" value={formik.values.personal.email} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
                         </div>
-                        <div className="flex flex-col gap-2">
+                        <div className="flex flex-col gap-2 text-[#525252]">
                             <label htmlFor="phone">Phone Number</label>
-                            <input type="text" name="personal.phone_number" value={formik.values.personal.phone_number} onChange={formik.handleChange} className="border border-black rounded-md px-3 py-2 focus:outline-none " />
+                            <input type="text" name="personal.phone_number" value={formik.values.personal.phone_number} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
                         </div>
                     </div>
-                    <h1 className="text-primary text-xl font-bold">Company Information</h1>
-                    <h1>Edit or complete your company information</h1>
-
-                    <div className="grid grid-cols-2 gap-4 mt-2">
-                        <div className="flex flex-col gap-2">
-                            <label htmlFor="country">Country</label>
-                            <input type="text" name="company.country" value={formik.values.company.country} onChange={formik.handleChange} className="border border-black rounded-md px-3 py-2 focus:outline-none " />
+                    <div>
+                        <h1 className="text-primary text-xl font-bold ">Company Information</h1>
+                        <h1 className="text-[#525252] text-xs md:text-base">Edit or complete your company information</h1>
+                    </div>
+                    <div className="grid grid-cols-1 text-xs md:text-base md:grid-cols-2 gap-4 mt-2">
+                        <div className="flex flex-col gap-2 text-[#525252]">
+                            <label htmlFor="country text-[#525252]">Country</label>
+                            <input type="text" name="company.country" value={formik.values.company.country} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
                         </div>
-                        <div className="flex flex-col gap-2">
+                        <div className="flex flex-col gap-2 text-[#525252]">
                             <label htmlFor="position">Position</label>
-                            <input type="text" name="company.position" value={formik.values.company.position} onChange={formik.handleChange} className="border border-black rounded-md px-3 py-2 focus:outline-none " />
+                            <input type="text" name="company.position" value={formik.values.company.position} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
                         </div>
-                        <div className="flex flex-col gap-2">
+                        <div className="flex flex-col gap-2 text-[#525252]">
                             <label htmlFor="email">Email</label>
-                            <input type="text" name="company.email" value={formik.values.company.email} onChange={formik.handleChange} className="border border-black rounded-md px-3 py-2 focus:outline-none " />
+                            <input type="text" name="company.email" value={formik.values.company.email} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
                         </div>
-                        <div className="flex flex-col gap-2">
+                        <div className="flex flex-col gap-2 text-[#525252]">
                             <label htmlFor="phone">Phone Number</label>
-                            <input type="text" name="company.phone_number" value={formik.values.company.phone_number} onChange={formik.handleChange} className="border border-black rounded-md px-3 py-2 focus:outline-none " />
+                            <input type="text" name="company.phone_number" value={formik.values.company.phone_number} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
                         </div>
-                        <div className="flex flex-col col-span-2 gap-2">
+                        <div className="flex flex-col md:col-span-2 gap-2 text-[#525252]">
                             <label htmlFor="address">Address</label>
-                            <input type="text" name="company.address" value={formik.values.company.address} onChange={formik.handleChange} className="border border-black rounded-md px-3 py-2 focus:outline-none " />
+                            <input type="text" name="company.address" value={formik.values.company.address} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
                         </div>
+                        <button type="submit" className="md:hidden bg-black rounded-md text-white py-2 cursor-pointer">
+                            Save Changes
+                        </button>
                     </div>
                 </div>
 
-                <div className=" w-[330px]">
+                <div className="md:w-[330px] w-full">
                     <div className="flex gap-2 items-center mt-4 min-h-[64px]">
-                        <Image src={previewAvatar || userMe?.avatar || "/Ellipse 2.svg"} alt="Ellipse 2" width={50} height={50} className="rounded-full h-[45px] w-[45px] object-cover object-top" />
+                        <Image src={previewAvatar || userMe?.avatar || "/Ellipse 2.svg"} alt="Ellipse 2" width={50} height={50} className="rounded-full md:h-[45px] md:w-[45px] w-[35px] h-[35px] object-cover object-top" />
                         <div className="overflow-hidden transition-all capitalize font-bold duration-300 whitespace-nowrap">
-                            <h1 className="text-xl">
+                            <h1 className="text-sm md:text-xl">
                                 {userMe?.first_name} {userMe?.last_name}
                             </h1>
-                            <p className="text-[#525252]">
+                            <p className="md:text-base text-[10px] text-[#525252]">
                                 {userMe?.position} at {userMe?.company_name}
                             </p>
                         </div>
                     </div>
                     <div>
-                        <div>
-                            <h1 className="text-primary font-bold">Upload Your Image</h1>
-                            <h1 className="text-[#525252]">Formats allowed are jpg and png. Image size up tp 10 MB</h1>
+                        <div className="font-calibri">
+                            <h1 className="text-primary font-bold md:text-base text-xs">Upload Your Image</h1>
+                            <h1 className="text-[#525252] md:text-base text-[10px]">Formats allowed are jpg and png. Image size up tp 10 MB</h1>
                         </div>
                         <input
                             id="upload-photo"
@@ -288,14 +288,14 @@ export default function Page() {
                                 }
                             }}
                         />
-                        <div className="grid grid-cols-2 gap-4 mt-2 font-radley">
-                            <button type="button" className="bg-[#DC0000] text-white rounded-md py-2 cursor-pointer" onClick={handleDeletedAccount}>
+                        <div className="flex md:grid grid-cols-2 gap-2 md:gap-4 mt-2 font-radley">
+                            <button type="button" className="bg-[#DC0000] text-white rounded-md py-2 px-4 md:text-base text-xs cursor-pointer" onClick={handleDeletedAccount}>
                                 Delete
                             </button>
-                            <label htmlFor="upload-photo" className="border border-black rounded-md py-2 text-center cursor-pointer">
+                            <label htmlFor="upload-photo" className="border border-black rounded-md py-2 px-4 md:text-base text-xs text-center cursor-pointer">
                                 Upload
                             </label>
-                            <button type="submit" className="col-span-2 bg-black rounded-md text-white py-2 cursor-pointer">
+                            <button type="submit" className="col-span-2 hidden md:block bg-black rounded-md text-white py-2 cursor-pointer">
                                 Save Changes
                             </button>
                         </div>
