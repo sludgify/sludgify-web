@@ -13,17 +13,12 @@ import { Separator } from "@/components/ui/separator";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { axiosInstance } from "@/lib/axios";
-import { useMediaQuery } from 'react-responsive';
+import { useMediaQuery } from "react-responsive";
 import BackgroundResponsiveMobileLogin from "../../../public/responsive-login-mobile.png";
-import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Group16 from "../../../public/Group 16.png";
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import IconGoogle from "../../../public/flat-color-icons_google.png";
 
@@ -57,7 +52,7 @@ export default function Page() {
         },
     });
 
-    const handleValidation = (errors: { email: string[]; password: string[]; }) => {
+    const handleValidation = (errors: { email: string[]; password: string[] }) => {
         setFormErrors({
             email: errors.email || [],
             password: errors.password || [],
@@ -120,43 +115,38 @@ export default function Page() {
         },
     });
 
-
     if (isSm || isMd || isDefault) {
         return (
             <div className="h-screen bg-cover bg-center pt-10" style={{ backgroundImage: `url(${BackgroundResponsiveMobileLogin.src})` }}>
-                <Card className={clsx(
-                    "w-[80%] mx-auto",
-                    {
-                        'h-[65%]': isMd,
-                    }
-                )}>
+                <Card
+                    className={clsx("w-[80%] mx-auto", {
+                        "h-[65%]": isMd,
+                    })}
+                >
                     <CardHeader>
                         <CardTitle className="flex flex-row justify-center items-center gap-4">
                             <div className="flex flex-row items-center gap-2">
-                                <Image
-                                    src={Group16}
-                                    alt="logo"
-                                    width={28}
-                                    height={15}
-                                />
+                                <Image src={Group16} alt="logo" width={28} height={15} />
                                 <p className="text-sm font-semibold text-black">Sludgify</p>
                             </div>
 
                             <div className="flex items-center">
-                                <div className="h-5 w-px bg-gray-400 mx-4 ms-7" />
+                                <div className="h-5 w-px bg-gray-400 mx-2" />
                                 <p className="text-sm text-black">One Platform for ESG, Waste, and Carbon Impact</p>
                             </div>
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div className="text-center space-y-1 ms-12 me-12 mb-8">
-                            <h1 className="text-4xl">Welcome Back!</h1>
+                        <div className="text-center space-y-1 font-calibri px-2">
+                            <h1 className="text-xl">Welcome Back!</h1>
                             <h2 className="text-sm">Kindly enter your email address and password to sign in</h2>
                         </div>
-                        <form onSubmit={formik.isSubmitting ? () => { } : formik.handleSubmit}>
+                        <form onSubmit={formik.isSubmitting ? () => {} : formik.handleSubmit}>
                             <div className="flex flex-col gap-1">
                                 <div className="flex flex-col mt-2">
-                                    <Label htmlFor="email" className="text-sm font-normal">Email</Label>
+                                    <Label htmlFor="email" className="text-sm font-normal">
+                                        Email
+                                    </Label>
                                     <Input type="text" name="email" value={formik.values.email} onChange={formik.handleChange} className={`${(formErrors.email?.length ?? 0) > 0 ? "border-red-500" : ""}`} />
                                 </div>
                                 {formErrors.email?.map((error, index) =>
@@ -174,7 +164,9 @@ export default function Page() {
                                     ) : null
                                 )}
                                 <div className="flex flex-col mt-2">
-                                    <Label htmlFor="email" className="text-sm font-normal">Password</Label>
+                                    <Label htmlFor="email" className="text-sm font-normal">
+                                        Password
+                                    </Label>
                                     <Input type="text" name="password" value={formik.values.password} onChange={formik.handleChange} className={`${(formErrors.password?.length ?? 0) > 0 ? "border-red-500" : ""}`} />
                                 </div>
                                 {formErrors.password?.map((error, index) =>
@@ -184,7 +176,14 @@ export default function Page() {
                                         </p>
                                     ) : null
                                 )}
-                                <Button type="submit" className="w-full mt-4" >Sign In</Button>
+
+                                <Link href="/forgot-password" className="text-xs text-primary mt-2">
+                                    Forgot password?
+                                </Link>
+
+                                <Button type="submit" className="w-full mt-2">
+                                    Sign In
+                                </Button>
                                 <div className="flex items-center justify-center w-full mt-1 mb-1">
                                     <div className="flex-grow h-px bg-[#525252]" />
                                     <span className="mx-4 text-sm text-black">OR</span>
@@ -205,7 +204,7 @@ export default function Page() {
                     </CardContent>
                 </Card>
             </div>
-        )
+        );
     }
 
     if (isLg || isXl) {
@@ -214,19 +213,19 @@ export default function Page() {
                 <div className="flex w-1/2 items-center justify-center relative">
                     <div className="absolute top-7 left-7 flex items-center gap-2 h-10 text-black">
                         <Image src={"/logo.svg"} width={isXl ? 50 : 30} height={isXl ? 50 : 30} alt="logo"></Image>
-                        <h1 className={`${isXl ? 'text-4xl' : 'text-2xl'}`}>Sludgify</h1>
+                        <h1 className={`${isXl ? "text-4xl" : "text-2xl"}`}>Sludgify</h1>
                         <Separator orientation="vertical" className="w-[10px] h-full bg-black mx-4" />
-                        <p className={`${isXl ? 'text-md' : 'text-sm'}`}>
+                        <p className={`${isXl ? "text-md" : "text-sm"}`}>
                             One Platform for ESG, Waste, <br /> and Carbon Impact
                         </p>
                     </div>
                     <div className="mt-10 flex justify-center items-center p-12">
                         <div className="right-0 space-y-2 w-[446px] h-[582px]">
                             <div className="text-center space-y-1">
-                                <h1 className={`${isXl ? 'text-4xl' : 'text-2xl'}`}>Welcome Back!</h1>
-                                <h2 className={`${isXl ? 'text-md' : 'text-sm'} mb-5 text-black`}>Kindly enter your email address and password to sign in</h2>
+                                <h1 className={`${isXl ? "text-4xl" : "text-2xl"}`}>Welcome Back!</h1>
+                                <h2 className={`${isXl ? "text-md" : "text-sm"} mb-5 text-black`}>Kindly enter your email address and password to sign in</h2>
                             </div>
-                            <form className={`space-y-5 ${isXl ? '' : 'me-15 ms-15'}`} onSubmit={formik.isSubmitting ? () => { } : formik.handleSubmit}>
+                            <form className={`space-y-5 ${isXl ? "" : "me-15 ms-15"}`} onSubmit={formik.isSubmitting ? () => {} : formik.handleSubmit}>
                                 <div>
                                     <label className="block text-sm text-gray-900 mb-2">Email </label>
                                     <input
@@ -291,7 +290,7 @@ export default function Page() {
                                     )}
                                 </div>
 
-                                <Link href="#" className="text-sm text-primary mb-7">
+                                <Link href="/forgot-password" className="text-sm text-primary mb-7">
                                     Forgot password?
                                 </Link>
 
@@ -299,12 +298,12 @@ export default function Page() {
                                     Sign In
                                 </button>
                             </form>
-                            <div className={`my-3 flex items-center ${isXl ? '' : 'w-[73%] mx-auto'}`}>
+                            <div className={`my-3 flex items-center ${isXl ? "" : "w-[73%] mx-auto"}`}>
                                 <div className="flex-1 border-t border-primary"></div>
                                 <span className="px-4 text-sm text-gray-500">or</span>
                                 <div className="flex-1 border-t border-primary"></div>
                             </div>
-                            <button onClick={() => login()} className={`mx-auto bg-primary border border-primary text-secondary py-2 px-6 rounded-md  flex items-center justify-center ${isXl ? 'w-full' : 'w-[73%]'}`}>
+                            <button onClick={() => login()} className={`mx-auto bg-primary border border-primary text-secondary py-2 px-6 rounded-md  flex items-center justify-center ${isXl ? "w-full" : "w-[73%]"}`}>
                                 <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24">
                                     <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
                                     <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
@@ -313,7 +312,7 @@ export default function Page() {
                                 </svg>
                                 <p>Continue with Google</p>
                             </button>
-                            <div className={`flex items-center gap-1 mt-6 ${isXl ? '' : 'me-8 ms-15 text-sm'}`}>
+                            <div className={`flex items-center gap-1 mt-6 ${isXl ? "" : "me-8 ms-15 text-sm"}`}>
                                 <p>Does not have an account?</p>
                                 <Link href="/register" className="text-blue-500">
                                     Sign Up

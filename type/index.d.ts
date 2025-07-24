@@ -69,6 +69,7 @@ declare interface FormErrors {
     company_name?: string[];
     email?: string[];
     password?: string[];
+    new_password?: string[];
     confirm_password?: string[];
     password_security?: string[];
     password_match?: string[];
@@ -80,6 +81,7 @@ declare interface FormData {
     company_name?: string;
     email?: string;
     password?: string;
+    new_password?: string;
     confirm_password?: string;
     provider?: string;
 }

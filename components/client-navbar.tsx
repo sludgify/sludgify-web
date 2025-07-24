@@ -30,6 +30,8 @@ export const ClientNavbar = () => {
         const companyCookie = Cookies.get("company-data");
         const accessTokenCookie = Cookies.get("accessToken");
 
+        console.log("userMeCookie", userMeCookie);
+
         if (userMeCookie && companyCookie) {
             console.log("userMeCookie", userMeCookie);
             try {
@@ -41,7 +43,6 @@ export const ClientNavbar = () => {
         }
 
         if (accessTokenCookie) {
-            console.log("accessTokenCookie", accessTokenCookie);
             setAccessToken(accessTokenCookie);
         }
     }, []);

@@ -21,7 +21,7 @@ export const ValuesCarousel = ({ values }) => {
             >
                 <CarouselContent>
                     {values.map((item) => (
-                        <CarouselItem key={item.id} className="basis-[55%] px-2">
+                        <CarouselItem key={item.id} className="basis-[55%] mx-2 px-2">
                             <div className={`rounded-md drop-shadow-md w-full min-w-[250px] h-[111px] px-3 py-3 ${item.className}`}>
                                 <h1 className="text-sm md:text-lg font-radley">{item.title}</h1>
                                 <p className="text-[10px] md:text-xs lg:mt-5">{item.description}</p>
