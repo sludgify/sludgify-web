@@ -38,7 +38,7 @@ const PickupForm = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="font-calibri justify-between text-[#525252] grid grid-cols-1 md:grid-cols-2 gap-3">
+        <form onSubmit={handleSubmit} className="font-calibri text-sm md:text-base justify-between text-[#525252] grid grid-cols-1 md:grid-cols-2 gap-3">
             {/* Pickup Address */}
             <div className="md:col-span-2">
                 <label className="block mb-1 font-medium">Set Pick Up Address</label>
