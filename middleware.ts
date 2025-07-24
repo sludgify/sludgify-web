@@ -34,6 +34,18 @@ const getAccountActiveEmail = async (token: string) => {
     }
 };
 
+const getStatusResetPassword = async (token: string) => {
+    try {
+        const response = await axiosInstance.get(`/sludgify/auth/reset-password/password-changed/${token}`, {
+            headers: { "Content-Type": "application/json" },
+        });
+        return response.data?.data;
+    } catch (err) {
+        const error = err as AxiosError<ErrorResponse>;
+        console.error("❌ Error getAccountActiveEmail:", error);
+    }
+};
+
 const getUserCompany = async (accessToken: string, etag?: string) => {
     try {
         const headers: Record<string, string> = {
@@ -82,10 +94,17 @@ export async function middleware(request: NextRequest) {
         const token = url.searchParams.get("token");
         if (!token) return NextResponse.redirect(new URL("/login", request.url));
 
-        const data =
-            url.pathname === "/account-active"
-                ? await getAccountActiveEmail(token)
-                : await getAccountActivePage(token);
+        const data = url.pathname === "/account-active" ? await getAccountActiveEmail(token) : await getAccountActivePage(token);
+
+        if (!data) return NextResponse.redirect(new URL("/login", request.url));
+    }
+
+    if (url.pathname === "/reset-password") {
+        const token = url.searchParams.get("token");
+        console.log(url.pathname)
+        if (!token) return NextResponse.redirect(new URL("/login", request.url));
+
+        const data = await getStatusResetPassword(token);
 
         if (!data) return NextResponse.redirect(new URL("/login", request.url));
     }
@@ -166,5 +185,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-    matcher: ["/account-active/:path*", "/client-menu/:path*", "/login", "/register"],
+    matcher: ["/account-active/:path*", "/reset-password", "/client-menu/:path*", "/login", "/register"],
 };
