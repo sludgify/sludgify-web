@@ -6,7 +6,7 @@ declare type service_name = {
 declare type PaymentData = {
     amount: string;
     method: string;
-}
+};
 
 declare type Transactions = {
     id: string;
@@ -106,6 +106,7 @@ declare interface User {
 
 declare interface Company {
     id: string | null;
+    company_name: string | null;
     country: string | null;
     email: string | null;
     phone_number: string | null;

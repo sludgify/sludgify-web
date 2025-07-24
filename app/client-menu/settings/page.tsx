@@ -31,6 +31,7 @@ interface PersonalInformationFormErrors {
 }
 
 interface CompanyInformationFormErrors {
+    company_name: string[];
     country: string[];
     position: string[];
     email: string[];
@@ -58,6 +59,7 @@ export default function Page() {
     });
 
     const [formErrorsCompanyInformation, setFormErrorsCompanyInformation] = useState<CompanyInformationFormErrors>({
+        company_name: [],
         country: [],
         position: [],
         email: [],
@@ -129,6 +131,7 @@ export default function Page() {
                 avatar: null as File | null,
             },
             company: {
+                company_name: companyData?.company_name || "",
                 country: companyData?.country || "",
                 position: companyData?.position || "",
                 email: companyData?.email || "",
@@ -150,6 +153,7 @@ export default function Page() {
                 }
 
                 const formData2 = new FormData();
+                formData2.append("company_name", company.company_name);
                 formData2.append("country", company.country);
                 formData2.append("position", company.position);
                 formData2.append("email", company.email);
@@ -231,6 +235,10 @@ export default function Page() {
                         <h1 className="text-[#525252] text-xs md:text-base">Edit or complete your company information</h1>
                     </div>
                     <div className="grid grid-cols-1 text-xs md:text-base md:grid-cols-2 gap-4 mt-2">
+                        <div className="flex flex-col gap-2 text-[#525252]">
+                            <label htmlFor="country text-[#525252]">Company Name</label>
+                            <input type="text" name="company.company_name" value={formik.values.company.company_name} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
+                        </div>
                         <div className="flex flex-col gap-2 text-[#525252]">
                             <label htmlFor="country text-[#525252]">Country</label>
                             <input type="text" name="company.country" value={formik.values.company.country} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
