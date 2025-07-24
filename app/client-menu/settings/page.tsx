@@ -9,6 +9,7 @@ import { useFormik } from "formik";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { ClientNavbarMobile } from "@/components/client-navbar-mobile";
+import { useMediaQuery } from "react-responsive";
 
 interface ErrorResponse {
     message: string;
@@ -47,6 +48,14 @@ export default function Page() {
     const [accessToken, setAccessToken] = useState<string | null>(null);
 
     const { push } = useRouter();
+
+    const is1250 = useMediaQuery({ maxWidth: 1250 });
+
+    const is1075 = useMediaQuery({ maxWidth: 1075 });
+
+    const is768 = useMediaQuery({ maxWidth: 768 });
+
+    const isMin1024Max1250 = useMediaQuery({ minWidth: 1024, maxWidth: 1250 });
 
     const [formErrorsPersonalInformation, setFormErrorsPersonalInformation] = useState<PersonalInformationFormErrors>({
         first_name: [],
@@ -199,73 +208,140 @@ export default function Page() {
                 <ClientNavbarMobile />
             </div>
 
-            <form onSubmit={formik.handleSubmit} className="px-6 border-t md:border md:p-6 flex md:gap-14 md:flex-row flex-col-reverse w-full items-start  md:max-w-[1077px] border-[#D9D9D9] md:rounded-md">
-                <div className="flex flex-col gap-4 w-full md:w-[50%]">
-                    <h1 className="hidden md:block text-primary text-xl font-bold">Personal Information</h1>
+            <form onSubmit={formik.handleSubmit} className={`px-6 border-t md:border md:p-6 flex md:gap-14 ${isMin1024Max1250 ? '' : 'md:flex-row'} flex-col-reverse w-full items-start  md:max-w-[1077px] border-[#D9D9D9] md:rounded-md`}>
+                <div className={`${isMin1024Max1250 ? 'mx-auto' : 'flex flex-col gap-4 w-full md:w-[50%]'}`}>
+                    <h1 className={`hidden md:block text-primary ${!is1250 ? 'text-xl' : 'text-lg'} font-bold`}>Personal Information</h1>
                     <h1 className="hidden md:block">Edit or complete your personal information</h1>
 
-                    <div className="grid grid-cols-1 text-xs md:text-base md:grid-cols-2 gap-4 mt-2">
-                        <div className="flex flex-col gap-2 text-[#525252]">
-                            <label htmlFor="firstname">First Name</label>
-                            <input type="text" name="personal.first_name" value={formik.values.personal.first_name} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
+                    {!is1250 ? (
+                        <div className="grid grid-cols-1 text-xs md:text-base md:grid-cols-2 gap-4 mt-2">
+                            <div className="flex flex-col gap-2 text-[#525252]">
+                                <label htmlFor="firstname">First Name</label>
+                                <input type="text" name="personal.first_name" value={formik.values.personal.first_name} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
+                            </div>
+                            <div className="flex flex-col gap-2 text-[#525252]">
+                                <label htmlFor="lastname">Last Name</label>
+                                <input type="text" name="personal.last_name" value={formik.values.personal.last_name} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
+                            </div>
+                            <div className="flex flex-col gap-2 text-[#525252]">
+                                <label htmlFor="country">Country</label>
+                                <input type="text" name="personal.country" value={formik.values.personal.country} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
+                            </div>
+                            <div className="flex flex-col gap-2 text-[#525252]">
+                                <label htmlFor="position">Position</label>
+                                <input type="text" name="personal.position" value={formik.values.personal.position} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
+                            </div>
+                            <div className="flex flex-col gap-2 text-[#525252]">
+                                <label htmlFor="email">Email</label>
+                                <input type="text" name="personal.email" value={formik.values.personal.email} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
+                            </div>
+                            <div className="flex flex-col gap-2 text-[#525252]">
+                                <label htmlFor="phone">Phone Number</label>
+                                <input type="text" name="personal.phone_number" value={formik.values.personal.phone_number} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
+                            </div>
                         </div>
-                        <div className="flex flex-col gap-2 text-[#525252]">
-                            <label htmlFor="lastname">Last Name</label>
-                            <input type="text" name="personal.last_name" value={formik.values.personal.last_name} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
+                    ) : (
+                        <div className={`flex flex-col gap-4 ${is768 ? 'mx-auto w-[90%]' : ''}`}>
+                            <div className="flex flex-col gap-2 text-[#525252]">
+                                <label htmlFor="firstname">First Name</label>
+                                <input type="text" name="personal.first_name" value={formik.values.personal.first_name} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
+                            </div>
+                            <div className="flex flex-col gap-2 text-[#525252]">
+                                <label htmlFor="lastname">Last Name</label>
+                                <input type="text" name="personal.last_name" value={formik.values.personal.last_name} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
+                            </div>
+                            <div className="flex flex-col gap-2 text-[#525252]">
+                                <label htmlFor="country">Country</label>
+                                <input type="text" name="personal.country" value={formik.values.personal.country} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
+                            </div>
+                            <div className="flex flex-col gap-2 text-[#525252]">
+                                <label htmlFor="position">Position</label>
+                                <input type="text" name="personal.position" value={formik.values.personal.position} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
+                            </div>
+                            <div className="flex flex-col gap-2 text-[#525252]">
+                                <label htmlFor="email">Email</label>
+                                <input type="text" name="personal.email" value={formik.values.personal.email} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
+                            </div>
+                            <div className="flex flex-col gap-2 text-[#525252]">
+                                <label htmlFor="phone">Phone Number</label>
+                                <input type="text" name="personal.phone_number" value={formik.values.personal.phone_number} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
+                            </div>
                         </div>
-                        <div className="flex flex-col gap-2 text-[#525252]">
-                            <label htmlFor="country">Country</label>
-                            <input type="text" name="personal.country" value={formik.values.personal.country} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
-                        </div>
-                        <div className="flex flex-col gap-2 text-[#525252]">
-                            <label htmlFor="position">Position</label>
-                            <input type="text" name="personal.position" value={formik.values.personal.position} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
-                        </div>
-                        <div className="flex flex-col gap-2 text-[#525252]">
-                            <label htmlFor="email">Email</label>
-                            <input type="text" name="personal.email" value={formik.values.personal.email} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
-                        </div>
-                        <div className="flex flex-col gap-2 text-[#525252]">
-                            <label htmlFor="phone">Phone Number</label>
-                            <input type="text" name="personal.phone_number" value={formik.values.personal.phone_number} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
-                        </div>
-                    </div>
+                    )}
                     <div>
-                        <h1 className="text-primary text-xl font-bold ">Company Information</h1>
+                        <h1 className={`text-primary ${!is1250 ? 'text-xl' : 'text-lg'} font-bold mb-3`}>Company Information</h1>
                         <h1 className="text-[#525252] text-xs md:text-base">Edit or complete your company information</h1>
                     </div>
-                    <div className="grid grid-cols-1 text-xs md:text-base md:grid-cols-2 gap-4 mt-2">
-                        <div className="flex flex-col gap-2 text-[#525252]">
-                            <label htmlFor="country text-[#525252]">Company Name</label>
-                            <input type="text" name="company.company_name" value={formik.values.company.company_name} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
+                    {!is1250 ? (
+                        <div className="grid grid-cols-1 text-xs md:text-base md:grid-cols-2 gap-4 mt-2">
+                            <div className="flex flex-col gap-2 text-[#525252]">
+                                <label htmlFor="country text-[#525252]">Company Name</label>
+                                <input type="text" name="company.company_name" value={formik.values.company.company_name} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
+                            </div>
+                            <div className="flex flex-col gap-2 text-[#525252]">
+                                <label htmlFor="country text-[#525252]">Country</label>
+                                <input type="text" name="company.country" value={formik.values.company.country} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
+                            </div>
+                            <div className="flex flex-col gap-2 text-[#525252]">
+                                <label htmlFor="position">Position</label>
+                                <input type="text" name="company.position" value={formik.values.company.position} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
+                            </div>
+                            <div className="flex flex-col gap-2 text-[#525252]">
+                                <label htmlFor="email">Email</label>
+                                <input type="text" name="company.email" value={formik.values.company.email} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
+                            </div>
+                            <div className="flex flex-col gap-2 text-[#525252]">
+                                <label htmlFor="phone">Phone Number</label>
+                                <input type="text" name="company.phone_number" value={formik.values.company.phone_number} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
+                            </div>
+                            <div className="flex flex-col gap-2 text-[#525252]">
+                                <label htmlFor="address">Address</label>
+                                <input type="text" name="company.address" value={formik.values.company.address} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
+                            </div>
+                            <button type="submit" className="md:hidden bg-black rounded-md text-white py-2 cursor-pointer">
+                                Save Changes
+                            </button>
                         </div>
-                        <div className="flex flex-col gap-2 text-[#525252]">
-                            <label htmlFor="country text-[#525252]">Country</label>
-                            <input type="text" name="company.country" value={formik.values.company.country} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
+                    ) : (
+                        <div className={`flex flex-col gap-4 ${is768 ? 'mx-auto w-[90%]' : ''}`}>
+                            <div className="flex flex-col gap-2 text-[#525252]">
+                                <label htmlFor="country text-[#525252]">Company Name</label>
+                                <input type="text" name="company.company_name" value={formik.values.company.company_name} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
+                            </div>
+                            <div className="flex flex-col gap-2 text-[#525252]">
+                                <label htmlFor="country text-[#525252]">Country</label>
+                                <input type="text" name="company.country" value={formik.values.company.country} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
+                            </div>
+                            <div className="flex flex-col gap-2 text-[#525252]">
+                                <label htmlFor="position">Position</label>
+                                <input type="text" name="company.position" value={formik.values.company.position} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
+                            </div>
+                            <div className="flex flex-col gap-2 text-[#525252]">
+                                <label htmlFor="email">Email</label>
+                                <input type="text" name="company.email" value={formik.values.company.email} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
+                            </div>
+                            <div className="flex flex-col gap-2 text-[#525252]">
+                                <label htmlFor="phone">Phone Number</label>
+                                <input type="text" name="company.phone_number" value={formik.values.company.phone_number} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
+                            </div>
+                            <div className="flex flex-col gap-2 text-[#525252]">
+                                <label htmlFor="address">Address</label>
+                                <input type="text" name="company.address" value={formik.values.company.address} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
+                            </div>
+                            <button type="submit" className={`md:hidden bg-black rounded-md text-white py-2 cursor-pointer ${!isMin1024Max1250 ? 'mb-5 mt-2' : ''}`}>
+                                Save Changes
+                            </button>
                         </div>
-                        <div className="flex flex-col gap-2 text-[#525252]">
-                            <label htmlFor="position">Position</label>
-                            <input type="text" name="company.position" value={formik.values.company.position} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
-                        </div>
-                        <div className="flex flex-col gap-2 text-[#525252]">
-                            <label htmlFor="email">Email</label>
-                            <input type="text" name="company.email" value={formik.values.company.email} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
-                        </div>
-                        <div className="flex flex-col gap-2 text-[#525252]">
-                            <label htmlFor="phone">Phone Number</label>
-                            <input type="text" name="company.phone_number" value={formik.values.company.phone_number} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
-                        </div>
-                        <div className="flex flex-col gap-2 text-[#525252]">
-                            <label htmlFor="address">Address</label>
-                            <input type="text" name="company.address" value={formik.values.company.address} onChange={formik.handleChange} className="border border-[#D9D9D9] rounded-[10px] px-3 py-2 focus:outline-none " />
-                        </div>
-                        <button type="submit" className="md:hidden bg-black rounded-md text-white py-2 cursor-pointer">
-                            Save Changes
-                        </button>
-                    </div>
+                    )}
+
+                    {isMin1024Max1250 && (
+                        <button type="submit" className="bg-black rounded-md text-white py-2 cursor-pointer w-[45%] mt-3">
+                        Save Changes
+                    </button>
+                    )}
                 </div>
 
-                <div className="md:w-[330px] w-full">
+                <div className={`md:w-[330px] w-full ${isMin1024Max1250 ? 'hidden' : ''}`}>
                     <div className="flex gap-2 items-center mt-4 min-h-[64px]">
                         <Image src={previewAvatar || userMe?.avatar || "/Ellipse 2.svg"} alt="Ellipse 2" width={50} height={50} className="rounded-full md:h-[45px] md:w-[45px] w-[35px] h-[35px] object-cover object-top" />
                         <div className="overflow-hidden transition-all capitalize font-bold duration-300 whitespace-nowrap">
@@ -282,31 +358,115 @@ export default function Page() {
                             <h1 className="text-primary font-bold md:text-base text-xs">Upload Your Image</h1>
                             <h1 className="text-[#525252] md:text-base text-[10px]">Formats allowed are jpg and png. Image size up tp 10 MB</h1>
                         </div>
-                        <input
-                            id="upload-photo"
-                            type="file"
-                            accept="image/png, image/jpeg"
-                            className="hidden"
-                            name="avatar"
-                            onChange={(event) => {
-                                const file = event.currentTarget.files?.[0];
-                                if (file) {
-                                    formik.setFieldValue("personal.avatar", file);
-                                    setPreviewAvatar(URL.createObjectURL(file));
-                                }
-                            }}
-                        />
-                        <div className="flex md:grid grid-cols-2 gap-2 md:gap-4 mt-2 font-radley">
-                            <button type="button" className="bg-[#DC0000] text-white rounded-md py-2 px-4 md:text-base text-xs cursor-pointer" onClick={handleDeletedAccount}>
-                                Delete
-                            </button>
-                            <label htmlFor="upload-photo" className="border border-black rounded-md py-2 px-4 md:text-base text-xs text-center cursor-pointer">
-                                Upload
-                            </label>
-                            <button type="submit" className="col-span-2 hidden md:block bg-black rounded-md text-white py-2 cursor-pointer">
-                                Save Changes
-                            </button>
-                        </div>
+                        {!is1250 ? (
+                            <>
+                                <input
+                                    id="upload-photo"
+                                    type="file"
+                                    accept="image/png, image/jpeg"
+                                    className="hidden"
+                                    name="avatar"
+                                    onChange={(event) => {
+                                        const file = event.currentTarget.files?.[0];
+                                        if (file) {
+                                            formik.setFieldValue("personal.avatar", file);
+                                            setPreviewAvatar(URL.createObjectURL(file));
+                                        }
+                                    }}
+                                />
+                                {!is768 ? (
+                                    <div className="flex md:grid grid-cols-2 gap-2 md:gap-4 mt-2 font-radley justify-end">
+                                        <button type="button" className="bg-[#DC0000] text-white rounded-md py-2 px-4 md:text-base text-xs cursor-pointer" onClick={handleDeletedAccount}>
+                                            Delete
+                                        </button>
+                                        <label htmlFor="upload-photo" className="border border-black rounded-md py-2 px-4 md:text-base text-xs text-center cursor-pointer">
+                                            Upload
+                                        </label>
+                                        <button type="submit" className="col-span-2 hidden md:block bg-black rounded-md text-white py-2 cursor-pointer">
+                                            Save Changes
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <div className="flex flex-col gap-4 mt-2 items-start">
+                                        <input
+                                            id="upload-photo"
+                                            type="file"
+                                            accept="image/png, image/jpeg"
+                                            className="hidden"
+                                            name="avatar"
+                                            onChange={(event) => {
+                                                const file = event.currentTarget.files?.[0];
+                                                if (file) {
+                                                    formik.setFieldValue("personal.avatar", file);
+                                                    setPreviewAvatar(URL.createObjectURL(file));
+                                                }
+                                            }}
+                                        />
+
+                                        <button
+                                            type="button"
+                                            className="bg-[#DC0000] text-white rounded-md py-2 px-4 md:text-base text-xs cursor-pointer"
+                                            onClick={handleDeletedAccount}
+                                        >
+                                            Delete
+                                        </button>
+
+                                        <label
+                                            htmlFor="upload-photo"
+                                            className="border border-black rounded-md py-2 px-4 md:text-base text-xs text-center cursor-pointer"
+                                        >
+                                            Upload
+                                        </label>
+
+                                        <button
+                                            type="submit"
+                                            className="col-span-2 hidden md:block bg-black rounded-md text-white py-2 px-4 text-center cursor-pointer"
+                                        >
+                                            Save Changes
+                                        </button>
+                                    </div>
+                                )}
+                            </>
+                        ) : (
+                            <div className={`flex ${is768 ? 'flex-row' : 'flex-col'} ${isMin1024Max1250 ? 'hidden' : ''} gap-4 mt-5 mb-5 items-start`}>
+                                <input
+                                    id="upload-photo"
+                                    type="file"
+                                    accept="image/png, image/jpeg"
+                                    className="hidden"
+                                    name="avatar"
+                                    onChange={(event) => {
+                                        const file = event.currentTarget.files?.[0];
+                                        if (file) {
+                                            formik.setFieldValue("personal.avatar", file);
+                                            setPreviewAvatar(URL.createObjectURL(file));
+                                        }
+                                    }}
+                                />
+
+                                <button
+                                    type="button"
+                                    className={`bg-[#DC0000] text-white rounded-md py-2 px-4 md:text-base text-xs cursor-pointer ${isMin1024Max1250 ? 'mx-auto' : ''} ${is1075 && !is768 ? "w-[60%] mx-auto" : ""} ${is768 ? 'w-[40%]' : ''}`}
+                                    onClick={handleDeletedAccount}
+                                >
+                                    Delete
+                                </button>
+
+                                <label
+                                    htmlFor="upload-photo"
+                                    className={`border border-black rounded-md py-2 px-4 md:text-base text-xs text-center cursor-pointer ${isMin1024Max1250 ? 'mx-auto' : ''} ${is1075 && !is768 ? "w-[60%] mx-auto" : ""} ${is768 ? 'w-[40%]' : ''}`}
+                                >
+                                    Upload
+                                </label>
+
+                                <button
+                                    type="submit"
+                                    className={`col-span-2 hidden md:block bg-black rounded-md text-white py-2 cursor-pointer ${isMin1024Max1250 ? 'mx-auto' : ''} ${is1075 && !is768 ? "w-[60%] mx-auto" : ""} ${is768 ? 'w-[40%]' : ''}`}
+                                >
+                                    Save Changes
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </div>
             </form>
