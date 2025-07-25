@@ -169,7 +169,7 @@ export default function Page() {
                     token,
                     msg,
                     pdf_base64: base64File,
-                    methode: "resume",
+                    method: "resume",
                     type: "text",
                 });
                 setUploadedFile(null);
