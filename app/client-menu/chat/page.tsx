@@ -38,7 +38,7 @@ export default function Page() {
     const is1023 = useMediaQuery({ maxWidth: 1023 });
 
     const [messages, setMessages] = useState<Message[]>([]);
-    const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+    const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
     const [isTyping, setIsTyping] = useState(false);
     const [inputValue, setInputValue] = useState("");
     const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -54,11 +54,13 @@ export default function Page() {
 
     useEffect(() => {
         const accessToken = Cookies.get("accessToken");
+        console.log("Access Token:", accessToken);
 
         const userMeCookie = Cookies.get("me-data");
         if (accessToken) {
             setToken(accessToken);
             const newSocket = io("http://localhost:5000/chat-bot");
+            console.log("Connecting to socket server...");
             setSocket(newSocket);
 
             newSocket.on("connect", () => {
@@ -139,9 +141,10 @@ export default function Page() {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages, isTyping]);
 
-    const handleSendMessage = (msg: string) => {
+    const handleSendMessage = async (msg: string) => {
         if (!msg || !socket || !token) return;
 
+        // Tampilkan pesan pengguna langsung
         setMessages((prev) => [
             ...prev,
             {
@@ -152,6 +155,9 @@ export default function Page() {
             },
         ]);
         setIsTyping(true);
+        setInputValue("");
+
+        // Kirim pesan suara jika ada
         if (voiceBase64) {
             socket.emit("message", {
                 audio: voiceBase64,
@@ -159,26 +165,49 @@ export default function Page() {
                 type: "voice",
             });
             setVoiceBase64(null);
-        } else if (uploadedFile) {
-            console.log("uploadedFile", uploadedFile);
-            const reader = new FileReader();
-            reader.onload = () => {
-                const base64File = reader.result?.toString().split(",")[1];
-                console.log(base64File);
+            return;
+        }
+
+        // Kirim file PDF jika ada (banyak file)
+        if (uploadedFiles.length > 0) {
+            try {
+                const base64List = await Promise.all(
+                    uploadedFiles.map(
+                        (file) =>
+                            new Promise<string>((resolve, reject) => {
+                                const reader = new FileReader();
+                                reader.onload = () => {
+                                    const base64 = reader.result?.toString().split(",")[1] || "";
+                                    resolve(base64);
+                                };
+                                reader.onerror = reject;
+                                reader.readAsDataURL(file);
+                            })
+                    )
+                );
+
                 socket.emit("message", {
                     token,
                     msg,
-                    pdf_base64: base64File,
+                    pdf_base64_list: base64List,
                     method: "resume",
                     type: "text",
                 });
-                setUploadedFile(null);
-            };
-            reader.readAsDataURL(uploadedFile);
-        } else {
-            socket.emit("message", { room: "default", msg, token });
+
+                setUploadedFiles([]);
+                return;
+            } catch (error) {
+                console.error("Gagal membaca file:", error);
+                return;
+            }
         }
-        setInputValue("");
+
+        // Kirim pesan teks biasa
+        socket.emit("message", {
+            room: "default",
+            msg,
+            token,
+        });
     };
 
     const toggleRecording = () => {
@@ -239,31 +268,15 @@ export default function Page() {
                                                 remarkPlugins={[remarkGfm]}
                                                 rehypePlugins={[rehypeRaw]}
                                                 components={{
-                                                    p: ({ children }) => (
-                                                        <p>{children}</p>
-                                                    ),
-                                                    ul: ({ children }) => (
-                                                        <ul className="list-disc pl-14">{children}</ul>
-                                                    ),
-                                                    li: ({ children }) => (
-                                                        <li className="mb-0.5">{children}</li>
-                                                    ),
+                                                    p: ({ children }) => <p>{children}</p>,
+                                                    ul: ({ children }) => <ul className="list-disc pl-14">{children}</ul>,
+                                                    li: ({ children }) => <li className="mb-0.5">{children}</li>,
                                                     a: ({ href, children }) => (
-                                                        <a
-                                                            href={href}
-                                                            className="text-blue-500 underline hover:text-blue-400"
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                        >
+                                                        <a href={href} className="text-blue-500 underline hover:text-blue-400" target="_blank" rel="noopener noreferrer">
                                                             {children}
                                                         </a>
                                                     ),
-                                                    // Simulasi tabulasi manual pakai blockquote
-                                                    blockquote: ({ children }) => (
-                                                        <blockquote className="pl-4 border-l-2 border-gray-400 text-sm text-gray-200">
-                                                            {children}
-                                                        </blockquote>
-                                                    ),
+                                                    blockquote: ({ children }) => <blockquote className="pl-4 border-l-2 border-gray-400 text-sm text-gray-200">{children}</blockquote>,
                                                 }}
                                             >
                                                 {message.content.replace(/\t/g, "\u2003")}
@@ -276,19 +289,9 @@ export default function Page() {
                                     {Array.isArray(message.links) && message.links.length > 0 && (
                                         <div className="mt-2 flex flex-wrap gap-2">
                                             {message.links.map((link, i) => (
-                                                <button
-                                                    key={i}
-                                                    onClick={() => window.open(link, "_blank")}
-                                                    className="px-3 py-1 text-xl bg-black text-white rounded-lg font-radley hover:bg-black/70 transition drop-shadow-xl"
-                                                >
+                                                <button key={i} onClick={() => window.open(link, "_blank")} className="px-3 py-1 text-xl bg-black text-white rounded-lg font-radley hover:bg-black/70 transition drop-shadow-xl">
                                                     Download Report {i + 1}
-                                                    <Image
-                                                        src="/file-download.svg"
-                                                        alt="Download Icon"
-                                                        width={20}
-                                                        height={20}
-                                                        className="inline ml-2"
-                                                    />
+                                                    <Image src="/file-download.svg" alt="Download Icon" width={20} height={20} className="inline ml-2" />
                                                 </button>
                                             ))}
                                         </div>
@@ -320,18 +323,7 @@ export default function Page() {
                     )}
                     <div ref={messagesEndRef} />
                 </div>
-                {is1023 ? (
-                    <ClientNavbarMobile />
-                ) : (
-                    <Image
-                        src="/text-search.svg"
-                        alt="text-search"
-                        width={35}
-                        height={35}
-                        className="absolute top-3 right-10 flex lg:hidden md:block xl:block"
-                        unoptimized
-                    />
-                )}
+                {is1023 ? <ClientNavbarMobile /> : <Image src="/text-search.svg" alt="text-search" width={35} height={35} className="absolute top-3 right-10 flex lg:hidden md:block xl:block" unoptimized />}
             </div>
 
             {/* Sticky Input */}
@@ -351,17 +343,22 @@ export default function Page() {
                                 <label className="cursor-pointer p-2 rounded hover:bg-white/10 transition">
                                     <input
                                         type="file"
+                                        multiple
                                         hidden
                                         accept=".pdf"
                                         ref={fileInputRef}
                                         onChange={(e) => {
-                                            const file = e.target.files?.[0];
-                                            if (file) {
-                                                setUploadedFile(file);
+                                            const files = Array.from(e.target.files ?? []);
+                                            if (files.length > 0) {
+                                                setUploadedFiles((prev) => {
+                                                    const newFiles = files.filter((f) => !prev.some((p) => p.name === f.name));
+                                                    return [...prev, ...newFiles];
+                                                });
                                                 if (fileInputRef.current) fileInputRef.current.value = "";
                                             }
                                         }}
                                     />
+
                                     <Paperclip className="h-5 w-5 text-white" />
                                 </label>
                                 <button className={cn("p-2 rounded hover:bg-white/10 transition", isRecording && "bg-red-500")} onClick={toggleRecording}>
@@ -371,9 +368,15 @@ export default function Page() {
                                     <Search className="h-5 w-5 text-white" />
                                     <h1>Research</h1>
                                 </button>
-                                {uploadedFile && (
+                                {uploadedFiles.length > 0 && (
                                     <div className="text-sm text-white opacity-80">
-                                        📎 File attached: <strong>{uploadedFile.name}</strong>
+                                        📎 File attached:{" "}
+                                        {uploadedFiles.map((file, idx) => (
+                                            <span key={idx} className="font-semibold">
+                                                {file.name}
+                                                {idx < uploadedFiles.length - 1 ? ", " : ""}
+                                            </span>
+                                        ))}
                                     </div>
                                 )}
                             </div>
