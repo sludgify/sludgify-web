@@ -119,7 +119,7 @@ export const ClientNavbarMobile = () => {
     return (
         <aside className="relative lg:hidden font-calibri">
             {/* Mobile Toggle */}
-            <div className="lg:hidden p-4">
+            <div className="lg:hidden p-2">
                 <button onClick={() => setIsOpen(!isOpen)}>{isOpen ? <X size={28} /> : <Menu size={28} />}</button>
             </div>
 

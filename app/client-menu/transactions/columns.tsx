@@ -13,7 +13,7 @@ export const columns: ColumnDef<Transactions>[] = [
         accessorKey: "id",
         header: ({ column }) => (
             <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-                <ArrowUpDown className="ml-2 h-4 w-4" />
+                <ArrowUpDown className=" h-4 w-4" />
                 ID
             </Button>
         ),
@@ -26,7 +26,7 @@ export const columns: ColumnDef<Transactions>[] = [
         accessorKey: "service_name",
         header: ({ column }) => (
             <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-                <ArrowUpDown className="ml-2 h-4 w-4" />
+                <ArrowUpDown className=" h-4 w-4" />
                 Service Name
             </Button>
         ),
@@ -43,7 +43,7 @@ export const columns: ColumnDef<Transactions>[] = [
         accessorKey: "time",
         header: ({ column }) => (
             <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-                <ArrowUpDown className="ml-2 h-4 w-4" />
+                <ArrowUpDown className=" h-4 w-4" />
                 Time
             </Button>
         ),
@@ -56,7 +56,7 @@ export const columns: ColumnDef<Transactions>[] = [
         accessorKey: "location",
         header: ({ column }) => (
             <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-                <ArrowUpDown className="ml-2 h-4 w-4" />
+                <ArrowUpDown className=" h-4 w-4" />
                 Location
             </Button>
         ),
@@ -69,7 +69,7 @@ export const columns: ColumnDef<Transactions>[] = [
         accessorKey: "volume",
         header: ({ column }) => (
             <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-                <ArrowUpDown className="ml-2 h-4 w-4" />
+                <ArrowUpDown className=" h-4 w-4" />
                 Volume
             </Button>
         ),
@@ -86,7 +86,7 @@ export const columns: ColumnDef<Transactions>[] = [
 
             return (
                 <div
-                    className={` font-medium rounded-[8px] w-[130px] px-3 py-1 text-center ${
+                    className={` font-medium rounded-[8px] md:w-fit lg:w-[130px] px-1 lg:px-3 py-1 text-center ${
                         status === "Completed"
                             ? "text-[#00AA06] bg-[#C9FFB9A8] border border-[#00AA06]"
                             : status === "On Process"
@@ -109,7 +109,7 @@ export const columns: ColumnDef<Transactions>[] = [
             return (
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0 hover:cursor-pointer">
+                        <Button variant="ghost" className="h-8 w-5 p-0 hover:cursor-pointer">
                             <span className="sr-only">Open menu</span>
                             <MoreVertical className="h-4 w-4" />
                         </Button>

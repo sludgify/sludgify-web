@@ -1,8 +1,11 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
 import Image from "next/image";
 import clsx from "clsx";
+import { ClientNavbarMobile } from "@/components/client-navbar-mobile";
+import Link from "next/link";
 
 const data: Transactions[] = [
     {
@@ -35,7 +38,7 @@ const data: Transactions[] = [
         time: "Sun, 26 May 2025",
         location: "Medan, Indonesia",
         volume: 1120,
-        status: "Failed",
+        status: "Cancelled",
     },
     {
         id: "SLD244",
@@ -83,9 +86,11 @@ const data: Transactions[] = [
         time: "Sat, 01 Jun 2025",
         location: "Bali, Indonesia",
         volume: 880,
-        status: "Failed",
+        status: "Cancelled",
     },
 ];
+
+const status = ["Waiting Payment", "On Process", "Completed", "Cancelled"];
 
 const stats = [
     {
@@ -119,30 +124,74 @@ const stats = [
 ];
 
 export default function Page() {
+    const [selectedStatus, setSelectedStatus] = useState<string | null>("Waiting Payment");
+
     return (
-        <div className="py-8 px-36 space-y-6 font-calibri">
-            <h1 className="font-bold text-4xl">Transaction</h1>
-            <div className="flex justify-between gap-5">
+        <div className="lg:py-8 lg:px-20 md:p-5 lg:space-y-6 font-calibri">
+            <div className="flex border-b items-center justify-between py-4 md:p-0 md:pl-0 pl-4">
+                <h1 className="font-bold text-4xl">Transaction</h1>
+                <ClientNavbarMobile />
+            </div>
+            <div className="flex md:grid md:grid-cols-4 gap-2 lg:gap-5 p-4 overflow-x-auto md:overflow-x-visible hide-scrollbar font-calibri">
                 {stats.map((stat, index) => (
-                    <div key={index} className="border rounded-[10px] border-[#D9D9D9] w-full">
-                        <div className="flex items-center gap-2 border-b p-4">
-                            <Image src={stat.icon} alt="Completed" width={50} height={50} />
+                    <div key={index} className="border rounded-[10px] border-[#D9D9D9] min-w-[170px] md:min-w-0 md:w-full">
+                        <div className="flex items-center gap-2 border-b p-2">
+                            <Image src={stat.icon} alt="Completed" width={50} height={50} className="w-[20px] h-[20px] md:w-[50px] md:h-[50px]" />
                             <div>
-                                <h1>{stat.title}</h1>
-                                <h1 className="text-2xl font-bold">{stat.value}</h1>
+                                <h1 className="text-sm lg:text-base font-bold">{stat.title}</h1>
+                                <h1 className="text-sm md:text-lg lg:text-2xl font-bold">{stat.value}</h1>
                             </div>
                         </div>
-                        <div className="flex items-center gap-3 p-2">
+                        <div className="flex items-center gap-1 p-2 bg-[#FAFAFA]">
                             <div className="flex items-center gap-1">
                                 {stat.change == "positive" ? <Image src={"/line-md_arrow-up.svg"} alt="up" width={15} height={15} /> : <Image src={"/line-md_arrow-down.svg"} alt="up" width={15} height={15} />}
-                                <h1 className={clsx(stat.change === "positive" ? "text-[#20FF0C]" : "text-[#FF0707]")}>{stat.percentage}%</h1>
+                                <h1 className={clsx(stat.change === "positive" ? "text-[#20FF0C]" : "text-[#FF0707]", "text-xs md:text-base")}>{stat.percentage}%</h1>
                             </div>
-                            <h1>From The Last Month</h1>
+                            <h1 className="text-xs md:text-sm lg:text-base">From The Last Month</h1>
                         </div>
                     </div>
                 ))}
             </div>
             <DataTable columns={columns} data={data} />
+            <div className="px-5 md:hidden">
+                <div className="flex justify-between gap-2 border-t border-b border-[#D9D9D9]">
+                    {status.map((stat, index) => (
+                        <div
+                            key={index}
+                            onClick={() => setSelectedStatus(stat)}
+                            className={clsx("flex relative items-center justify-center text-xs px-1 py-2 cursor-pointer", selectedStatus === stat && "border-b-2 border-black -mb-[1.5px]")}
+                        >
+                            <h1 className="font-bold">{stat}</h1>
+                        </div>
+                    ))}
+                </div>
+                <div className=" flex flex-col gap-3 mt-3 h-[550px]  overflow-y-scroll hide-scrollbar">
+                    {data
+                        .filter((transaction) => transaction.status === selectedStatus)
+                        .map((transaction, index) => (
+                            <div key={index} className="flex flex-col items-start justify-between gap-2 border border-[#D9D9D9] rounded-[10px] p-2">
+                                <div className="flex items-center justify-between gap-2 w-full">
+                                    <div className="flex items-center gap-2">
+                                        <h1 className="text-sm font-bold border border-[#D9D9D9] rounded-[10px] p-4">{transaction.id}</h1>
+                                        <div className="">
+                                            <h1 className="text-sm">{transaction.service_name.name}</h1>
+                                            <span className="text-xs text-gray-500">Type {transaction.service_name.type}</span>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <h1>Volume:</h1>
+                                        <h1 className="text-sm">{transaction.volume} Tons</h1>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h1 className="text-sm">{transaction.location}</h1>
+                                    <h1 className="text-sm">{transaction.time}</h1>
+                                </div>
+                            </div>
+                        ))}
+                </div>
+            </div>
         </div>
     );
 }

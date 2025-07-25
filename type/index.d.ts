@@ -14,7 +14,7 @@ declare type Transactions = {
     time: string;
     location: string;
     volume: number;
-    status: "Waiting Payment" | "On Process" | "Completed" | "Failed";
+    status: "Waiting Payment" | "On Process" | "Completed" | "Cancelled";
 };
 
 declare type TrackingStep = {

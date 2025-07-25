@@ -23,32 +23,6 @@ export function DataTable<
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
     const router = useRouter();
 
-    // Helper: Filter data based on frequency
-    // const filteredData = React.useMemo(() => {
-    //     const now = new Date();
-    //     return data.filter((item) => {
-    //         const itemDate = new Date(item.date);
-
-    //         switch (frequency) {
-    //             case "Daily":
-    //                 return itemDate.toDateString() === now.toDateString();
-    //             case "Weekly": {
-    //                 const startOfWeek = new Date(now);
-    //                 startOfWeek.setDate(now.getDate() - now.getDay());
-    //                 const endOfWeek = new Date(startOfWeek);
-    //                 endOfWeek.setDate(startOfWeek.getDate() + 6);
-    //                 return itemDate >= startOfWeek && itemDate <= endOfWeek;
-    //             }
-    //             case "Monthly":
-    //                 return itemDate.getMonth() === now.getMonth() && itemDate.getFullYear() === now.getFullYear();
-    //             case "Yearly":
-    //                 return itemDate.getFullYear() === now.getFullYear();
-    //             default:
-    //                 return true;
-    //         }
-    //     });
-    // }, [data, frequency]);
-
     const table = useReactTable({
         data,
         columns,
@@ -70,7 +44,7 @@ export function DataTable<
     });
 
     return (
-        <div className="rounded-md border p-8 space-y-5">
+        <div className="hidden md:block rounded-md border p-8 space-y-5">
             <div className="flex justify-between">
                 <div className="w-[300px] border rounded-lg p-2 flex items-center gap-2">
                     <Search size={18} />
@@ -96,9 +70,7 @@ export function DataTable<
                         table.getRowModel().rows.map((row) => (
                             <TableRow key={row.id} className="cursor-pointer hover:bg-gray-100" onClick={() => router.push(`/client-menu/transactions/${row.original.id}`)}>
                                 {row.getVisibleCells().map((cell) => (
-                                    <TableCell key={cell.id}>
-                                        <Link href={`/client-menu/transactions/${row.original.id}`}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</Link>
-                                    </TableCell>
+                                    <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                                 ))}
                             </TableRow>
                         ))
