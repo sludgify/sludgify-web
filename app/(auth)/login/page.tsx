@@ -44,7 +44,12 @@ export default function Page() {
                     provider: "google",
                     token: tokenResponse.access_token,
                 });
-                toast.success(response.data.message);
+                const data = response.data;
+                toast.success(data.message);
+                Cookies.set("accessToken", data.token.access_token);
+                setTimeout(() => {
+                    push("/client-menu");
+                }, 1000);
             } catch (err) {
                 const error = err as AxiosError<ErrorResponse>;
                 toast.error(error.response?.data.message);
