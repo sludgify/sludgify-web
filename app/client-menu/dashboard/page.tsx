@@ -47,15 +47,16 @@ export default function Page() {
         sludge_type: "",
     });
     const [calculateResult, setCalculateResult] = useState({
-        co_processing: {
-            emisi_kg_CO2: 0,
-            massa_ton: 0,
-            methode: "",
+        emissions_produced: {
+            emission_ton: 0,
+            mass_ton: 0,
+            method: "",
         },
-        emisi_kg_CO2: 0,
-        massa_ton: 0,
-        methode: "",
-        sludge_type: "",
+        reduced_potential: {
+            emission_ton: 0,
+            mass_ton: 0,
+            method: "",
+        }
     });
 
     const chartData = [
@@ -195,16 +196,16 @@ export default function Page() {
                 <div className="bg-[#FAFAFA] border border-[#D9D9D9] rounded-2xl space-y-8 shadow-md p-4 lg:p-6">
                     <h1 className="text-sm md:text-xl lg:text-2xl font-bold">Carbon Credit Status</h1>
                     <div className={clsx("w-full", "flex", is1380 ? "flex-row" : "flex-col", "gap-3")}>
-            <div className="bg-white border border-[#D9D9D9] lg:rounded-2xl rounded-[10px] w-full shadow-md p-4 lg:p-6">
-                <h1 className="text-[10px] md:text-sm lg:text-base">Credit Price (1 ton of CO2)</h1>
-                <p className="text-sm md:text-base lg:text-2xl font-bold">IDR 150.000</p>
-            </div>
+                        <div className="bg-white border border-[#D9D9D9] lg:rounded-2xl rounded-[10px] w-full shadow-md p-4 lg:p-6">
+                            <h1 className="text-[10px] md:text-sm lg:text-base">Credit Price (1 ton of CO2)</h1>
+                            <p className="text-sm md:text-base lg:text-2xl font-bold">IDR 150.000</p>
+                        </div>
 
-            <div className="bg-white border border-[#D9D9D9] lg:rounded-2xl rounded-[10px] w-full shadow-md p-4 lg:p-6">
-                <h1 className="text-[10px] md:text-sm lg:text-base">Total Available Credit</h1>
-                <p className="text-sm md:text-base lg:text-2xl font-bold">350 tons of CO2</p>
-            </div>
-        </div>
+                        <div className="bg-white border border-[#D9D9D9] lg:rounded-2xl rounded-[10px] w-full shadow-md p-4 lg:p-6">
+                            <h1 className="text-[10px] md:text-sm lg:text-base">Total Available Credit</h1>
+                            <p className="text-sm md:text-base lg:text-2xl font-bold">350 tons of CO2</p>
+                        </div>
+                    </div>
                     <div className="flex-1 border-t border-primary"></div>
                     <h1 className="text-sm md:text-xl lg:text-2xl font-bold">Buy Carbon Credit</h1>
                     {is1380 ? (
@@ -262,13 +263,13 @@ export default function Page() {
                     <div className="flex-1 border-t border-primary"></div>
                     <h1 className="text-sm md:text-xl lg:text-2xl font-bold">Calculation Result</h1>
                     <div className="flex justify-between gap-2 w-full">
-                        <div className="bg-[#FFB2B273] py-6 px-4 w-full">
+                        <div className="bg-[#FFB2B273] py-6 px-4 w-full rounded-sm">
                             <h1 className="text-sm lg:text-base">Emissions Produced</h1>
-                            <h1 className="text-sm lg:text-base font-bold text-[#C63B3B]">{calculateResult?.emisi_kg_CO2} ton CO2</h1>
+                            <h1 className="text-sm lg:text-base font-bold text-[#C63B3B]">{calculateResult?.emissions_produced.emission_ton} ton CO2</h1>
                         </div>
-                        <div className="bg-[#20FF0C33] py-6 px-4 w-full">
-                            <h1 className="text-sm lg:text-base">Emissions Produced</h1>
-                            <h1 className="text-sm lg:text-base font-bold text-[#3CAA32]">{calculateResult?.co_processing?.emisi_kg_CO2} ton CO2</h1>
+                        <div className="bg-[#20FF0C33] py-6 px-4 w-full rounded-sm">
+                            <h1 className="text-sm lg:text-base">Reduced Potentional</h1>
+                            <h1 className="text-sm lg:text-base font-bold text-[#3CAA32]">{calculateResult?.reduced_potential?.emission_ton} ton CO2</h1>
                         </div>
                     </div>
                 </div>

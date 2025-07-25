@@ -36,7 +36,6 @@ function formatTime(date: string | number | Date) {
 
 export default function Page() {
     const is1023 = useMediaQuery({ maxWidth: 1023 });
-    const is1130 = useMediaQuery({ maxWidth: 1130 });
 
     const [messages, setMessages] = useState<Message[]>([]);
     const [uploadedFile, setUploadedFile] = useState<File | null>(null);
@@ -57,15 +56,14 @@ export default function Page() {
         const accessToken = Cookies.get("accessToken");
 
         const userMeCookie = Cookies.get("me-data");
-        const parsedMe = JSON.parse(userMeCookie as string) as User;
         if (accessToken) {
             setToken(accessToken);
-            const newSocket = io("http://localhost:5000");
+            const newSocket = io("http://localhost:5000/chat-bot");
             setSocket(newSocket);
 
             newSocket.on("connect", () => {
                 console.log("Connected to server");
-                newSocket.emit("join", { room: parsedMe.id, token: accessToken });
+                newSocket.emit("join", { token: accessToken });
             });
 
             newSocket.on("chat_history", (msgs: SocketMessage[]) => {
@@ -156,7 +154,6 @@ export default function Page() {
         setIsTyping(true);
         if (voiceBase64) {
             socket.emit("message", {
-                room: "default",
                 audio: voiceBase64,
                 token,
                 type: "voice",
@@ -169,7 +166,6 @@ export default function Page() {
                 const base64File = reader.result?.toString().split(",")[1];
                 console.log(base64File);
                 socket.emit("message", {
-                    room: "default",
                     token,
                     msg,
                     pdf_base64: base64File,
@@ -237,19 +233,43 @@ export default function Page() {
                         messages.map((message) => (
                             <div key={message.id} className={cn("flex", message.role === "user" ? "justify-end" : "justify-start")}>
                                 <div className={cn("whitespace-pre-wrap", message.role === "user" ? "max-w-[80%] rounded-lg p-3 bg-primary text-primary-foreground" : "")}>
-                                    <div className="overflow-x-auto prose prose-sm prose-invert max-w-full break-words whitespace-pre-wrap [&>p]:mb-1 [&>ul]:mb-1 [&>li]:my-0">
+                                    <div className="overflow-x-auto text-md text-black max-w-full break-words whitespace-pre-wrap">
                                         {message.role === "assistant" ? (
                                             <ReactMarkdown
-                                                components={{
-                                                    a: ({ node, ...props }) => <a {...props} className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer" />,
-                                                }}
                                                 remarkPlugins={[remarkGfm]}
                                                 rehypePlugins={[rehypeRaw]}
+                                                components={{
+                                                    p: ({ children }) => (
+                                                        <p>{children}</p>
+                                                    ),
+                                                    ul: ({ children }) => (
+                                                        <ul className="list-disc pl-14">{children}</ul>
+                                                    ),
+                                                    li: ({ children }) => (
+                                                        <li className="mb-0.5">{children}</li>
+                                                    ),
+                                                    a: ({ href, children }) => (
+                                                        <a
+                                                            href={href}
+                                                            className="text-blue-500 underline hover:text-blue-400"
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                        >
+                                                            {children}
+                                                        </a>
+                                                    ),
+                                                    // Simulasi tabulasi manual pakai blockquote
+                                                    blockquote: ({ children }) => (
+                                                        <blockquote className="pl-4 border-l-2 border-gray-400 text-sm text-gray-200">
+                                                            {children}
+                                                        </blockquote>
+                                                    ),
+                                                }}
                                             >
-                                                {message.content}
+                                                {message.content.replace(/\t/g, "\u2003")}
                                             </ReactMarkdown>
                                         ) : (
-                                            <p className="mb-1">{message.content}</p>
+                                            <p className="mb-1 text-white">{message.content}</p>
                                         )}
                                     </div>
 
