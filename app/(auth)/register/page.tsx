@@ -282,7 +282,7 @@ export default function Page() {
                         </p>
                     </div>
                     <div className=" flex justify-end items-center mr-[10%]">
-                        <div className="bg-white right-0 space-y-2 rounded-[25px] p-12 w-[500px] h-[652px]">
+                        <div className="bg-white right-0 space-y-2 rounded-[25px] pt-14 p-12 w-[500px] h-[552px]">
                             <h1 className={`text-4xl ${isLg ? 'ms-7': ''} mb-5`}>Create Account</h1>
                             <form className={`grid grid-cols-2 gap-2 ${isLg ? 'w-[85%] mx-auto': 'w-full'}`} onSubmit={formik.isSubmitting ? () => { } : formik.handleSubmit}>
                                 <div>

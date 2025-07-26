@@ -224,8 +224,8 @@ export default function Page() {
                             One Platform for ESG, Waste, <br /> and Carbon Impact
                         </p>
                     </div>
-                    <div className="mt-10 flex justify-center items-center p-12">
-                        <div className="right-0 space-y-2 w-[446px] h-[582px]">
+                    <div className="pt-24 flex justify-center items-center p-12">
+                        <div className="right-0 space-y-2 w-[446px] h-[482px]">
                             <div className="text-center space-y-1">
                                 <h1 className={`${isXl ? "text-4xl" : "text-2xl"}`}>Welcome Back!</h1>
                                 <h2 className={`${isXl ? "text-md" : "text-sm"} mb-5 text-black`}>Kindly enter your email address and password to sign in</h2>
