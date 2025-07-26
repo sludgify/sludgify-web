@@ -126,12 +126,7 @@ export default function Page() {
                     <CardHeader>
                         <CardTitle className="flex flex-row justify-center items-center gap-4">
                             <div className="flex flex-row items-center gap-2">
-                                <Image
-                                    src={Group16}
-                                    alt="logo"
-                                    width={28}
-                                    height={15}
-                                />
+                                <Image src={Group16} alt="logo" width={28} height={15} />
                                 <p className="text-sm font-semibold text-black">Sludgify</p>
                             </div>
 

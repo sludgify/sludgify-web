@@ -144,21 +144,20 @@ export default function Page() {
     const handleSendMessage = async (msg: string) => {
         if (!msg || !socket || !token) return;
 
-        // Tampilkan pesan pengguna langsung
-        setMessages((prev) => [
-            ...prev,
-            {
-                id: `${Date.now()}`,
-                role: "user",
-                content: msg,
-                timestamp: new Date().toISOString(),
-            },
-        ]);
-        setIsTyping(true);
         setInputValue("");
+        setIsTyping(true);
 
-        // Kirim pesan suara jika ada
+        // Kirim pesan suara
         if (voiceBase64) {
+            setMessages((prev) => [
+                ...prev,
+                {
+                    id: `${Date.now()}`,
+                    role: "user",
+                    content: "(Voice message sent)",
+                    timestamp: new Date().toISOString(),
+                },
+            ]);
             socket.emit("message", {
                 audio: voiceBase64,
                 token,
@@ -168,7 +167,7 @@ export default function Page() {
             return;
         }
 
-        // Kirim file PDF jika ada (banyak file)
+        // Kirim file PDF jika ada
         if (uploadedFiles.length > 0) {
             try {
                 const base64List = await Promise.all(
@@ -185,6 +184,18 @@ export default function Page() {
                             })
                     )
                 );
+
+                // Simpan pesan user dengan file
+                setMessages((prev) => [
+                    ...prev,
+                    {
+                        id: `${Date.now()}`,
+                        role: "user",
+                        content: msg,
+                        timestamp: new Date().toISOString(),
+                        links: uploadedFiles.map((file) => file.name),
+                    },
+                ]);
 
                 socket.emit("message", {
                     token,
@@ -203,6 +214,15 @@ export default function Page() {
         }
 
         // Kirim pesan teks biasa
+        setMessages((prev) => [
+            ...prev,
+            {
+                id: `${Date.now()}`,
+                role: "user",
+                content: msg,
+                timestamp: new Date().toISOString(),
+            },
+        ]);
         socket.emit("message", {
             room: "default",
             msg,
@@ -286,7 +306,23 @@ export default function Page() {
                                         )}
                                     </div>
 
-                                    {Array.isArray(message.links) && message.links.length > 0 && (
+                                    {/* FILE PREVIEW USER */}
+                                    {message.role === "user" && message.links && message.links.length > 0 && (
+                                        <div className="mt-2 flex flex-wrap gap-2">
+                                            {message.links.map((filename, i) => (
+                                                <div key={i} className="bg-pink-100 text-black rounded-lg px-4 py-2 flex items-center gap-3 max-w-fit">
+                                                    <Image src="/file-pdf.svg" alt="PDF" width={30} height={30} />
+                                                    <div>
+                                                        <p className="font-semibold text-sm">{filename}</p>
+                                                        <p className="text-xs text-gray-600">PDF</p>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+
+                                    {/* LINK DOWNLOAD ASSISTANT */}
+                                    {message.role === "assistant" && Array.isArray(message.links) && message.links.length > 0 && (
                                         <div className="mt-2 flex flex-wrap gap-2">
                                             {message.links.map((link, i) => (
                                                 <button key={i} onClick={() => window.open(link, "_blank")} className="px-3 py-1 text-xl bg-black text-white rounded-lg font-radley hover:bg-black/70 transition drop-shadow-xl">
