@@ -63,7 +63,7 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body suppressHydrationWarning={true} className={`${geistSans.variable} ${geistMono.variable} ${calibri.variable} ${radley.variable} antialiased`}>
-                <GoogleOAuthProvider clientId="113118193592-loc110rrqru2gmg3ahr94771n1c7hp8j.apps.googleusercontent.com">
+                <GoogleOAuthProvider clientId={process.env.CLIENT_ID as string}>
                     <ReactQueryProvider>
                         {children}
                         <Toaster />
