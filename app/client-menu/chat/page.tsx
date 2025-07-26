@@ -59,7 +59,7 @@ export default function Page() {
         const userMeCookie = Cookies.get("me-data");
         if (accessToken) {
             setToken(accessToken);
-            const newSocket = io("http://localhost:5000/chat-bot");
+            const newSocket = io(`${process.env.NEXT_PUBLIC_API_URL}/chat-bot`);
             console.log("Connecting to socket server...");
             setSocket(newSocket);
 
