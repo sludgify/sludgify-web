@@ -135,7 +135,7 @@ export default function Page() {
     };
 
     const handleDownload = () => {
-        window.location.href = "http://localhost:5000/download/sludgify/report";
+        window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/download/sludgify/report`;
     };
 
     return (
