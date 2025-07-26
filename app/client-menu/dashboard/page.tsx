@@ -46,6 +46,7 @@ export default function Page() {
         massa: 0,
         sludge_type: "",
     });
+
     const [calculateResult, setCalculateResult] = useState({
         emissions_produced: {
             emission_ton: 0,
@@ -133,6 +134,10 @@ export default function Page() {
         }
     };
 
+    const handleDownload = () => {
+        window.location.href = "http://localhost:5000/download/sludgify/report";
+    };
+
     return (
         <div className="py-6 md:py-8 md:px-5 lg:px-16 space-y-6">
             <div className="flex lg:flex-row flex-col justify-between md:items-start md:gap-2 items-center w-full px-3 lg:px-0">
@@ -144,7 +149,7 @@ export default function Page() {
                     <ClientNavbarMobile />
                 </div>
                 <div className="font-radley flex gap-2 h-fit">
-                    <button className="flex gap-2 border bg-black text-white md:w-[200px] lg:text-center px-4 py-2 rounded-md">Download Report</button>
+                    <button className="flex gap-2 border bg-black text-white md:w-[200px] lg:text-center px-4 py-2 rounded-md cursor-pointer" onClick={handleDownload}>Download Report</button>
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <button className="border px-4 py-2 rounded-md min-w-[120px] lg:w-[160px] flex items-center justify-between">
